@@ -20,7 +20,7 @@
             <field name="model">wxapp.config</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="小程序设置">
+                <form string="小程序设置" create="0" delete="0" duplicate="0">
                     <sheet>
 
                      <group string="基础配置" colspan="4">
@@ -51,9 +51,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="target">current</field>
+            <field name="res_id">1</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('wxapp_config_view_tree_1002')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_config_view_form_1003')}),
                     ]"/>
         </record>
