@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="oe_province_view_tree_1016" model="ir.ui.view">
+            <field name="name">oe.province.view_tree</field>
+            <field name="model">oe.province</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="省" create="0" delete="0">
+               <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="oe_province_view_form_1017" model="ir.ui.view">
+            <field name="name">oe.province.view_form</field>
+            <field name="model">oe.province</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="省" version="7.0" create="0" delete="0" edit="0" save="0" cancel="0" duplicate="0">
+                    <sheet>
+                    <group>
+               <field name="name"/>
+               <field name="child_ids"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="oe_province_action_412" model="ir.actions.act_window">
+            <field name="name">省</field>
+            <field name="res_model">oe.province</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+        </record>
+        <menuitem action="oe_province_action_412" id="oe_province_menuitem_334_1536754696" name="省份" parent="parent_menu_331" sequence="1"/>
+
+    </data>
+</openerp>

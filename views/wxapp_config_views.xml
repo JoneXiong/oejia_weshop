@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="wxapp_config_view_tree_1002" model="ir.ui.view">
+            <field name="name">wxapp.config.view_tree</field>
+            <field name="model">wxapp.config</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="小程序设置">
+               <field name="mall_name"/>
+               <field name="sub_domain"/>
+               <field name="team_id"/>
+               <field name="app_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="wxapp_config_view_form_1003" model="ir.ui.view">
+            <field name="name">wxapp.config.view_form</field>
+            <field name="model">wxapp.config</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="小程序设置">
+                    <sheet>
+
+                     <group string="基础配置" colspan="4">
+                        <field name="app_id"/>
+                        <field name="secret"/>
+                        <field name="mall_name"/>
+                        <field name="sub_domain"/>
+                        <field name="team_id"/>
+                    </group>
+
+                     <group string="支付配置" colspan="4">
+                        <field name="wechat_pay_id"/>
+                        <field name="wechat_pay_secret"/>
+                    </group>
+
+                     <group string="物流配置" colspan="4">
+                        <field name="kdniao_app_id"/>
+                        <field name="kdniao_app_key"/>
+                    </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="wxapp_config_action_404" model="ir.actions.act_window">
+            <field name="name">小程序设置</field>
+            <field name="res_model">wxapp.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+        </record>
+        <menuitem action="wxapp_config_action_404" id="wxapp_config_menuitem_322_1536754696" name="对接设置" parent="parent_menu_327" sequence="3"/>
+
+    </data>
+</openerp>

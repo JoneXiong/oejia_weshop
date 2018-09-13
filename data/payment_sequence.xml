@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="seq_wxapp_payment_payment_num" model="ir.sequence">
+            <field name="name">wxapp payment num</field>
+            <field name="code">wxapp.payment_num</field>
+            <field name="padding">4</field>
+            <field name="prefix">TS%(y)s%(month)s%(day)s%(h24)s%(min)s%(sec)s</field>
+        </record>
+
+    </data>
+</odoo>

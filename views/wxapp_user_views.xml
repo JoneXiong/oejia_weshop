@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="wxapp_user_view_tree_1004" model="ir.ui.view">
+            <field name="name">wxapp.user.view_tree</field>
+            <field name="model">wxapp.user</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="小程序用户">
+
+                    <field name="name"/>
+                    <field name="avatar"/>
+                    <field name="phone"/>
+
+                    <field name="country"/>
+                    <field name="province"/>
+                    <field name="city"/>
+               <field name="language"/>
+               <field name="gender"/>
+
+                    <field name="open_id"/>
+                    <field name="union_id"/>
+               <field name="partner_id"/>
+                    <field name="create_date" string="注册时间"/>
+                    <field name="last_login"/>
+                    <field name="status"/>
+
+                    <field name="register_type"/>
+               <field name="register_ip"/>
+               <field name="ip"/>
+
+               <field name="address_ids"/>
+
+                </tree>
+            </field>
+        </record>
+        <record id="wxapp_user_view_form_1005" model="ir.ui.view">
+            <field name="name">wxapp.user.view_form</field>
+            <field name="model">wxapp.user</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="小程序用户" version="7.0">
+                    <sheet>
+                    <group>
+                    <field name="name"/>
+                    <field name="avatar"/>
+                    <field name="phone"/>
+
+                    <field name="country"/>
+                    <field name="province"/>
+                    <field name="city"/>
+               <field name="language"/>
+               <field name="gender"/>
+
+                    <field name="open_id"/>
+                    <field name="union_id"/>
+               <field name="partner_id"/>
+                    <field name="create_date" string="注册时间"/>
+                    <field name="last_login"/>
+                    <field name="status"/>
+
+                    <field name="register_type"/>
+               <field name="register_ip"/>
+               <field name="ip"/>
+
+               <field name="address_ids"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="wxapp_user_action_405" model="ir.actions.act_window">
+            <field name="name">小程序用户</field>
+            <field name="res_model">wxapp.user</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+        </record>
+        <menuitem action="wxapp_user_action_405" id="wxapp_user_menuitem_323_1536754696" name="用户" parent="parent_menu_319" sequence="10"/>
+
+    </data>
+</openerp>

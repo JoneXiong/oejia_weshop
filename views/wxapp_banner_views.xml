@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="wxapp_banner_view_tree_1000" model="ir.ui.view">
+            <field name="name">wxapp.banner.view_tree</field>
+            <field name="model">wxapp.banner</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="横幅">
+               <field name="title"/>
+               <field name="display_pic"/>
+               <field name="remark"/>
+               <field name="sort"/>
+               <field name="status"/>
+                </tree>
+            </field>
+        </record>
+        <record id="wxapp_banner_view_form_1001" model="ir.ui.view">
+            <field name="name">wxapp.banner.view_form</field>
+            <field name="model">wxapp.banner</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="横幅" version="7.0">
+                    <sheet>
+                    <group>
+               <field name="title"/>
+               <field name="image" widget="image"/>
+               <field name="business_id"/>
+               <field name="link_url"/>
+               <field name="remark"/>
+               <field name="sort"/>
+               <field name="status"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="wxapp_banner_action_403" model="ir.actions.act_window">
+            <field name="name">横幅</field>
+            <field name="res_model">wxapp.banner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+        </record>
+        <menuitem action="wxapp_banner_action_403" id="wxapp_banner_menuitem_321_1536754696" name="横幅图" parent="parent_menu_327" sequence="1"/>
+
+    </data>
+</openerp>

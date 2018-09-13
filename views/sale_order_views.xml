@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <menuitem action="sale.action_quotations" id="sale_order_menuitem_335_1536754696" name="订单" parent="parent_menu_319" sequence="0"/>
+
+    </data>
+</openerp>

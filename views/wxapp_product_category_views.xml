@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="wxapp_product_category_view_tree_1006" model="ir.ui.view">
+            <field name="name">wxapp.product.category.view_tree</field>
+            <field name="model">wxapp.product.category</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="商品分类">
+               <field name="name"/>
+               <field name="pid"/>
+               <field name="sort"/>
+               <field name="is_use"/>
+               <field name="key"/>
+               <field name="level"/>
+                </tree>
+            </field>
+        </record>
+        <record id="wxapp_product_category_view_form_1007" model="ir.ui.view">
+            <field name="name">wxapp.product.category.view_form</field>
+            <field name="model">wxapp.product.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="商品分类" version="7.0">
+                    <sheet>
+                    <group>
+               <field name="name"/>
+               <field name="pid"/>
+               <field name="sort"/>
+               <field name="icon"/>
+               <field name="is_use"/>
+               <field name="key"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="wxapp_product_category_action_406" model="ir.actions.act_window">
+            <field name="name">商品分类</field>
+            <field name="res_model">wxapp.product.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                        
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('wxapp_product_category_view_tree_1006')}),
+                        
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_product_category_view_form_1007')}),
+                        
+                    ]"/>
+        </record>
+        <menuitem action="wxapp_product_category_action_406" id="wxapp_product_category_menuitem_324_1536754696" name="商品分类" parent="parent_menu_327" sequence="2"/>
+
+    </data>
+</openerp>

@@ -1,0 +1,69 @@
+# coding=utf-8
+
+from openerp import models, fields, api
+
+
+class ProductTemplate(models.Model):
+
+    _inherit = "product.template"
+
+    wxpp_category_id = fields.Many2one('wxapp.product.category', string='小程序商城分类', ondelete='set null')
+    characteristic = fields.Text('商品特色')
+    logistics_id = fields.Many2one('oe.logistics', string='物流模板')
+    recommend_status = fields.Boolean('是否推荐')
+    wxapp_published = fields.Boolean('是否上架', default=True)
+    description_wxapp = fields.Html('小程序描述')
+    original_price = fields.Float('原始价格', default=0)
+    qty_public_tpl = fields.Integer('库存', default=0)
+
+    number_good_reputation = fields.Integer('好评数', default=0)
+    number_fav = fields.Integer('收藏数', default=0)
+    views = fields.Integer('浏览量', default=0)
+
+
+    def get_main_image(self):
+        base_url='https://wx.oejia.net'#self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        return '%s/web/image/product.template/%s/image/300x300'%(base_url, self.id)
+
+    def get_images(self):
+        base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        _list = []
+        if hasattr(self, 'product_image_ids'):
+            for obj in self.product_image_ids:
+                _dict = {
+                    "id": obj.id,
+                    "goodsId": self.id,
+                    "pic": '%s/web/image/product.image/%s/image/'%(base_url, obj.id)
+                }
+                _list.append(_dict)
+        else:
+            _list.append({
+                'id': self.id,
+                'goodsId': self.id,
+                'pic': '%s/web/image/product.template/%s/image/'%(base_url, self.id)
+            })
+        return _list
+
+
+class ProductProduct(models.Model):
+
+    _inherit = "product.product"
+
+    present_price = fields.Float('现价', default=0, required=True)
+    qty_public = fields.Integer('库存', default=0, required=True)
+    # 字符'property_id1:value_id1,property_id2:value_id2,'
+    attr_val_str = fields.Char('规格', compute='_compute_attr_val_str', store=True)
+
+    @api.multi
+    @api.depends('attribute_value_ids')
+    def _compute_attr_val_str(self):
+        for obj in self:
+            _str = ''
+            attr_val_list = obj.attribute_value_ids.sorted(key=lambda o: o.attribute_id.id)
+            for o in attr_val_list:
+                _str += '%s:%s,'%(o.attribute_id.id, o.id)
+            obj.attr_val_str = _str
+
+
+    def get_property_str(self):
+        return ', '.join(['%s: %s'%(e.attribute_id.name, e.name) for e in self.attribute_value_ids])

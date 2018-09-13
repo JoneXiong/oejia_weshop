@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_product_template_all,product_template.group_False,product.model_product_template,,1,0,0,0
+access_wxapp_banner_all,wxapp_banner.group_False,model_wxapp_banner,,1,0,0,0

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="oe_city_view_tree_1012" model="ir.ui.view">
+            <field name="name">oe.city.view_tree</field>
+            <field name="model">oe.city</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="市" create="0" delete="0">
+               <field name="name"/>
+               <field name="pid"/>
+                </tree>
+            </field>
+        </record>
+        <record id="oe_city_view_form_1013" model="ir.ui.view">
+            <field name="name">oe.city.view_form</field>
+            <field name="model">oe.city</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="市" version="7.0" create="0" delete="0" edit="0" save="0" cancel="0" duplicate="0">
+                    <sheet>
+                    <group>
+               <field name="name"/>
+               <field name="pid"/>
+               <field name="child_ids"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="oe_city_action_410" model="ir.actions.act_window">
+            <field name="name">市</field>
+            <field name="res_model">oe.city</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                        
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('oe_city_view_tree_1012')}),
+                        
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('oe_city_view_form_1013')}),
+                        
+                    ]"/>
+        </record>
+        <menuitem action="oe_city_action_410" id="oe_city_menuitem_332_1536754696" name="城市" parent="parent_menu_331" sequence="10"/>
+
+    </data>
+</openerp>

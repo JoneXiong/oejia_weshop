@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="oe_shipper_view_tree_1010" model="ir.ui.view">
+            <field name="name">oe.shipper.view_tree</field>
+            <field name="model">oe.shipper</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="承运商">
+               <field name="code"/>
+               <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="oe_shipper_view_form_1011" model="ir.ui.view">
+            <field name="name">oe.shipper.view_form</field>
+            <field name="model">oe.shipper</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="承运商" version="7.0">
+                    <sheet>
+                    <group>
+               <field name="code"/>
+               <field name="name"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="oe_shipper_action_409" model="ir.actions.act_window">
+            <field name="name">承运商</field>
+            <field name="res_model">oe.shipper</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                        
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('oe_shipper_view_tree_1010')}),
+                        
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('oe_shipper_view_form_1011')}),
+                        
+                    ]"/>
+        </record>
+        <menuitem action="oe_shipper_action_409" id="oe_shipper_menuitem_330_1536754696" name="物流商" parent="parent_menu_319" sequence="10"/>
+
+    </data>
+</openerp>

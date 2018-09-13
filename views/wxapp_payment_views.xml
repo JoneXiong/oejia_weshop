@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="wxapp_payment_view_tree_1018" model="ir.ui.view">
+            <field name="name">wxapp.payment.view_tree</field>
+            <field name="model">wxapp.payment</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="支付记录" create="0" delete="0">
+               <field name="wechat_user_id"/>
+               <field name="order_id"/>
+               <field name="payment_number"/>
+               <field name="cash_fee"/>
+               <field name="cash_fee_type"/>
+               <field name="coupon_count"/>
+               <field name="coupon_fee"/>
+               <field name="fee_type"/>
+               <field name="openid"/>
+               <field name="price"/>
+               <field name="result_code"/>
+               <field name="settlement_total_fee"/>
+               <field name="total_fee"/>
+               <field name="transaction_id"/>
+               <field name="status"/>
+                </tree>
+            </field>
+        </record>
+        <record id="wxapp_payment_view_form_1019" model="ir.ui.view">
+            <field name="name">wxapp.payment.view_form</field>
+            <field name="model">wxapp.payment</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="支付记录" version="7.0">
+                    <sheet>
+                    <group>
+               <field name="bank_type"/>
+               <field name="cash_fee"/>
+               <field name="cash_fee_type"/>
+               <field name="coupon_count"/>
+               <field name="coupon_fee"/>
+               <field name="err_code"/>
+               <field name="err_code_des"/>
+               <field name="fee_type"/>
+               <field name="openid"/>
+               <field name="order_id"/>
+               <field name="payment_number"/>
+               <field name="price"/>
+               <field name="result_code"/>
+               <field name="settlement_total_fee"/>
+               <field name="status"/>
+               <field name="total_fee"/>
+               <field name="transaction_id"/>
+               <field name="wechat_user_id"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="wxapp_payment_action_413" model="ir.actions.act_window">
+            <field name="name">支付记录</field>
+            <field name="res_model">wxapp.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                        
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('wxapp_payment_view_tree_1018')}),
+                        
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_payment_view_form_1019')}),
+                        
+                    ]"/>
+        </record>
+        <menuitem action="wxapp_payment_action_413" id="wxapp_payment_menuitem_336_1536754696" name="支付记录" parent="parent_menu_319" sequence="10"/>
+
+    </data>
+</openerp>
