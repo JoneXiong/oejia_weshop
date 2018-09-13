@@ -30,9 +30,3 @@ oejia_weshop 是 Odoo 对接微信小程序实现的商城应用。
 
 
 ![我的订单](http://oejia.net/files/201809/13172524213.jpeg)
-
-
-<figure class="half">
-    <div style="float:left;border:solid 1px 000;margin:2px;"><img src="http://oejia.net/files/201809/13172406513.jpeg" width="100"></div>
-    <div style="float:left;border:solid 1px 000;margin:2px;"><img src="http://oejia.net/files/201809/13172524213.jpeg" width="100"></div>
-</figure>
