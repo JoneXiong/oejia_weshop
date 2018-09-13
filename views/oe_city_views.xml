@@ -37,11 +37,8 @@
             <field name="target">current</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
-                        
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('oe_city_view_tree_1012')}),
-                        
                           (0, 0, {'view_mode': 'form', 'view_id': ref('oe_city_view_form_1013')}),
-                        
                     ]"/>
         </record>
         <menuitem action="oe_city_action_410" id="oe_city_menuitem_332_1536754696" name="城市" parent="parent_menu_331_1536754696" sequence="10"/>

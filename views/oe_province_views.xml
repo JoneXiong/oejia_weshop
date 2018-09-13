@@ -35,11 +35,8 @@
             <field name="target">current</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
-                        
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('oe_province_view_tree_1016')}),
-                        
                           (0, 0, {'view_mode': 'form', 'view_id': ref('oe_province_view_form_1017')}),
-                        
                     ]"/>
         </record>
         <menuitem action="oe_province_action_412" id="oe_province_menuitem_334_1536754696" name="省份" parent="parent_menu_331_1536754696" sequence="1"/>

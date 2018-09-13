@@ -65,11 +65,8 @@
             <field name="target">current</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
-                        
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('wxapp_payment_view_tree_1018')}),
-                        
                           (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_payment_view_form_1019')}),
-                        
                     ]"/>
         </record>
         <menuitem action="wxapp_payment_action_413" id="wxapp_payment_menuitem_336_1536754696" name="支付记录" parent="parent_menu_319_1536754696" sequence="10"/>

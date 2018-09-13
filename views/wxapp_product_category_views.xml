@@ -44,11 +44,8 @@
             <field name="target">current</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
-                        
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('wxapp_product_category_view_tree_1006')}),
-                        
                           (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_product_category_view_form_1007')}),
-                        
                     ]"/>
         </record>
         <menuitem action="wxapp_product_category_action_406" id="wxapp_product_category_menuitem_324_1536754696" name="商品分类" parent="parent_menu_327_1536754696" sequence="2"/>

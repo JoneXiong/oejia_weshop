@@ -36,11 +36,8 @@
             <field name="target">current</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
-                        
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('oe_district_view_tree_1014')}),
-                        
                           (0, 0, {'view_mode': 'form', 'view_id': ref('oe_district_view_form_1015')}),
-                        
                     ]"/>
         </record>
         <menuitem action="oe_district_action_411" id="oe_district_menuitem_333_1536754696" name="区" parent="parent_menu_331_1536754696" sequence="10"/>
