@@ -49,37 +49,3 @@ class PaymentStatus(Const):
     fail = ('fail', '失败')
 
 
-
-class LogisticsValuationType(Const):
-    by_piece = ('by_piece', u'按件')
-    by_weight = ('by_weight', u'按重量')
-
-class LogisticsValuationResponseType(Const):
-    by_piece = ('by_piece', 0)
-    by_weight = ('by_weight', 1)
-
-class LogisticsValuationRequestType(Const):
-    by_piece = (0, 'by_piece')
-    by_weight = (1, 'by_weight')
-
-class TransportationUnit(Const):
-    by_piece = ('by_piece', u'件')
-    by_weight = ('by_weight', u'KG')
-
-
-class TransportType(Const):
-    express = ('express', u'快递(或商家配送)')
-
-class TransportResponseType(Const):
-    express = ('express', 0)
-    ems = ('ems', 1)
-    post = ('post', 2)
-    by_self = ('self', 3)
-
-class TransportRequestType(Const):
-    express = (0, 'express')
-    ems = (1, 'ems')
-    post = (2, 'post')
-    by_self = (3, 'self')
-
-
