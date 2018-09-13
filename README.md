@@ -1,5 +1,6 @@
 ## oejia_weshop
-odoo 微信小程序商城模块
+Odoo 微信小程序商城模块
+
 oejia_weshop 是 Odoo 对接微信小程序实现的商城应用。
 
 如果您使用odoo的销售模块，而想要在微信小程序上实现自己的商城卖odoo里的商品，装上 oejia_weshop 模块即可
