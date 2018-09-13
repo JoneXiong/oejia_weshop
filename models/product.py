@@ -9,7 +9,6 @@ class ProductTemplate(models.Model):
 
     wxpp_category_id = fields.Many2one('wxapp.product.category', string='小程序商城分类', ondelete='set null')
     characteristic = fields.Text('商品特色')
-    logistics_id = fields.Many2one('oe.logistics', string='物流模板')
     recommend_status = fields.Boolean('是否推荐')
     wxapp_published = fields.Boolean('是否上架', default=True)
     description_wxapp = fields.Html('小程序描述')
