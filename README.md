@@ -11,3 +11,10 @@ oejia_weshop 是 Odoo 对接微信小程序实现的商城应用。
 * 和 odoo 销售模块无缝集成，产品和订单统一管理
 * 微信用户集成到 odoo 统一的客户（partner）管理
 * 支持 Odoo 10.0、11.0
+
+## 使用
+1. 下载源码
+2. 将整个oejia_weshop 目录放到你的addons 目录下
+3. 安装模块，可以看到产生了顶部“小程”主菜单
+4. 进入【设置】-【对接设置】页填写你的微信小程序相关对接信息
+5. 小程序客户端: 使用的开源项目 [wechat-app-mall](https://github.com/EastWorld/wechat-app-mall), 下载后修改接口api调用路径为您的odoo url即可
