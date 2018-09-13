@@ -36,11 +36,6 @@
                         <field name="wechat_pay_secret"/>
                     </group>
 
-                     <group string="物流配置" colspan="4">
-                        <field name="kdniao_app_id"/>
-                        <field name="kdniao_app_key"/>
-                    </group>
-
                     </sheet>
                 </form>
             </field>
