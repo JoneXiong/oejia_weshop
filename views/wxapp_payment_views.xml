@@ -72,7 +72,7 @@
                         
                     ]"/>
         </record>
-        <menuitem action="wxapp_payment_action_413" id="wxapp_payment_menuitem_336_1536754696" name="支付记录" parent="parent_menu_319" sequence="10"/>
+        <menuitem action="wxapp_payment_action_413" id="wxapp_payment_menuitem_336_1536754696" name="支付记录" parent="parent_menu_319_1536754696" sequence="10"/>
 
     </data>
 </openerp>

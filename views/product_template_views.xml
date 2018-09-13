@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <menuitem action="product.product_template_action" id="product_template_menuitem_325_1536754696" name="产品" parent="parent_menu_319" sequence="10"/>
+        <menuitem action="product.product_template_action" id="product_template_menuitem_325_1536754696" name="产品" parent="parent_menu_319_1536754696" sequence="10"/>
 
     </data>
 </openerp>

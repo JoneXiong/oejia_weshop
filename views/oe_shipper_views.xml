@@ -43,7 +43,7 @@
                         
                     ]"/>
         </record>
-        <menuitem action="oe_shipper_action_409" id="oe_shipper_menuitem_330_1536754696" name="物流商" parent="parent_menu_319" sequence="10"/>
+        <menuitem action="oe_shipper_action_409" id="oe_shipper_menuitem_330_1536754696" name="物流商" parent="parent_menu_319_1536754696" sequence="10"/>
 
     </data>
 </openerp>

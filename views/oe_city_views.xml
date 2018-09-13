@@ -44,7 +44,7 @@
                         
                     ]"/>
         </record>
-        <menuitem action="oe_city_action_410" id="oe_city_menuitem_332_1536754696" name="城市" parent="parent_menu_331" sequence="10"/>
+        <menuitem action="oe_city_action_410" id="oe_city_menuitem_332_1536754696" name="城市" parent="parent_menu_331_1536754696" sequence="10"/>
 
     </data>
 </openerp>

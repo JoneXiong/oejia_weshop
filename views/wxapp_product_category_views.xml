@@ -51,7 +51,7 @@
                         
                     ]"/>
         </record>
-        <menuitem action="wxapp_product_category_action_406" id="wxapp_product_category_menuitem_324_1536754696" name="商品分类" parent="parent_menu_327" sequence="2"/>
+        <menuitem action="wxapp_product_category_action_406" id="wxapp_product_category_menuitem_324_1536754696" name="商品分类" parent="parent_menu_327_1536754696" sequence="2"/>
 
     </data>
 </openerp>

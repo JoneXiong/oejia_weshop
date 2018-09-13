@@ -51,8 +51,16 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="target">current</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                        
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('wxapp_config_view_tree_1002')}),
+                        
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_config_view_form_1003')}),
+                        
+                    ]"/>
         </record>
-        <menuitem action="wxapp_config_action_404" id="wxapp_config_menuitem_322_1536754696" name="对接设置" parent="parent_menu_327" sequence="3"/>
+        <menuitem action="wxapp_config_action_404" id="wxapp_config_menuitem_322_1536754696" name="对接设置" parent="parent_menu_327_1536754696" sequence="0"/>
 
     </data>
 </openerp>

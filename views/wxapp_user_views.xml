@@ -76,8 +76,16 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="target">current</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                        
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('wxapp_user_view_tree_1004')}),
+                        
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_user_view_form_1005')}),
+                        
+                    ]"/>
         </record>
-        <menuitem action="wxapp_user_action_405" id="wxapp_user_menuitem_323_1536754696" name="用户" parent="parent_menu_319" sequence="10"/>
+        <menuitem action="wxapp_user_action_405" id="wxapp_user_menuitem_323_1536754696" name="用户" parent="parent_menu_319_1536754696" sequence="10"/>
 
     </data>
 </openerp>
