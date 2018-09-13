@@ -28,6 +28,8 @@
         'views/sale_order_views.xml',
 
         'data/payment_sequence.xml',
+        'data/crm_team_datas.xml',
+        'data/wxapp_config_datas.xml',
 
     ],
     'demo': [

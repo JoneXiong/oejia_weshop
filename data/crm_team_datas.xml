@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    
+        <record id="crm_team_data_3" model="crm.team">
+            <field name="name">小程序商城</field>
+            <field name="use_quotations">True</field>
+        </record>
+	
+    </data>
+</openerp>

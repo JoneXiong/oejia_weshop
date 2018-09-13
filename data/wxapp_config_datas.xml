@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    
+        <record id="wxapp_config_data_1" model="wxapp.config">
+            <field name="app_id">app_id_xxxxxxxxxxxxxxxx</field>
+            <field name="secret">secret_xxxxxxxxxxxxxxxxxxxxxx</field>
+            <field name="mall_name">Oejia小程序商城</field>
+            <field name="sub_domain">oejia</field>
+            <field name="team_id" ref="crm_team_data_3"/>
+        </record>
+	
+    </data>
+</openerp>
