@@ -7,8 +7,8 @@ from odoo.http import request
 from odoo import fields
 
 from .. import defs
-from .tools import get_wechat_session_info, get_wechat_user_info
 from .base import BaseController
+from .tools import get_wx_session_info, get_wx_user_info
 
 import logging
 
@@ -57,7 +57,7 @@ class WxappUser(http.Controller, BaseController):
             if not app_id or not secret:
                 return self.res_err(404)
 
-            session_info = get_wechat_session_info(app_id, secret, code)
+            session_info = get_wx_session_info(app_id, secret, code)
             if session_info.get('errcode'):
                 return self.res_err(-1, session_info.get('errmsg'))
 
@@ -117,7 +117,7 @@ class WxappUser(http.Controller, BaseController):
             if not app_id or not secret:
                 return self.res_err(404)
 
-            session_key, user_info = get_wechat_user_info(app_id, secret, code, encrypted_data, iv)
+            session_key, user_info = get_wx_user_info(app_id, secret, code, encrypted_data, iv)
             request.env(user=1)['wxapp.user'].create({
                 'name': user_info['nickName'],
                 'open_id': user_info['openId'],

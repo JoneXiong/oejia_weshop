@@ -6,8 +6,8 @@ from odoo import http
 from odoo.http import request
 
 from .. import defs
-from .tools import convert_static_link
 from .base import BaseController
+from .base import convert_static_link
 
 import logging
 
