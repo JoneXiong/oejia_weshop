@@ -35,6 +35,7 @@
     'demo': [
     ],
     'images': [],
-    'description': """oejia_weshop 是 Odoo 对接微信小程序实现的商城应用""",
+    'description': """oejia_weshop 是 Odoo 对接微信小程序实现的商城应用
+    """,
     'license': 'GPL-3',
 }
