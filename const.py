@@ -183,4 +183,4 @@ class ConstType(type):
 
 
 class Const(six.with_metaclass(ConstType)):
-    __metaclass__ = ConstType
+    pass
