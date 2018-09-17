@@ -34,4 +34,6 @@
     ],
     'demo': [
     ],
+    'images': ['static/description/main.png'],
+    'license': 'GPL-3',
 }
