@@ -171,7 +171,7 @@ class ConstType(type):
                 attrs_value[k] = v
                 attrs_label[k] = v
 
-        sort_new_attrs = sorted(new_attrs.iteritems(), key=lambda (k, v): k)
+        sort_new_attrs = sorted(six.iteritems(new_attrs), key=lambda kv: k[0])
         new_attrs = SortedDict(sort_new_attrs)
 
         obj = type.__new__(cls, name, bases, attrs_value)
@@ -182,5 +182,5 @@ class ConstType(type):
         return obj
 
 
-class Const(object):
+class Const(six.with_metaclass(ConstType)):
     __metaclass__ = ConstType
