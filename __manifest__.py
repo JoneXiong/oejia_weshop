@@ -8,6 +8,9 @@
     'website': 'http://www.oejia.net/',
     'application': True,
     'depends': ['base', 'mail', 'sale'],
+    'external_dependencies': {
+        'python': ['pycrypto', 'itsdangerous'],
+    },
     'data': [
         'security/ir.model.access.csv',
 
