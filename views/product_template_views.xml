@@ -2,6 +2,28 @@
 <openerp>
     <data>
 
+        <record id="product_template_form_wxapp_inherit_1020" model="ir.ui.view">
+            <field name="name">product.template.form.wxapp_inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data><xpath expr="//notebook" position="after">
+                    <group string="小程序相关">
+                        <group>
+                            <field name="wxapp_published"/>
+                            <field name="wxpp_category_id"/>
+                        </group>
+                        <group>
+                            <field name="qty_public_tpl"/>
+                            <field name="original_price"/>
+                        </group>
+                        <field name="description_wxapp"/>
+                    </group>
+                    </xpath>
+                </data>
+            </field>
+        </record>
         <menuitem action="product.product_template_action" id="product_template_menuitem_325_1536754696" name="产品" parent="parent_menu_319_1536754696" sequence="10"/>
 
     </data>
