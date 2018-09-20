@@ -9,7 +9,7 @@
     'application': True,
     'depends': ['base', 'mail', 'sale'],
     'external_dependencies': {
-        'python': ['pycrypto', 'xmltodict', 'itsdangerous'],
+        'python': ['Crypto', 'xmltodict', 'itsdangerous'],
     },
     'data': [
         'security/ir.model.access.csv',
