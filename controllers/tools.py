@@ -15,7 +15,7 @@ def get_wx_session_info(app_id, secret, code):
 
 
 def get_wx_user_info(app_id, secret, code, encrypted_data, iv):
-    session_info = get_wechat_session_info(app_id, secret, code)
+    session_info = get_wx_session_info(app_id, secret, code)
     session_key = session_info.get('session_key')
     crypt = WXBizDataCrypt(app_id, session_key)
     user_info = crypt.decrypt(encrypted_data, iv)
