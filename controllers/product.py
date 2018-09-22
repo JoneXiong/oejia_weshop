@@ -24,7 +24,7 @@ class WxappProduct(http.Controller, BaseController):
             "dateAdd": each_goods.create_date,
             "dateUpdate": each_goods.write_date,
             "id": each_goods.id,
-            "logisticsId": 0,
+            "logisticsId": 1,
             "minPrice": each_goods.list_price,
             "name": each_goods.name,
             "numberFav": each_goods.number_fav,
@@ -62,7 +62,9 @@ class WxappProduct(http.Controller, BaseController):
         return _dict
 
     @http.route('/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET'])
-    def list(self, sub_domain, categoryId=False, nameLike=False, **kwargs):
+    def list(self, sub_domain, categoryId=False, nameLike=False, page=1, pageSize=20, **kwargs):
+        page = int(page)
+        pageSize = int(pageSize)
         category_id = categoryId
         try:
             ret, entry = self._check_domain(sub_domain)
@@ -75,7 +77,7 @@ class WxappProduct(http.Controller, BaseController):
             if nameLike:
                 domain.append(('name', 'ilike', nameLike))
 
-            goods_list = request.env['product.template'].sudo().search(domain)
+            goods_list = request.env['product.template'].sudo().search(domain, offset=(page-1)*pageSize, limit=pageSize)
 
             if not goods_list:
                 return self.res_err(404)
@@ -126,5 +128,12 @@ class WxappProduct(http.Controller, BaseController):
             return self.res_err(-1, e.message)
 
     def product_info_ext(self, data, goods):
-        pass
+        data["data"]["logistics"] = {
+                "logisticsBySelf": False,
+                "isFree": False,
+                "by_self": False,
+                "feeType": 0,
+                "feeTypeStr": '按件',
+                "details": []
+            }
 
