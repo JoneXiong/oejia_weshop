@@ -80,6 +80,7 @@ class WxappUser(http.Controller, BaseController):
                 access_token = request.env(user=1)['wxapp.access_token'].create({
                     'open_id': open_id,
                     'session_key': session_key,
+                    'sub_domain': sub_domain,
                 })
 
             data = {

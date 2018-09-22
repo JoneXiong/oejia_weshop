@@ -25,7 +25,7 @@ class WxappConfig(models.Model):
     team_id = fields.Many2one('crm.team', string='所属销售渠道', required=True)
 
     @api.model
-    def get_config(self, key, sub_domain=False, obj=False):
+    def get_config(self, key, sub_domain, obj=False):
         config = self.search([('sub_domain', '=', sub_domain)])
         if obj:
             return config

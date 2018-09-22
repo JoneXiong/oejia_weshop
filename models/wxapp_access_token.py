@@ -21,13 +21,13 @@ class AccessToken(models.TransientModel):
     @api.model
     def create(self, vals):
         record = super(AccessToken, self).create(vals)
-        record.write({'token': record.generate_token()})
+        record.write({'token': record.generate_token(vals['sub_domain'])})
         return record
 
-    def generate_token(self):
-        config = self.env['wechat_mall.config.settings']
-        secret_key = config.get_config('secret', self.create_uid.id)
-        app_id = config.get_config('app_id', self.create_uid.id)
+    def generate_token(self, sub_domain):
+        config = self.env['wxapp.config']
+        secret_key = config.get_config('secret', sub_domain)
+        app_id = config.get_config('app_id', sub_domain)
         if not secret_key or not app_id:
             raise exceptions.ValidationError('未设置 secret_key 或 appId')
 
