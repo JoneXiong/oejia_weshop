@@ -21,7 +21,7 @@ class ProductTemplate(models.Model):
 
 
     def get_main_image(self):
-        base_url='https://wx.oejia.net'#self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         return '%s/web/image/product.template/%s/image/300x300'%(base_url, self.id)
 
     def get_images(self):
@@ -35,12 +35,11 @@ class ProductTemplate(models.Model):
                     "pic": '%s/web/image/product.image/%s/image/'%(base_url, obj.id)
                 }
                 _list.append(_dict)
-        else:
-            _list.append({
-                'id': self.id,
-                'goodsId': self.id,
-                'pic': '%s/web/image/product.template/%s/image/'%(base_url, self.id)
-            })
+        _list.append({
+            'id': self.id,
+            'goodsId': self.id,
+            'pic': '%s/web/image/product.template/%s/image/'%(base_url, self.id)
+        })
         return _list
 
 
@@ -50,19 +49,14 @@ class ProductProduct(models.Model):
 
     present_price = fields.Float('现价', default=0, required=True)
     qty_public = fields.Integer('库存', default=0, required=True)
-    # 字符'property_id1:value_id1,property_id2:value_id2,'
     attr_val_str = fields.Char('规格', compute='_compute_attr_val_str', store=True)
 
     @api.multi
     @api.depends('attribute_value_ids')
     def _compute_attr_val_str(self):
         for obj in self:
-            _str = ''
-            attr_val_list = obj.attribute_value_ids.sorted(key=lambda o: o.attribute_id.id)
-            for o in attr_val_list:
-                _str += '%s:%s,'%(o.attribute_id.id, o.id)
-            obj.attr_val_str = _str
+            obj.attr_val_str = ''
 
 
     def get_property_str(self):
-        return ', '.join(['%s: %s'%(e.attribute_id.name, e.name) for e in self.attribute_value_ids])
+        return ''

@@ -62,7 +62,7 @@ class WxappOrder(http.Controller, BaseController):
                     each_goods['order_id'] = order.id
                     request.env(user=1)['sale.order.line'].create(each_goods)
 
-                #mail_template = request.env.ref('wechat_mall.wechat_mall_order_create')
+                #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
                 _data = {
                     "amountReal": order.total,
@@ -337,7 +337,7 @@ class WxappOrder(http.Controller, BaseController):
 
             order.write({'customer_status': 'closed', 'state': 'cancel'})
 
-            #mail_template = request.env.ref('wechat_mall.wechat_mall_order_closed')
+            #mail_template = request.env.ref('wechat_mall_order_closed')
             #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
 
             return self.res_ok()
@@ -367,7 +367,7 @@ class WxappOrder(http.Controller, BaseController):
 
             order.write({'customer_status': 'unevaluated'})
 
-            #mail_template = request.env.ref('wechat_mall.wechat_mall_order_confirmed')
+            #mail_template = request.env.ref('wechat_mall_order_confirmed')
             #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
 
             return self.res_ok()
