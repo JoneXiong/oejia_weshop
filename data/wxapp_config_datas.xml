@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-    <data>
+    <data noupdate="1">
     
         <record id="wxapp_config_data_1" model="wxapp.config">
             <field name="app_id">app_id_xxxxxxxxxxxxxxxx</field>
