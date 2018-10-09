@@ -282,7 +282,7 @@ class WxappOrder(http.Controller, BaseController):
                         {
                             "amount": each_goods.product_id.price,
                             "goodsId": each_goods.product_id.product_tmpl_id.id,
-                            "goodsName": each_goods.product_id.name,
+                            "goodsName": each_goods.name,
                             "id": each_goods.id,
                             "number": each_goods.product_uom_qty,
                             "orderId": order.id,
@@ -319,7 +319,8 @@ class WxappOrder(http.Controller, BaseController):
 
 
     @http.route('/<string:sub_domain>/order/close', auth='public', method=['GET'])
-    def close(self, sub_domain, token=None, order_id=None, **kwargs):
+    def close(self, sub_domain, token=None, orderId=None, **kwargs):
+        order_id = orderId
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return res
