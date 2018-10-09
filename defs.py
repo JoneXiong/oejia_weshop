@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 
 from .const import Const
 
@@ -49,3 +50,22 @@ class PaymentStatus(Const):
     fail = ('fail', '失败')
 
 
+
+def hump2underline(hunp_str):
+    '''
+    驼峰形式字符串转成下划线形式
+    :param hunp_str: 驼峰形式字符串
+    :return: 字母全小写的下划线形式字符串
+    '''
+    p = re.compile(r'([a-z]|\d)([A-Z])')
+    sub = re.sub(p, r'\1_\2', hunp_str).lower()
+    return sub
+
+def underline2hump(underline_str):
+    '''
+    下划线形式字符串转成驼峰形式
+    :param underline_str: 下划线形式字符串
+    :return: 驼峰形式字符串
+    '''
+    sub = re.sub(r'(_\w)',lambda x:x.group(1)[1].upper(),underline_str)
+    return sub

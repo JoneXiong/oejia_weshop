@@ -21,8 +21,8 @@ class WxappAddress(http.Controller, BaseController):
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return res
             _data = {
-                'balance': 10,
-                'score': 10,
+                'balance': 0,
+                'score': 0,
             }
             return self.res_ok(_data)
 
