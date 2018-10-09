@@ -32,6 +32,8 @@ class WxappConfig(models.Model):
 
         if config:
             config.ensure_one()
+            if key=='mallName':
+                key = 'mall_name'
             return config.__getattribute__(key)
         else:
             return False
