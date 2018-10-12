@@ -58,4 +58,4 @@ class WxappUser(models.Model):
     @api.depends('partner_id')
     def _compute_address_ids(self):
         for obj in self:
-            self.address_ids = self.partner_id.child_ids.filtered(lambda r: r.type == 'delivery')
+            obj.address_ids = obj.partner_id.child_ids.filtered(lambda r: r.type == 'delivery')
