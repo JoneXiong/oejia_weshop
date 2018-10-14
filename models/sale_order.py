@@ -13,9 +13,9 @@ class SaleOrder(models.Model):
                               required=True, string='状态', track_visibility='onchange')
 
     number_goods = fields.Integer('商品数量')
-    goods_price = fields.Float('商品总金额', requried=True, default=0)
+    # goods_price = fields.Float('商品总金额', requried=True, default=0)
     logistics_price = fields.Float('物流费用', requried=True, default=0)
-    total = fields.Float('实际支付', requried=True, default=0, track_visibility='onchange')
+    total = fields.Float('实际支付', requried=True, default=0, track_visibility='onchange', compute='_compute_pay_total', store=True)
 
     province_id = fields.Many2one('oe.province', string='省')
     city_id = fields.Many2one('oe.city', string='市')
@@ -48,3 +48,8 @@ class SaleOrder(models.Model):
     @api.depends('shipper_id', 'shipper_no')
     def _compute_traces(self):
         pass
+
+    @api.one
+    @api.depends('logistics_price', 'amount_total')
+    def _compute_pay_total(self):
+        self.total = self.amount_total + self.logistics_price

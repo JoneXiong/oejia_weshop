@@ -39,9 +39,7 @@ class WxappOrder(http.Controller, BaseController):
                 'zipcode': zipcode,
                 'partner_id': wechat_user.partner_id.id,
                 'number_goods': sum(map(lambda r: r['product_uom_qty'], goods_list)),
-                'goods_price': goods_price,
                 'logistics_price': logistics_price,
-                'total': total,
                 'province_id': province_id,
                 'city_id': city_id,
                 'district_id': district_id,
@@ -139,7 +137,7 @@ class WxappOrder(http.Controller, BaseController):
             if not product:
                 raise exceptions.ValidationError('商品不存在！')
 
-            price = product.present_price or goods.list_price
+            price = product.get_present_price()
             total = price * amount
             property_str = product.name
 
@@ -263,7 +261,7 @@ class WxappOrder(http.Controller, BaseController):
                 "code": 0,
                 "data": {
                     "orderInfo": {
-                        "amount": order.goods_price,
+                        "amount": order.amount_total,
                         "amountLogistics": order.logistics_price,
                         "amountReal": order.total,
                         "dateAdd": order.create_date,
@@ -280,7 +278,7 @@ class WxappOrder(http.Controller, BaseController):
                     },
                     "goods": [
                         {
-                            "amount": each_goods.product_id.price,
+                            "amount": each_goods.price_unit,
                             "goodsId": each_goods.product_id.product_tmpl_id.id,
                             "goodsName": each_goods.name,
                             "id": each_goods.id,

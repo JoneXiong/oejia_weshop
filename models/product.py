@@ -60,3 +60,6 @@ class ProductProduct(models.Model):
 
     def get_property_str(self):
         return ''
+
+    def get_present_price(self):
+        return self.lst_price or self.product_tmpl_id.list_price
