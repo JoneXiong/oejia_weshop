@@ -350,6 +350,9 @@ class WxappOrder(http.Controller, BaseController):
 
     @http.route('/<string:sub_domain>/order/delivery', auth='public', method=['GET'])
     def delivery(self, sub_domain, token=None, orderId=None, **kwargs):
+        '''
+        确认收货接口
+        '''
         order_id = orderId
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
@@ -381,6 +384,7 @@ class WxappOrder(http.Controller, BaseController):
     @http.route('/<string:sub_domain>/order/reputation', auth='public', method=['GET'])
     def reputation(self, sub_domain, token=None, order_id=None, reputation=2, **kwargs):
         '''
+        评论接口
         {
             "token": "xxx",
             "orderId": "4",
@@ -395,6 +399,7 @@ class WxappOrder(http.Controller, BaseController):
             post_json = json.loads(kwargs.pop('postJsonString'))
             token = post_json.get('token',None)
             order_id = post_json.get('orderId',None)
+            reputations = post_json.get('reputations',[])
 
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return res
@@ -411,6 +416,9 @@ class WxappOrder(http.Controller, BaseController):
                 return self.res_err(404)
 
             order.write({'customer_status': 'completed'})
+
+            for reputation in reputations:
+                # 保存评论
 
             return request.make_response(json.dumps({'code': 0, 'msg': 'success'}))
 
