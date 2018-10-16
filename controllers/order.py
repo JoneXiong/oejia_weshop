@@ -30,6 +30,7 @@ class WxappOrder(http.Controller, BaseController):
             district_id = int(kwargs.pop('districtId')) if 'districtId' in kwargs.keys() else False
             zipcode = kwargs.pop('code')
             calculate = kwargs.pop('calculate', False)
+            remark = kwargs.pop('remark', '')
 
             goods_price, logistics_price, total, goods_list = self.parse_goods_json(
                 goods_json, province_id, city_id, district_id, calculate
@@ -43,7 +44,8 @@ class WxappOrder(http.Controller, BaseController):
                 'province_id': province_id,
                 'city_id': city_id,
                 'district_id': district_id,
-                'team_id': entry.team_id.id
+                'team_id': entry.team_id.id,
+                'note': remark,
             }
             order_dict.update(kwargs)
 
