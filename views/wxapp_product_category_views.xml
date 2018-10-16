@@ -6,6 +6,7 @@
             <field name="name">wxapp.product.category.view_tree</field>
             <field name="model">wxapp.product.category</field>
             <field name="type">tree</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <tree string="商品分类">
                <field name="name"/>
@@ -21,6 +22,7 @@
             <field name="name">wxapp.product.category.view_form</field>
             <field name="model">wxapp.product.category</field>
             <field name="type">form</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <form string="商品分类" version="7.0">
                     <sheet>

@@ -6,6 +6,7 @@
             <field name="name">oe.district.view_tree</field>
             <field name="model">oe.district</field>
             <field name="type">tree</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <tree string="区" create="0" delete="0">
                <field name="name"/>
@@ -17,6 +18,7 @@
             <field name="name">oe.district.view_form</field>
             <field name="model">oe.district</field>
             <field name="type">form</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <form string="区" version="7.0" create="0" delete="0" edit="0" save="0" cancel="0" duplicate="0">
                     <sheet>
@@ -34,6 +36,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="target">current</field>
+            <field name="help" type="html"><p></p></field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('oe_district_view_tree_1014')}),

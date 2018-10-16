@@ -6,6 +6,7 @@
             <field name="name">wxapp.config.view_tree</field>
             <field name="model">wxapp.config</field>
             <field name="type">tree</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <tree string="小程序设置">
                <field name="mall_name"/>
@@ -19,6 +20,7 @@
             <field name="name">wxapp.config.view_form</field>
             <field name="model">wxapp.config</field>
             <field name="type">form</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <form string="小程序设置" create="0" delete="0" duplicate="0">
                     <sheet>
@@ -47,6 +49,7 @@
             <field name="view_mode">tree,form</field>
             <field name="target">current</field>
             <field name="res_id">1</field>
+            <field name="help" type="html"><p></p></field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_config_view_form_1003')}),

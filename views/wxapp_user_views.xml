@@ -6,6 +6,7 @@
             <field name="name">wxapp.user.view_tree</field>
             <field name="model">wxapp.user</field>
             <field name="type">tree</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <tree string="小程序用户">
 
@@ -19,8 +20,6 @@
                <field name="language"/>
                <field name="gender"/>
 
-                    <field name="open_id"/>
-                    <field name="union_id"/>
                <field name="partner_id"/>
                     <field name="create_date" string="注册时间"/>
                     <field name="last_login"/>
@@ -39,6 +38,7 @@
             <field name="name">wxapp.user.view_form</field>
             <field name="model">wxapp.user</field>
             <field name="type">form</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <form string="小程序用户" version="7.0">
                     <sheet>
@@ -76,6 +76,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="target">current</field>
+            <field name="help" type="html"><p></p></field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('wxapp_user_view_tree_1004')}),

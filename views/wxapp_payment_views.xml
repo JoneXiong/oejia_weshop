@@ -6,6 +6,7 @@
             <field name="name">wxapp.payment.view_tree</field>
             <field name="model">wxapp.payment</field>
             <field name="type">tree</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <tree string="支付记录" create="0" delete="0">
                <field name="wechat_user_id"/>
@@ -30,6 +31,7 @@
             <field name="name">wxapp.payment.view_form</field>
             <field name="model">wxapp.payment</field>
             <field name="type">form</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <form string="支付记录" version="7.0">
                     <sheet>
@@ -69,7 +71,7 @@
                           (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_payment_view_form_1019')}),
                     ]"/>
         </record>
-        <menuitem action="wxapp_payment_action_413" id="wxapp_payment_menuitem_336_1536754696" name="支付记录" parent="parent_menu_319_1536754696" sequence="10"/>
+        <menuitem action="wxapp_payment_action_413" id="wxapp_payment_menuitem_336_1536754696" name="支付记录" parent="parent_menu_319_1536754696" sequence="12"/>
 
     </data>
 </openerp>

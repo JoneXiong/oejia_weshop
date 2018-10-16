@@ -53,3 +53,33 @@ class SaleOrder(models.Model):
     @api.depends('logistics_price', 'amount_total')
     def _compute_pay_total(self):
         self.total = self.amount_total + self.logistics_price
+
+
+    @api.multi
+    def write(self, vals):
+        result = super(SaleOrder, self).write(vals)
+        if 'shipper_id' in vals:
+            self.delivery()
+        return result
+
+    @api.multi
+    def delivery(self):
+        pass
+
+    def delivery_window(self):
+        self.ensure_one()
+        return {
+            'name': '送货',
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'res_id': self.id,
+            'view_mode': 'form',
+            'view_type': 'form',
+            'view_id': self.env.ref('oejia_weshop.sale_order_view_form_1029').id,
+            'target': 'new',
+            'domain': [],
+            'context': {
+                'default_customer_status': 'unconfirmed'
+            }
+        }
+

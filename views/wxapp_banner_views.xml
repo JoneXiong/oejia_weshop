@@ -6,6 +6,7 @@
             <field name="name">wxapp.banner.view_tree</field>
             <field name="model">wxapp.banner</field>
             <field name="type">tree</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <tree string="横幅">
                <field name="title"/>
@@ -20,6 +21,7 @@
             <field name="name">wxapp.banner.view_form</field>
             <field name="model">wxapp.banner</field>
             <field name="type">form</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <form string="横幅" version="7.0">
                     <sheet>
@@ -42,6 +44,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="target">current</field>
+            <field name="help" type="html"><p></p></field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('wxapp_banner_view_tree_1000')}),

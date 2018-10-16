@@ -2,6 +2,35 @@
 <openerp>
     <data>
 
+        <record id="sale_order_view_form_1029" model="ir.ui.view">
+            <field name="name">sale.order.view_form</field>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <form string="销售订单" version="7.0">
+                    <sheet>
+                    <group>
+               <field name="shipper_id"/>
+               <field name="shipper_no"/>
+               <field name="customer_status" invisible="1"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="sale_order_form_weshop_inherit_1030" model="ir.ui.view">
+            <field name="name">sale.order.form_weshop_inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_invoice']" position="after">
+                        <field name="customer_status" invisible="1"/>
+                        <button class="btn-success" name="delivery_window" string="发货" type="object" attrs="{'invisible': [('customer_status', '!=', 'pending')]}"/>
+                </xpath>
+            </field>
+        </record>
         <menuitem action="sale.action_quotations" id="sale_order_menuitem_335_1536754696" name="订单" parent="parent_menu_319_1536754696" sequence="0"/>
 
     </data>

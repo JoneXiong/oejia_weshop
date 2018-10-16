@@ -6,6 +6,7 @@
             <field name="name">oe.shipper.view_tree</field>
             <field name="model">oe.shipper</field>
             <field name="type">tree</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <tree string="承运商">
                <field name="code"/>
@@ -17,6 +18,7 @@
             <field name="name">oe.shipper.view_form</field>
             <field name="model">oe.shipper</field>
             <field name="type">form</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <form string="承运商" version="7.0">
                     <sheet>
