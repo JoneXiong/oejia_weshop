@@ -419,6 +419,7 @@ class WxappOrder(http.Controller, BaseController):
 
             for reputation in reputations:
                 # 保存评论
+                pass
 
             return request.make_response(json.dumps({'code': 0, 'msg': 'success'}))
 
