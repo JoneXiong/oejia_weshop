@@ -37,7 +37,3 @@ class Payment(models.Model):
         'wechat payment payment_number is existed！'
     )]
 
-    @api.model
-    def create(self, vals):
-        vals['payment_number'] = self.env['ir.sequence'].next_by_code('wxapp.payment_num')
-        return super(Payment, self).create(vals)
