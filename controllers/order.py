@@ -29,6 +29,7 @@ class WxappOrder(http.Controller, BaseController):
             city_id = int(kwargs.pop('cityId'))
             district_id = int(kwargs.pop('districtId')) if 'districtId' in kwargs.keys() else False
             zipcode = kwargs.pop('code')
+            link_man = kwargs.pop('linkMan')
             calculate = kwargs.pop('calculate', False)
             remark = kwargs.pop('remark', '')
 
@@ -46,6 +47,7 @@ class WxappOrder(http.Controller, BaseController):
                 'district_id': district_id,
                 'team_id': entry.team_id.id,
                 'note': remark,
+                'linkman': link_man,
             }
             order_dict.update(kwargs)
 
@@ -254,11 +256,6 @@ class WxappOrder(http.Controller, BaseController):
             if not order:
                 return self.res_err(404)
 
-            if order.shipper_traces:
-                traces = json.loads(order.shipper_traces).get('data', {})
-            else:
-                traces = {}
-
             data = {
                 "code": 0,
                 "data": {
@@ -301,15 +298,14 @@ class WxappOrder(http.Controller, BaseController):
                         "provinceId": order.province_id.id,
                         "shipperCode": order.shipper_id.code if order.shipper_id else '',
                         "shipperName": order.shipper_id.name if order.shipper_id else '',
-                        "status": int(traces.get('State', 0)) if order.shipper_id else '',
+                        "status": 0 if order.shipper_id else '',
                         "trackingNumber": order.shipper_no if order.shipper_no else ''
                     },
                 },
                 "msg": "success"
             }
-            traces_list = traces.get('Traces')
-            if traces_list:
-                data["data"]["logisticsTraces"] = traces_list
+            if order.shipper_no:
+                self.build_traces(order, data)
 
             return self.res_ok(data["data"])
 
@@ -317,6 +313,8 @@ class WxappOrder(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.message)
 
+    def build_traces(self, order, data):
+        pass
 
     @http.route('/<string:sub_domain>/order/close', auth='public', method=['GET'])
     def close(self, sub_domain, token=None, orderId=None, **kwargs):
