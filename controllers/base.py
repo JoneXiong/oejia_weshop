@@ -41,15 +41,16 @@ class BaseController(object):
         wxapp_entry = request.env['wxapp.config'].sudo().search([('sub_domain', '=', sub_domain)])
         if not wxapp_entry:
             return self.res_err(404), None
-        return None, wxapp_entry
+        return None, wxapp_entry[0]
 
     def _check_user(self, sub_domain, token):
-        user = request.env['wxapp.config'].sudo().search([('sub_domain', '=', sub_domain)])
-        if not user:
-            return self.res_err(404), None, user
+        wxapp_entry = request.env['wxapp.config'].sudo().search([('sub_domain', '=', sub_domain)])
+        if not wxapp_entry:
+            return self.res_err(404), None, wxapp_entry
 
+        wxapp_entry =wxapp_entry[0]
         if not token:
-            return self.res_err(300), None, user
+            return self.res_err(300), None, wxapp_entry
 
         access_token = request.env(user=1)['wxapp.access_token'].search([
             ('token', '=', token),
@@ -57,7 +58,7 @@ class BaseController(object):
         ])
 
         if not access_token:
-            return self.res_err(901), None, user
+            return self.res_err(901), None, wxapp_entry
 
         wechat_user = request.env(user=1)['wxapp.user'].search([
             ('open_id', '=', access_token.open_id),
@@ -65,9 +66,9 @@ class BaseController(object):
         ])
 
         if not wechat_user:
-            return self.res_err(10000), None, user
+            return self.res_err(10000), None, wxapp_entry
 
-        return None, wechat_user, user
+        return None, wechat_user, wxapp_entry
 
 
     def res_ok(self, data=None):

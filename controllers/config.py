@@ -25,20 +25,15 @@ class WxappConfig(http.Controller, BaseController):
             if not key:
                 return self.res_err(300)
 
-            config = request.env['wxapp.config'].sudo()
-            value_obj = config.get_config(key, sub_domain, obj=True)
-            if not value_obj:
-                return self.res_err(404)
-
             data = {
-                'creatAt': value_obj.create_date,
+                'creatAt': entry.create_date,
                 'dateType': 0,
-                'id': value_obj.id,
+                'id': entry.id,
                 'key': key,
                 'remark': '',
-                'updateAt': value_obj.write_date,
+                'updateAt': entry.write_date,
                 'userId': entry.id,
-                'value': config.get_config(key, sub_domain)
+                'value': entry.get_config(key, sub_domain)
             }
             return self.res_ok(data)
 
