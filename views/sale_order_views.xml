@@ -27,6 +27,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_view_invoice']" position="after">
                         <field name="customer_status" invisible="1"/>
+                        <button class="btn-warning" name="check_pay_window" string="确认支付" type="object" attrs="{'invisible': [('customer_status', '!=', 'unpaid')]}"/>
                         <button class="btn-success" name="delivery_window" string="发货" type="object" attrs="{'invisible': [('customer_status', '!=', 'pending')]}"/>
                 </xpath>
             </field>
