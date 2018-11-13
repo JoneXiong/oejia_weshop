@@ -19,6 +19,12 @@ oejia_weshop 是 Odoo 对接微信小程序实现的商城应用。
 4. 进入【设置】-【对接设置】页填写你的微信小程序相关对接信息
 5. 小程序客户端: 使用的开源项目 [wechat-app-mall](https://github.com/EastWorld/wechat-app-mall), 下载后修改接口api调用路径为您的odoo url即可，开参考[这里](https://github.com/JoneXiong/wechat-app-mall/commit/8e9398161fc20af60502d4e41e6a20c5f24f3502)修改，或者直接使用我们[fork的版本](https://github.com/JoneXiong/wechat-app-mall)
 
+## 试用
+
+关注官方公众号“oejia客优云”，点击菜单“演示&体验”即可获取测试体验账号
+
+![官方公众号](http://oejia.net/static/img/oejia_gzh.jpg)
+
 ## 效果
 ![用户管理](http://oejia.net/files/201809/13165725703.jpeg)
 
