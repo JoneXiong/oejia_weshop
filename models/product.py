@@ -42,6 +42,12 @@ class ProductTemplate(models.Model):
         })
         return _list
 
+    def get_present_qty(self):
+        return self.qty_public_tpl
+
+    def change_qty(self, val):
+        self.write({'qty_public_tpl': self.qty_public_tpl + val})
+
 
 class ProductProduct(models.Model):
 
@@ -63,3 +69,9 @@ class ProductProduct(models.Model):
 
     def get_present_price(self):
         return self.lst_price or self.product_tmpl_id.list_price
+
+    def get_present_qty(self):
+        return self.qty_public
+
+    def change_qty(self, val):
+        self.write({'qty_public': self.qty_public + val})

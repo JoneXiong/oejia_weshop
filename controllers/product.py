@@ -39,7 +39,7 @@ class WxappProduct(http.Controller, BaseController):
             "shopId": 0,
             "status": 0 if each_goods.wxapp_published else 1,
             "statusStr": '上架' if each_goods.wxapp_published else '下架',
-            "stores": each_goods.qty_public_tpl,
+            "stores": each_goods.get_present_qty(),
             "userId": each_goods.create_uid.id,
             "views": each_goods.views,
             "weight": each_goods.weight

@@ -155,9 +155,9 @@ class WxappOrder(http.Controller, BaseController):
                 # todo 发送库存空预警
                 pass
             if not calculate:
-                product.sudo().write({'qty_public': stores})
+                product.sudo().change_qty(-amount)
                 if not property_child_ids:
-                    goods.sudo().write({'qty_public_tpl': stores})
+                    goods.sudo().change_qty(-amount)
 
         return price, total, property_str, product
 
