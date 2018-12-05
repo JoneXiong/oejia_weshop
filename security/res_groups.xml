@@ -12,6 +12,7 @@
         <field name="name">小程序配置</field>
         <field name="category_id" ref="oejia_weshop.module_cate62"/>
         <field name="users" eval="[
+			(4, ref('base.user_admin')),
 		]"/>
     </record>
 	
@@ -19,6 +20,7 @@
         <field name="name">小程序销售</field>
         <field name="category_id" ref="oejia_weshop.module_cate62"/>
         <field name="users" eval="[
+			(4, ref('base.user_admin')),
 		]"/>
     </record>
 	
