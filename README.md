@@ -13,7 +13,7 @@ oejia_weshop 是 Odoo 对接微信小程序实现的商城应用。
 * 支持 Odoo 10.0、11.0、12.0
 
 ## 使用
-1. 下载源码
+1. 下载源码 (odoo10、11为master分支，odoo12为12.0分支）
 2. 将整个oejia_weshop 目录放到你的 addons 目录下
 3. 安装依赖的python库：xmltodict、pycrypto、itsdangerous；安装模块，可以看到产生了顶部“小程”主菜单
 4. 进入【设置】-【对接设置】页填写你的微信小程序相关对接信息
