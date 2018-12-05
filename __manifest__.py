@@ -12,6 +12,7 @@
         'python': ['Crypto', 'xmltodict', 'itsdangerous'],
     },
     'data': [
+        'security/res_groups.xml',
         'security/ir.model.access.csv',
 
         'views/parent_menus.xml',

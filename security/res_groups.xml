@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+    <record id="module_cate62" model="ir.module.category">
+        <field name="name">小程序</field>
+        <field name="description">False</field>
+        <field name="sequence">0</field>
+    </record>
+	
+	
+    <record id="group_wxapp_config" model="res.groups">
+        <field name="name">小程序配置</field>
+        <field name="category_id" ref="oejia_weshop.module_cate62"/>
+        <field name="users" eval="[
+		]"/>
+    </record>
+	
+    <record id="group_wxapp_sale" model="res.groups">
+        <field name="name">小程序销售</field>
+        <field name="category_id" ref="oejia_weshop.module_cate62"/>
+        <field name="users" eval="[
+		]"/>
+    </record>
+	
+</odoo>
