@@ -10,6 +10,8 @@ from . import product
 from . import user
 from . import address
 from . import order
+from . import notice
+from . import score
 
 
 from odoo.http import root, JsonRequest, HttpRequest
