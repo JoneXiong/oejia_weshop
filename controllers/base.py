@@ -89,4 +89,5 @@ class BaseController(object):
 
 def convert_static_link(request, html):
     base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
+    html = html.replace('<p>', '').replace('</p>', '')
     return html.replace('src="', 'src="{base_url}'.format(base_url=base_url))
