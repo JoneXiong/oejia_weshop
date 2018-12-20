@@ -17,7 +17,8 @@ from odoo.http import root, JsonRequest, HttpRequest
 
 def get_request(self, httprequest):
     if 'User-Agent' in httprequest.headers and 'MicroMessenger' in httprequest.headers['User-Agent']:
-        return HttpRequest(httprequest)
+        if httprequest.mimetype=="application/json":
+            return HttpRequest(httprequest)
     if httprequest.args.get('jsonp'):
         return JsonRequest(httprequest)
     if httprequest.mimetype in ("application/json", "application/json-rpc"):
