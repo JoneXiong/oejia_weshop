@@ -79,7 +79,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.message)
+            return self.res_err(-1, e.name)
 
     def parse_goods_json(self, goods_json, province_id, city_id, district_id, calculate):
         """
@@ -145,9 +145,9 @@ class WxappOrder(http.Controller, BaseController):
             total = price * amount
             property_str = product.name
 
-            stores = product.qty_public - amount
+            stores = product.get_present_qty() - amount
             if not property_child_ids:
-                stores = goods.qty_public_tpl - amount
+                stores = goods.get_present_qty() - amount
 
             if stores < 0:
                 raise exceptions.ValidationError('库存不足！')
@@ -196,7 +196,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.message)
+            return self.res_err(-1, e.name)
 
 
     @http.route('/<string:sub_domain>/order/list', auth='public', method=['GET'])
@@ -235,7 +235,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.message)
+            return self.res_err(-1, e.name)
 
 
     @http.route('/<string:sub_domain>/order/detail', auth='public', method=['GET'])
@@ -311,7 +311,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.message)
+            return self.res_err(-1, e.name)
 
     def build_traces(self, order, data):
         pass
@@ -343,7 +343,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.message)
+            return self.res_err(-1, e.name)
 
 
     @http.route('/<string:sub_domain>/order/delivery', auth='public', method=['GET'])
@@ -376,7 +376,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.message)
+            return self.res_err(-1, e.name)
 
 
     @http.route('/<string:sub_domain>/order/reputation', auth='public', method=['GET'])
@@ -423,7 +423,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.message)
+            return self.res_err(-1, e.name)
 
 
     @http.route('/<string:sub_domain>/order/pay', auth='public', method=['POST'], csrf=False)
@@ -449,5 +449,5 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.message)
+            return self.res_err(-1, e.name)
 
