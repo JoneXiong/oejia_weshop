@@ -125,7 +125,6 @@ class WxappProduct(http.Controller, BaseController):
             }
             self.product_info_ext(data, goods, product)
 
-            _logger.info(str(data))
             goods.sudo().write({'views': goods.views + 1})
             return self.res_ok(data['data'])
 
