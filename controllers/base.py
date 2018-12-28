@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import json
+from datetime import date, datetime, time
 
 from odoo import http, exceptions
 from odoo.http import request
+from odoo.loglevels import ustr
 
 from .. import defs
 
@@ -33,6 +35,18 @@ error_code = {
     404: u'暂无数据',
     10000: u'微信用户未注册'
 }
+
+
+def json_default(obj):
+    """
+    Properly serializes date and datetime objects.
+    """
+    from odoo import fields
+    if isinstance(obj, date):
+        if isinstance(obj, datetime):
+            return fields.Datetime.to_string(obj)
+        return fields.Date.to_string(obj)
+    return ustr(obj)
 
 
 class BaseController(object):
@@ -77,7 +91,7 @@ class BaseController(object):
             ret['data'] = data
         return request.make_response(
             headers={'Content-Type': 'json'},
-            data=json.dumps(ret)
+            data=json.dumps(ret, default=json_default)
         )
 
     def res_err(self, code, data=None):
