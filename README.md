@@ -47,9 +47,9 @@ Odoo后台
 
 扩展功能模块 [oejia_weshop_ent](https://www.calluu.cn/shop/product/odoo-12)
 
-小程序客服集成 [http://oejia.net/blog/2018/12/21/odoo_kf.html](http://oejia.net/blog/2018/12/21/odoo_kf.html)
+融合微商城的全功能进销存系统套件 [https://sale.calluu.cn/](https://sale.calluu.cn/)
 
-融合微商城的全功能进销存系统套件 [http://oejia.net/](http://oejia.net/)
+小程序客服集成 [http://oejia.net/blog/2018/12/21/odoo_kf.html](http://oejia.net/blog/2018/12/21/odoo_kf.html)
 
 
 ## 交流
