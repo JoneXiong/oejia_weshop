@@ -334,7 +334,8 @@ class WxappOrder(http.Controller, BaseController):
             if not order:
                 return self.res_err(404)
 
-            order.write({'customer_status': 'closed', 'state': 'cancel'})
+            order.write({'customer_status': 'closed'})
+            order.action_cancel()
 
             #mail_template = request.env.ref('wechat_mall_order_closed')
             #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
@@ -444,7 +445,8 @@ class WxappOrder(http.Controller, BaseController):
             if not order:
                 return self.res_err(404)
 
-            order.write({'customer_status': 'pending', 'state': 'sale'})
+            order.write({'customer_status': 'pending'})
+            order.action_confirm()
             return request.make_response(json.dumps({'code': 0, 'msg': 'success'}))
 
         except Exception as e:
