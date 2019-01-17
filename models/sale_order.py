@@ -100,7 +100,7 @@ class SaleOrder(models.Model):
         return {
             'name': u'确认订单已支付',
             'type': 'ir.actions.act_window',
-            'res_model': 'wx.confirm',
+            'res_model': 'wxapp.confirm',
             'res_id': None,
             'view_mode': 'form',
             'view_type': 'form',
