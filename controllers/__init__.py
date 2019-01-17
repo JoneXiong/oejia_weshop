@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 
 from types import MethodType
 
@@ -16,9 +17,10 @@ from . import score
 
 from odoo.http import root, JsonRequest, HttpRequest
 
+_logger = logging.getLogger(__name__)
 
 def get_request(self, httprequest):
-    if 'User-Agent' in httprequest.headers and 'MicroMessenger' in httprequest.headers['User-Agent']:
+    if 'Referer' in httprequest.headers and 'servicewechat.com' in httprequest.headers['Referer']:
         if httprequest.mimetype=="application/json":
             return HttpRequest(httprequest)
     if httprequest.args.get('jsonp'):
@@ -27,5 +29,4 @@ def get_request(self, httprequest):
         return JsonRequest(httprequest)
     else:
         return HttpRequest(httprequest)
-
 root.get_request = MethodType(get_request, root)
