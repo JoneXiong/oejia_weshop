@@ -71,7 +71,7 @@ class WxappProduct(http.Controller, BaseController):
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
 
-            domain = [('wxapp_published', '=', True)]
+            domain = [('sale_ok', '=', True), ('wxapp_published', '=', True)]
             if category_id:
                 cate_ids = [int(category_id)] + request.env['wxapp.product.category'].sudo().browse(int(category_id)).child_ids.ids
                 domain.append(('wxpp_category_id', 'in', cate_ids))

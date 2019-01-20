@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
                               required=True, string='状态', track_visibility='onchange')
 
     number_goods = fields.Integer('商品数量')
-    # goods_price = fields.Float('商品总金额', requried=True, default=0)
+    goods_price = fields.Float('商品总金额', requried=True, default=0, compute='_compute_pay_total', store=True)
     logistics_price = fields.Float('物流费用', requried=True, default=0)
     total = fields.Float('实际支付', requried=True, default=0, track_visibility='onchange', compute='_compute_pay_total', store=True)
 
@@ -56,6 +56,7 @@ class SaleOrder(models.Model):
     @api.depends('logistics_price', 'amount_total')
     def _compute_pay_total(self):
         self.total = self.amount_total
+        self.goods_price = self.amount_total - self.logistics_price
 
 
     @api.multi
