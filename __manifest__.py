@@ -34,6 +34,7 @@
         'views/sale_order_views.xml',
 
         'data/wxapp_config_datas.xml',
+        'data/product_product_datas.xml',
 
     ],
     'demo': [

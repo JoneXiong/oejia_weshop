@@ -63,11 +63,17 @@ class WxappOrder(http.Controller, BaseController):
                 for each_goods in goods_list:
                     each_goods['order_id'] = order.id
                     request.env(user=1)['sale.order.line'].create(each_goods)
+                if logistics_price>0:
+                    request.env(user=1)['sale.order.line'].create({
+                        'product_id': request.env.ref('oejia_weshop.product_product_delivery_weshop'),
+                        'price_unit': logistics_price,
+                        'product_uom_qty': 1,
+                    })
 
                 #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
                 _data = {
-                    "amountReal": order.total,
+                    "amountReal": order.amount_total,
                     "dateAdd": order.create_date,
                     "id": order.id,
                     "orderNumber": order.name,
@@ -214,10 +220,10 @@ class WxappOrder(http.Controller, BaseController):
                 orders = request.env['sale.order'].search([
                     ('partner_id', '=', wechat_user.partner_id)
                 ])
-
+            delivery_product_id = request.env.ref('oejia_weshop.product_product_delivery_weshop')
             data = {
                 "orderList": [{
-                    "amountReal": each_order.total,
+                    "amountReal": each_order.amount_total,
                     "dateAdd": each_order.create_date,
                     "id": each_order.id,
                     "orderNumber": each_order.name,
@@ -228,7 +234,7 @@ class WxappOrder(http.Controller, BaseController):
                     each_order.id: [
                         {
                             "pic": each_goods.product_id.product_tmpl_id.get_main_image(),
-                        } for each_goods in each_order.order_line]
+                        } for each_goods in each_order.order_line if each_goods.product_id.id!=delivery_product_id]
                     for each_order in orders}
             }
             return self.res_ok(data)
@@ -260,9 +266,9 @@ class WxappOrder(http.Controller, BaseController):
                 "code": 0,
                 "data": {
                     "orderInfo": {
-                        "amount": order.amount_total,
+                        "amount": order.amount_total - order.logistics_price,
                         "amountLogistics": order.logistics_price,
-                        "amountReal": order.total,
+                        "amountReal": order.amount_total,
                         "dateAdd": order.create_date,
                         "dateUpdate": order.write_date,
                         "goodsNumber": order.number_goods,

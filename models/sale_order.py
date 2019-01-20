@@ -55,7 +55,7 @@ class SaleOrder(models.Model):
     @api.one
     @api.depends('logistics_price', 'amount_total')
     def _compute_pay_total(self):
-        self.total = self.amount_total + self.logistics_price
+        self.total = self.amount_total
 
 
     @api.multi
