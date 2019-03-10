@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="product.product_template_form_view" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <data><xpath expr="//notebook" position="after">
+                <data><xpath expr="//page[@name='general_information']" position="inside">
                     <group string="小程序相关">
                         <group>
                             <field name="wxapp_published"/>
