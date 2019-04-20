@@ -15,6 +15,8 @@ _logger = logging.getLogger(__name__)
 
 
 error_code = {
+    -99: '', # 其他异常
+    -2: u'用户名或密码不正确',
     -1: u'服务器内部错误',
     0: u'接口调用成功',
     403: u'禁止访问',
@@ -95,7 +97,7 @@ class BaseController(object):
         )
 
     def res_err(self, code, data=None):
-        ret = {'code': code, 'msg': error_code[code]}
+        ret = {'code': code, 'msg': error_code[code] or data}
         if data:
             ret['data'] = data
         return request.make_response(json.dumps(ret))

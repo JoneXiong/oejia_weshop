@@ -2,13 +2,14 @@
 
 import json
 
+import odoo
 from odoo import http
 from odoo.http import request
 from odoo import fields
 
 from .. import defs
 from .base import BaseController
-from .tools import get_wx_session_info, get_wx_user_info
+from .tools import get_wx_session_info, get_wx_user_info, get_decrypt_info
 
 import logging
 
@@ -138,3 +139,61 @@ class WxappUser(http.Controller, BaseController):
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, e.name)
+
+    def get_user_info(self, wechat_user):
+        data = {
+            'base':{
+                'mobile': wechat_user.phone,
+            },
+        }
+        return data
+
+    @http.route('/<string:sub_domain>/user/detail', auth='public', methods=['GET'])
+    def detail(self, sub_domain, token=None):
+        try:
+            res, wechat_user, entry = self._check_user(sub_domain, token)
+            if res:return res
+
+            data = self.get_user_info(wechat_user)
+            return self.res_ok(data)
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, e.name)
+
+    @http.route('/<string:sub_domain>/user/wxapp/bindMobile', auth='public', methods=['GET'])
+    def bind_mobile(self, sub_domain, token=None, encryptedData=None, iv=None, **kwargs):
+        try:
+            res, wechat_user, entry = self._check_user(sub_domain, token)
+            if res:return res
+
+            config = request.env['wxapp.config'].sudo()
+
+            encrypted_data = encryptedData
+            if not token or not encrypted_data or not iv:
+                return self.res_err(300)
+
+            app_id = config.get_config('app_id', sub_domain)
+            secret = config.get_config('secret', sub_domain)
+
+            if not app_id or not secret:
+                return self.res_err(404)
+
+            access_token = request.env(user=1)['wxapp.access_token'].search([
+                ('token', '=', token),
+            ])
+            if not access_token:
+                return self.res_err(901)
+            session_key = access_token[0].session_key
+
+            _logger.info('>>> decrypt: %s %s %s %s', app_id, session_key, encrypted_data, iv)
+            user_info = get_decrypt_info(app_id, session_key, encrypted_data, iv)
+            _logger.info('>>> bind_mobile: %s', user_info)
+            wechat_user.write({'phone': user_info.get('phoneNumber')})
+
+            return self.res_ok()
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, e.name)
+

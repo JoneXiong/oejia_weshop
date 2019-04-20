@@ -21,3 +21,8 @@ def get_wx_user_info(app_id, secret, code, encrypted_data, iv):
     user_info = crypt.decrypt(encrypted_data, iv)
     return session_key, user_info
 
+def get_decrypt_info(app_id, session_key, encrypted_data, iv):
+    crypt = WXBizDataCrypt(app_id, session_key)
+    _info = crypt.decrypt(encrypted_data, iv)
+    return _info
+
