@@ -172,7 +172,7 @@ class WxappOrder(http.Controller, BaseController):
         return 0
 
 
-    @http.route('/<string:sub_domain>/order/statistics', auth='public', method=['GET'])
+    @http.route('/<string:sub_domain>/order/statistics', auth='public', method=['GET', 'POST'], csrf=False)
     def statistics(self, sub_domain, token=None, **kwargs):
         '''
         closed = ('closed', u'已关闭')
@@ -206,7 +206,7 @@ class WxappOrder(http.Controller, BaseController):
             return self.res_err(-1, e.name)
 
 
-    @http.route('/<string:sub_domain>/order/list', auth='public', method=['GET'])
+    @http.route('/<string:sub_domain>/order/list', auth='public', method=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, token=None, status=None, **kwargs):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
@@ -227,6 +227,7 @@ class WxappOrder(http.Controller, BaseController):
                     "amountReal": each_order.amount_total,
                     "dateAdd": each_order.create_date,
                     "id": each_order.id,
+                    "remark": each_order.note,
                     "orderNumber": each_order.name,
                     "status": defs.OrderResponseStatus.attrs[each_order.customer_status],
                     "statusStr": defs.OrderStatus.attrs[each_order.customer_status],
