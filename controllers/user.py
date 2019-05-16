@@ -126,7 +126,7 @@ class WxappUser(http.Controller, BaseController):
             if hasattr(request, 'user_id'):
                 user_id = request.user_id
 
-            request.env(user=1)['wxapp.user'].create({
+            vals = {
                 'name': user_info['nickName'],
                 'open_id': user_info['openId'],
                 'gender': user_info['gender'],
@@ -138,7 +138,12 @@ class WxappUser(http.Controller, BaseController):
                 'register_ip': request.httprequest.remote_addr,
                 'user_id': user_id,
                 'partner_id': user_id and request.env['res.users'].sudo().browse(user_id).partner_id.id or None,
-            })
+            }
+            if user_id:
+                vals['user_id'] = user_id
+                vals['partner_id'] = request.env['res.users'].sudo().browse(user_id).partner_id.id
+                vals.pop('name')
+            request.env(user=1)['wxapp.user'].create(vals)
             return self.res_ok()
 
         except AttributeError:
