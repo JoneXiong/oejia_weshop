@@ -33,6 +33,7 @@
                <field name="icon"/>
                <field name="is_use"/>
                <field name="key"/>
+               <field name="product_template_ids"/>
                     </group>
                     </sheet>
                 </form>
