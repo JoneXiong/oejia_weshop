@@ -50,6 +50,7 @@ class WxappOrder(http.Controller, BaseController):
                 'linkman': link_man,
             }
             order_dict.update(kwargs)
+            _logger.info('>>> order_dict %s', order_dict)
 
             if calculate:
                 _data = {
@@ -137,6 +138,7 @@ class WxappOrder(http.Controller, BaseController):
         return goods_price, logistics_price, goods_price + logistics_price, goods_list
 
     def calculate_goods_fee(self, goods, amount, property_child_ids, calculate):
+        _logger.info('>>> calculate_goods_fee %s %s %s', goods, amount, property_child_ids)
         property_str = ''
 
         if 1:#property_child_ids:
@@ -223,6 +225,7 @@ class WxappOrder(http.Controller, BaseController):
                 ])
             delivery_product_id = request.env.ref('oejia_weshop.product_product_delivery_weshop').id
             data = {
+                "logisticsMap": {},
                 "orderList": [{
                     "amountReal": each_order.amount_total,
                     "dateAdd": each_order.create_date,
@@ -325,7 +328,7 @@ class WxappOrder(http.Controller, BaseController):
     def build_traces(self, order, data):
         pass
 
-    @http.route('/<string:sub_domain>/order/close', auth='public', method=['GET'])
+    @http.route('/<string:sub_domain>/order/close', auth='public', method=['GET', 'POST'], csrf=False)
     def close(self, sub_domain, token=None, orderId=None, **kwargs):
         order_id = orderId
         try:
@@ -343,7 +346,10 @@ class WxappOrder(http.Controller, BaseController):
             if not order:
                 return self.res_err(404)
 
-            order.write({'customer_status': 'closed'})
+            if order.state=='sale':
+                return self.res_err(-99, u'该订单已被确认，无法取消')
+
+            #order.write({'customer_status': 'closed'})
             order.action_cancel()
 
             #mail_template = request.env.ref('wechat_mall_order_closed')
@@ -436,29 +442,4 @@ class WxappOrder(http.Controller, BaseController):
             return self.res_err(-1, e.name)
 
 
-    @http.route('/<string:sub_domain>/order/pay', auth='public', method=['POST'], csrf=False)
-    def pay(self, sub_domain, token=None, orderId=None, **kwargs):
-        order_id = orderId
-        try:
-            res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
-
-            if not order_id:
-                return self.res_err(300)
-
-            order = request.env['sale.order'].sudo().search([
-                ('partner_id', '=', wechat_user.partner_id.id),
-                ('id', '=', int(order_id))
-            ])
-
-            if not order:
-                return self.res_err(404)
-
-            order.write({'customer_status': 'pending'})
-            order.action_confirm()
-            return request.make_response(json.dumps({'code': 0, 'msg': 'success'}))
-
-        except Exception as e:
-            _logger.exception(e)
-            return self.res_err(-1, e.name)
 
