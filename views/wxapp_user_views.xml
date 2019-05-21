@@ -11,6 +11,7 @@
                 <tree string="小程序用户">
 
                     <field name="name"/>
+                    <field name="nickname"/>
                     <field name="avatar"/>
                     <field name="phone"/>
 
@@ -44,6 +45,7 @@
                     <sheet>
                     <group>
                     <field name="name"/>
+                    <field name="nickname"/>
                     <field name="avatar"/>
                     <field name="phone"/>
 

@@ -128,6 +128,7 @@ class WxappUser(http.Controller, BaseController):
 
             vals = {
                 'name': user_info['nickName'],
+                'nickname': user_info['nickName'],
                 'open_id': user_info['openId'],
                 'gender': user_info['gender'],
                 'language': user_info['language'],
