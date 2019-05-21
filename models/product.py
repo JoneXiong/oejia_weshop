@@ -1,7 +1,9 @@
 # coding=utf-8
+import logging
 
 from openerp import models, fields, api
 
+_logger = logging.getLogger(__name__)
 
 class ProductTemplate(models.Model):
 
@@ -47,6 +49,9 @@ class ProductTemplate(models.Model):
 
     def change_qty(self, val):
         self.write({'qty_public_tpl': self.qty_public_tpl + val})
+
+    def get_present_price(self):
+        return self.list_price
 
 
 class ProductProduct(models.Model):
