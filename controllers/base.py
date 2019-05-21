@@ -68,7 +68,7 @@ class BaseController(object):
         if not token:
             return self.res_err(300), None, wxapp_entry
 
-        access_token = request.env(user=1)['wxapp.access_token'].search([
+        access_token = request.env['wxapp.access_token'].sudo().search([
             ('token', '=', token),
             #('create_uid', '=', user.id)
         ])
@@ -76,7 +76,7 @@ class BaseController(object):
         if not access_token:
             return self.res_err(901), None, wxapp_entry
 
-        wechat_user = request.env(user=1)['wxapp.user'].search([
+        wechat_user = request.env['wxapp.user'].sudo().search([
             ('open_id', '=', access_token.open_id),
             #('create_uid', '=', user.id)
         ])
@@ -84,7 +84,25 @@ class BaseController(object):
         if not wechat_user:
             return self.res_err(10000), None, wxapp_entry
 
+        request.wechat_user = wechat_user
         return None, wechat_user, wxapp_entry
+
+    def check_userid(self, token, userid):
+        if token and userid:
+            _logger.info('>>> check_userid: %s %s', userid, token)
+            access_token = request.env(user=1)['wxapp.access_token'].search([
+                ('token', '=', token),
+            ])
+            if not access_token:
+                return
+            wechat_user = request.env(user=1)['wxapp.user'].search([
+                ('open_id', '=', access_token.open_id),
+            ])
+            if not wechat_user:
+                return
+
+            if hasattr(wechat_user, 'user_id') and str(wechat_user.user_id.id)=str(userid):
+                request.wechat_user = wechat_user
 
 
     def res_ok(self, data=None):
@@ -97,7 +115,7 @@ class BaseController(object):
         )
 
     def res_err(self, code, data=None):
-        ret = {'code': code, 'msg': error_code[code] or data}
+        ret = {'code': code, 'msg': error_code.get(code) or data}
         if data:
             ret['data'] = data
         return request.make_response(json.dumps(ret))
