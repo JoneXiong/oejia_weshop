@@ -101,13 +101,13 @@ class BaseController(object):
             if not wechat_user:
                 return
 
-            if hasattr(wechat_user, 'user_id') and str(wechat_user.user_id.id)=str(userid):
+            if hasattr(wechat_user, 'user_id') and str(wechat_user.user_id.id)==str(userid):
                 request.wechat_user = wechat_user
 
 
     def res_ok(self, data=None):
         ret = {'code': 0, 'msg': 'success'}
-        if data:
+        if data!=None:
             ret['data'] = data
         return request.make_response(
             headers={'Content-Type': 'json'},
