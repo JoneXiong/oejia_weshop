@@ -83,6 +83,8 @@ class WxappUser(http.Controller, BaseController):
                     'session_key': session_key,
                     'sub_domain': sub_domain,
                 })
+            else:
+                access_token.write({'session_key': session_info['session_key']})
 
             data = {
                 'token': access_token.token,
@@ -176,7 +178,7 @@ class WxappUser(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-    @http.route('/<string:sub_domain>/user/wxapp/bindMobile', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/user/wxapp/bindMobile', auth='public', methods=['GET', 'POST'], csrf=False)
     def bind_mobile(self, sub_domain, token=None, encryptedData=None, iv=None, **kwargs):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
