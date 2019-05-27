@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 class WxappScore(http.Controller, BaseController):
 
-    @http.route('/<string:sub_domain>/score/send/rule', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/score/send/rule', auth='public', methods=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, code=5, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
@@ -29,7 +29,7 @@ class WxappScore(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-    @http.route('/<string:sub_domain>/shop/goods/kanjia/list', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/shop/goods/kanjia/list', auth='public', methods=['GET', 'POST'], csrf=False)
     def kanjia_list(self, sub_domain, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
