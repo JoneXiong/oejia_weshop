@@ -6,7 +6,7 @@ from odoo import http, exceptions
 from odoo.http import request
 
 from .. import defs
-from .base import BaseController
+from .base import BaseController, dt_convert
 
 import logging
 
@@ -76,7 +76,7 @@ class WxappOrder(http.Controller, BaseController):
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
                 _data = {
                     "amountReal": order.amount_total,
-                    "dateAdd": order.create_date,
+                    "dateAdd": dt_convert(order.create_date),
                     "id": order.id,
                     "orderNumber": order.name,
                     "status": defs.OrderResponseStatus.attrs[order.customer_status],
@@ -228,12 +228,13 @@ class WxappOrder(http.Controller, BaseController):
                 "logisticsMap": {},
                 "orderList": [{
                     "amountReal": each_order.amount_total,
-                    "dateAdd": each_order.create_date,
+                    "dateAdd": dt_convert(each_order.create_date),
                     "id": each_order.id,
                     "remark": each_order.note,
                     "orderNumber": each_order.name,
                     "status": defs.OrderResponseStatus.attrs[each_order.customer_status],
                     "statusStr": defs.OrderStatus.attrs[each_order.customer_status],
+                    "score": 0,
                 } for each_order in orders],
                 "goodsMap": {
                     each_order.id: [
@@ -242,6 +243,8 @@ class WxappOrder(http.Controller, BaseController):
                         } for each_goods in each_order.order_line if each_goods.product_id.id!=delivery_product_id]
                     for each_order in orders}
             }
+            if not data['orderList']:
+                return self.res_err(700)
             return self.res_ok(data)
 
         except Exception as e:
@@ -275,8 +278,8 @@ class WxappOrder(http.Controller, BaseController):
                         "amount": order.goods_price,
                         "amountLogistics": order.logistics_price,
                         "amountReal": order.amount_total,
-                        "dateAdd": order.create_date,
-                        "dateUpdate": order.write_date,
+                        "dateAdd": dt_convert(order.create_date),
+                        "dateUpdate": dt_convert(order.write_date),
                         "goodsNumber": order.number_goods,
                         "id": order.id,
                         "orderNumber": order.name,
@@ -303,7 +306,7 @@ class WxappOrder(http.Controller, BaseController):
                         "address": order.address,
                         "cityId": order.city_id.id,
                         "code": order.zipcode,
-                        "dateUpdate": order.write_date,
+                        "dateUpdate": dt_convert(order.write_date),
                         "districtId": order.district_id.id or 0,
                         "linkMan": order.linkman,
                         "mobile": order.mobile,
@@ -362,7 +365,7 @@ class WxappOrder(http.Controller, BaseController):
             return self.res_err(-1, e.name)
 
 
-    @http.route('/<string:sub_domain>/order/delivery', auth='public', method=['GET'])
+    @http.route('/<string:sub_domain>/order/delivery', auth='public', method=['GET', 'POST'], csrf=False)
     def delivery(self, sub_domain, token=None, orderId=None, **kwargs):
         '''
         确认收货接口

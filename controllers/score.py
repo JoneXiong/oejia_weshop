@@ -23,7 +23,7 @@ class WxappScore(http.Controller, BaseController):
 
             data = []
 
-            return self.res_ok(data)
+            return self.res_err(700)
 
         except Exception as e:
             _logger.exception(e)
