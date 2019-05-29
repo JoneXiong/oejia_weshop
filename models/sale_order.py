@@ -70,6 +70,10 @@ class SaleOrder(models.Model):
     def delivery(self):
         self.write({'customer_status': 'unconfirmed'})
 
+    @api.multi
+    def close_dialog(self):
+        return {'type': 'ir.actions.act_window_close'}
+
     def delivery_window(self):
         self.ensure_one()
         return {
