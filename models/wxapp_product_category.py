@@ -12,12 +12,13 @@ class Category(models.Model):
     name = fields.Char(string='名称', required=True)
     category_type = fields.Char(string='类型')
     pid = fields.Many2one('wxapp.product.category', string='上级分类', ondelete='cascade')
-    child_ids = fields.One2many('wxapp.product.category', 'pid', string='子品类')
+    child_ids = fields.One2many('wxapp.product.category', 'pid', string='子分类')
     key = fields.Char(string='编号')
     icon = fields.Binary(string='图标')
     level = fields.Integer(string='分类级别', compute='_compute_level')
     is_use = fields.Boolean(string='是否启用', default=True, required=True)
     sort = fields.Integer(string='排序')
+    product_template_ids = fields.One2many('product.template', 'wxpp_category_id', string='商品')
 
     @api.one
     @api.depends('pid')

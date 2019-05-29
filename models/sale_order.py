@@ -70,6 +70,10 @@ class SaleOrder(models.Model):
     def delivery(self):
         self.write({'customer_status': 'unconfirmed'})
 
+    @api.multi
+    def close_dialog(self):
+        return {'type': 'ir.actions.act_window_close'}
+
     def delivery_window(self):
         self.ensure_one()
         return {
@@ -110,3 +114,15 @@ class SaleOrder(models.Model):
             'target': 'new'
         }
 
+
+    @api.multi
+    def action_cancel(self):
+        result = super(SaleOrder, self).action_cancel()
+        self.write({'customer_status': 'closed'})
+        return result
+
+    @api.multi
+    def action_draft(self):
+        result = super(SaleOrder, self).action_draft()
+        self.write({'customer_status': 'unpaid'})
+        return result

@@ -11,10 +11,11 @@ class WxappUser(models.Model):
     _description = u'小程序用户'
     _inherits = {'res.partner': 'partner_id'}
 
-    name = fields.Char(related='partner_id.name',string='昵称', inherited=True)
+    name = fields.Char(related='partner_id.name',string='名称', inherited=True)
+    nickname = fields.Char('昵称')
 
-    open_id = fields.Char('OpenId', required=True, index=True)
-    union_id = fields.Char('UnionId')
+    open_id = fields.Char('OpenId', required=True, index=True, readonly=True)
+    union_id = fields.Char('UnionId', readonly=True)
     gender = fields.Integer('gender')
     language = fields.Char('语言')
     phone = fields.Char('手机号码')

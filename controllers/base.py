@@ -2,6 +2,7 @@
 
 import json
 from datetime import date, datetime, time
+import pytz
 
 from odoo import http, exceptions
 from odoo.http import request
@@ -68,7 +69,7 @@ class BaseController(object):
         if not token:
             return self.res_err(300), None, wxapp_entry
 
-        access_token = request.env(user=1)['wxapp.access_token'].search([
+        access_token = request.env['wxapp.access_token'].sudo().search([
             ('token', '=', token),
             #('create_uid', '=', user.id)
         ])
@@ -76,7 +77,7 @@ class BaseController(object):
         if not access_token:
             return self.res_err(901), None, wxapp_entry
 
-        wechat_user = request.env(user=1)['wxapp.user'].search([
+        wechat_user = request.env['wxapp.user'].sudo().search([
             ('open_id', '=', access_token.open_id),
             #('create_uid', '=', user.id)
         ])
@@ -84,12 +85,30 @@ class BaseController(object):
         if not wechat_user:
             return self.res_err(10000), None, wxapp_entry
 
+        request.wechat_user = wechat_user
         return None, wechat_user, wxapp_entry
+
+    def check_userid(self, token, userid):
+        if token and userid:
+            _logger.info('>>> check_userid: %s %s', userid, token)
+            access_token = request.env(user=1)['wxapp.access_token'].search([
+                ('token', '=', token),
+            ])
+            if not access_token:
+                return
+            wechat_user = request.env(user=1)['wxapp.user'].search([
+                ('open_id', '=', access_token.open_id),
+            ])
+            if not wechat_user:
+                return
+
+            if hasattr(wechat_user, 'user_id') and str(wechat_user.user_id.id)==str(userid):
+                request.wechat_user = wechat_user
 
 
     def res_ok(self, data=None):
         ret = {'code': 0, 'msg': 'success'}
-        if data:
+        if data!=None:
             ret['data'] = data
         return request.make_response(
             headers={'Content-Type': 'json'},
@@ -97,7 +116,7 @@ class BaseController(object):
         )
 
     def res_err(self, code, data=None):
-        ret = {'code': code, 'msg': error_code[code] or data}
+        ret = {'code': code, 'msg': error_code.get(code) or data}
         if data:
             ret['data'] = data
         return request.make_response(json.dumps(ret))
@@ -107,3 +126,17 @@ def convert_static_link(request, html):
     base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
     html = html.replace('<p>', '').replace('</p>', '')
     return html.replace('src="', 'src="{base_url}'.format(base_url=base_url))
+
+
+def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S'):
+    """
+    时间的时区转换
+    """
+    if not value:
+        return value
+    if not isinstance(value, str):
+        value = value.strftime(return_format)
+    dt = datetime.strptime(value, return_format)
+    pytz_timezone = pytz.timezone('Etc/GMT-8')
+    dt = dt.replace(tzinfo=pytz.timezone('UTC'))
+    return dt.astimezone(pytz_timezone).strftime(return_format)

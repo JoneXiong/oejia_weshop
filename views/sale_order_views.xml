@@ -15,6 +15,10 @@
                <field name="shipper_no"/>
                <field name="customer_status" invisible="1"/>
                     </group>
+                    <footer>
+                        <button string="保存" name="close_dialog" type="object" class="btn-primary"/>
+                        <button string="取消" class="btn-secondary" special="cancel"/>
+                    </footer>
                     </sheet>
                 </form>
             </field>
