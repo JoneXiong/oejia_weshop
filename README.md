@@ -59,4 +59,5 @@ Odoo后台
 技术分享
 [http://www.oejia.net/](http://www.oejia.net/)
 
-Odoo-OpenERP扩展开发群: 260160505
+Odoo-OpenERP扩展开发2群： 796367461
+Odoo-OpenERP扩展开发1群: 260160505(已满)
