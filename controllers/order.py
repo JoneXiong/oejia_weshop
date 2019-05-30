@@ -37,6 +37,11 @@ class WxappOrder(http.Controller, BaseController):
                 goods_json, province_id, city_id, district_id, calculate
             )
 
+            address = request.env(user=1)['res.partner'].search([
+                ('parent_id', '=', wechat_user.partner_id.id),
+                ('type', '=', 'delivery'),
+                ('is_default', '=', True)
+            ], limit=1)
             order_dict = {
                 'zipcode': zipcode,
                 'partner_id': wechat_user.partner_id.id,
@@ -48,6 +53,7 @@ class WxappOrder(http.Controller, BaseController):
                 'team_id': entry.team_id.id,
                 'note': remark,
                 'linkman': link_man,
+                'partner_shipping_id': address and address.id or None,
             }
             order_dict.update(kwargs)
             _logger.info('>>> order_dict %s', order_dict)
