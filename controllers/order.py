@@ -81,7 +81,7 @@ class WxappOrder(http.Controller, BaseController):
                 #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
                 _data = {
-                    "amountReal": order.amount_total,
+                    "amountReal": round(order.amount_total, 2),
                     "dateAdd": dt_convert(order.create_date),
                     "id": order.id,
                     "orderNumber": order.name,
@@ -233,7 +233,7 @@ class WxappOrder(http.Controller, BaseController):
             data = {
                 "logisticsMap": {},
                 "orderList": [{
-                    "amountReal": each_order.amount_total,
+                    "amountReal": round(each_order.amount_total, 2),
                     "dateAdd": dt_convert(each_order.create_date),
                     "id": each_order.id,
                     "remark": each_order.note,
@@ -283,7 +283,7 @@ class WxappOrder(http.Controller, BaseController):
                     "orderInfo": {
                         "amount": order.goods_price,
                         "amountLogistics": order.logistics_price,
-                        "amountReal": order.amount_total,
+                        "amountReal": round(order.amount_total, 2),
                         "dateAdd": dt_convert(order.create_date),
                         "dateUpdate": dt_convert(order.write_date),
                         "goodsNumber": order.number_goods,
