@@ -27,4 +27,4 @@ class WxappNotice(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))

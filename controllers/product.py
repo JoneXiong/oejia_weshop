@@ -90,7 +90,7 @@ class WxappProduct(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
 
     @http.route('/<string:sub_domain>/shop/goods/detail', auth='public', methods=['GET'])
@@ -136,7 +136,7 @@ class WxappProduct(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
     def product_info_ext(self, data, goods, product):
         data["data"]["logistics"] = {

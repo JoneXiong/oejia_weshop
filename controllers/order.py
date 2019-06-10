@@ -93,7 +93,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
     def parse_goods_json(self, goods_json, province_id, city_id, district_id, calculate):
         """
@@ -211,7 +211,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
 
     @http.route('/<string:sub_domain>/order/list', auth='public', method=['GET', 'POST'], csrf=False)
@@ -255,7 +255,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
 
     @http.route('/<string:sub_domain>/order/detail', auth='public', method=['GET'])
@@ -332,7 +332,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
     def build_traces(self, order, data):
         pass
@@ -368,7 +368,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
 
     @http.route('/<string:sub_domain>/order/delivery', auth='public', method=['GET', 'POST'], csrf=False)
@@ -401,7 +401,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
 
     @http.route('/<string:sub_domain>/order/reputation', auth='public', method=['GET'])
@@ -448,7 +448,7 @@ class WxappOrder(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
 
 
