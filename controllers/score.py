@@ -72,7 +72,7 @@ class WxappScore(http.Controller, BaseController):
             return self.res_err(-1, e.name)
 
 
-    @http.route('/<string:sub_domain>/shop/goods/reputation', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/shop/goods/reputation', auth='public', methods=['GET', 'POST'], csrf=False)
     def reputation(self, sub_domain, goodsId=None, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
