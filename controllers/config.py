@@ -42,7 +42,7 @@ class WxappConfig(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
     @http.route('/<string:sub_domain>/config/vipLevel', auth='public', methods=['GET'])
     def get_viplevel(self, sub_domain, key=None, **kwargs):
@@ -54,4 +54,4 @@ class WxappConfig(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))

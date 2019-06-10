@@ -39,7 +39,7 @@ class WxappUser(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
     @http.route('/<string:sub_domain>/user/wxapp/login', auth='public', methods=['GET', 'POST'],csrf=False)
     def login(self, sub_domain, code=None, **kwargs):
@@ -98,7 +98,7 @@ class WxappUser(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
 
     @http.route('/<string:sub_domain>/user/wxapp/register/complex', auth='public', methods=['GET', 'POST'], csrf=False)
@@ -154,7 +154,7 @@ class WxappUser(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
     def get_user_info(self, wechat_user):
         data = {
@@ -176,7 +176,7 @@ class WxappUser(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 
     @http.route('/<string:sub_domain>/user/wxapp/bindMobile', auth='public', methods=['GET', 'POST'], csrf=False)
     def bind_mobile(self, sub_domain, token=None, encryptedData=None, iv=None, **kwargs):
@@ -212,5 +212,5 @@ class WxappUser(http.Controller, BaseController):
 
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, e.name)
+            return self.res_err(-1, str(e))
 

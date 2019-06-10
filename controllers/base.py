@@ -134,9 +134,22 @@ def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S'):
     """
     if not value:
         return value
-    if not isinstance(value, str):
+    if isinstance(value, datetime):
         value = value.strftime(return_format)
     dt = datetime.strptime(value, return_format)
     pytz_timezone = pytz.timezone('Etc/GMT-8')
+    dt = dt.replace(tzinfo=pytz.timezone('UTC'))
+    return dt.astimezone(pytz_timezone).strftime(return_format)
+
+def dt_utc(value, return_format='%Y-%m-%d %H:%M:%S'):
+    """
+    时间的时区转换
+    """
+    if not value:
+        return value
+    if isinstance(value, datetime):
+        value = value.strftime(return_format)
+    dt = datetime.strptime(value, return_format)
+    pytz_timezone = pytz.timezone('Etc/GMT+8')
     dt = dt.replace(tzinfo=pytz.timezone('UTC'))
     return dt.astimezone(pytz_timezone).strftime(return_format)
