@@ -54,6 +54,7 @@ class WxappOrder(http.Controller, BaseController):
                 'note': remark,
                 'linkman': link_man,
                 'partner_shipping_id': address and address.id or None,
+                'user_id': wechat_user.partner_id.user_id.id,
             }
             order_dict.update(kwargs)
             _logger.info('>>> order_dict %s', order_dict)
