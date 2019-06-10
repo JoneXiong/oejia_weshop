@@ -41,7 +41,7 @@ class WxappUser(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-    @http.route('/<string:sub_domain>/user/wxapp/login', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/user/wxapp/login', auth='public', methods=['GET', 'POST'],csrf=False)
     def login(self, sub_domain, code=None, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
@@ -83,10 +83,13 @@ class WxappUser(http.Controller, BaseController):
                     'session_key': session_key,
                     'sub_domain': sub_domain,
                 })
+            else:
+                access_token.write({'session_key': session_info['session_key']})
 
             data = {
                 'token': access_token.token,
-                'uid': wechat_user.id
+                'uid': wechat_user.id,
+                'info': self.get_user_info(wechat_user)
             }
             return self.res_ok(data)
 
@@ -98,7 +101,7 @@ class WxappUser(http.Controller, BaseController):
             return self.res_err(-1, e.name)
 
 
-    @http.route('/<string:sub_domain>/user/wxapp/register/complex', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/user/wxapp/register/complex', auth='public', methods=['GET', 'POST'], csrf=False)
     def register(self, sub_domain, code=None, encryptedData=None, iv=None, **kwargs):
         '''
         用户注册
@@ -120,8 +123,14 @@ class WxappUser(http.Controller, BaseController):
                 return self.res_err(404)
 
             session_key, user_info = get_wx_user_info(app_id, secret, code, encrypted_data, iv)
-            request.env(user=1)['wxapp.user'].create({
+
+            user_id = None
+            if hasattr(request, 'user_id'):
+                user_id = request.user_id
+
+            vals = {
                 'name': user_info['nickName'],
+                'nickname': user_info['nickName'],
                 'open_id': user_info['openId'],
                 'gender': user_info['gender'],
                 'language': user_info['language'],
@@ -130,7 +139,14 @@ class WxappUser(http.Controller, BaseController):
                 'city': user_info['city'],
                 'avatar_url': user_info['avatarUrl'],
                 'register_ip': request.httprequest.remote_addr,
-            })
+                'user_id': user_id,
+                'partner_id': user_id and request.env['res.users'].sudo().browse(user_id).partner_id.id or None,
+            }
+            if user_id:
+                vals['user_id'] = user_id
+                vals['partner_id'] = request.env['res.users'].sudo().browse(user_id).partner_id.id
+                vals.pop('name')
+            request.env(user=1)['wxapp.user'].create(vals)
             return self.res_ok()
 
         except AttributeError:
@@ -144,6 +160,7 @@ class WxappUser(http.Controller, BaseController):
         data = {
             'base':{
                 'mobile': wechat_user.phone,
+                'userid': '',
             },
         }
         return data
@@ -161,7 +178,7 @@ class WxappUser(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-    @http.route('/<string:sub_domain>/user/wxapp/bindMobile', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/user/wxapp/bindMobile', auth='public', methods=['GET', 'POST'], csrf=False)
     def bind_mobile(self, sub_domain, token=None, encryptedData=None, iv=None, **kwargs):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)

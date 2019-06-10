@@ -17,6 +17,8 @@ class WxappBanner(http.Controller, BaseController):
 
     @http.route('/<string:sub_domain>/banner/list', auth='public', methods=['GET'])
     def list(self, sub_domain, default_banner=True, **kwargs):
+        _logger.info('>>> banner_list %s %s', default_banner, kwargs)
+        banner_type = kwargs.get('type')
         try:
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
@@ -44,6 +46,14 @@ class WxappBanner(http.Controller, BaseController):
                         "userId": each_banner.create_uid.id
                     } for each_banner in banner_list
                 ]
+                if banner_type=='app':
+                    if len(data)>=3:
+                        return self.res_ok(data)
+                    else:
+                        return self.res_err(700)
+            else:
+                if banner_type=='app':
+                    return self.res_err(700)
 
             recommend_goods = request.env(user=1)['product.template'].search([
                 ('recommend_status', '=', True),

@@ -25,12 +25,12 @@ class WxappProduct(http.Controller, BaseController):
             "dateUpdate": each_goods.write_date,
             "id": each_goods.id,
             "logisticsId": 1,
-            "minPrice": each_goods.list_price,
+            "minPrice": each_goods.get_present_price(),
             "minScore": 0,
-            "name": each_goods.name,
+            "name": '[%s] %s'%(each_goods.default_code, each_goods.name) if each_goods.default_code else each_goods.name,
             "numberFav": each_goods.number_fav,
             "numberGoodReputation": 0,
-            "numberOrders": each_goods.sales_count,
+            "numberOrders": 0,#each_goods.sales_count,
             "originalPrice": each_goods.original_price,
             "paixu": each_goods.sequence or 0,
             "pic": each_goods.get_main_image(),
@@ -62,14 +62,17 @@ class WxappProduct(http.Controller, BaseController):
         }
         return _dict
 
-    @http.route('/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, categoryId=False, nameLike=False, page=1, pageSize=20, **kwargs):
         page = int(page)
         pageSize = int(pageSize)
         category_id = categoryId
+        token = kwargs.get('token', None)
+        userid = kwargs.get('userid', None)
         try:
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
+            self.check_userid(token, userid)
 
             domain = [('sale_ok', '=', True), ('wxapp_published', '=', True)]
             if category_id:
@@ -78,7 +81,7 @@ class WxappProduct(http.Controller, BaseController):
             if nameLike:
                 domain.append(('name', 'ilike', nameLike))
 
-            goods_list = request.env['product.template'].sudo().search(domain, offset=(page-1)*pageSize, limit=pageSize)
+            goods_list = request.env['product.template'].sudo().search(domain, offset=(page-1)*pageSize, limit=pageSize, order="sequence")
 
             if not goods_list:
                 return self.res_err(404)
@@ -93,9 +96,12 @@ class WxappProduct(http.Controller, BaseController):
     @http.route('/<string:sub_domain>/shop/goods/detail', auth='public', methods=['GET'])
     def detail(self, sub_domain, id=False, code=False, **kwargs):
         goods_id = id
+        token = kwargs.get('token', None)
+        userid = kwargs.get('userid', None)
         try:
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
+            self.check_userid(token, userid)
 
             if not goods_id and not code:
                 return self.res_err(300)
@@ -125,7 +131,7 @@ class WxappProduct(http.Controller, BaseController):
             }
             self.product_info_ext(data, goods, product)
 
-            goods.sudo().write({'views': goods.views + 1})
+            goods.sudo().write({'views': goods.views + 1}) #同时同用户多次重复请求的事务问题
             return self.res_ok(data['data'])
 
         except Exception as e:

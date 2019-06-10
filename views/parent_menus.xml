@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <menuitem id="parent_menu_319_1536754696" name="小程序" parent=""  sequence="10"/>
+        <menuitem id="parent_menu_319_1536754696" name="小程序" parent=""  sequence="6"/>
         <menuitem id="parent_menu_327_1536754696" name="设置" parent="parent_menu_319_1536754696"  sequence="999"/>
         <menuitem id="parent_menu_331_1536754696" name="省市区" parent="parent_menu_327_1536754696"  sequence="10"/>
 

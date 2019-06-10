@@ -9,9 +9,9 @@
             <field name="priority">999</field>
             <field name="arch" type="xml">
                 <tree string="商品分类">
+               <field name="sort" widget="handle"/>
                <field name="name"/>
                <field name="pid"/>
-               <field name="sort"/>
                <field name="is_use"/>
                <field name="key"/>
                <field name="level"/>
@@ -33,6 +33,7 @@
                <field name="icon"/>
                <field name="is_use"/>
                <field name="key"/>
+               <field name="product_template_ids"/>
                     </group>
                     </sheet>
                 </form>
