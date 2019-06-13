@@ -23,6 +23,9 @@ class WxappOrder(http.Controller, BaseController):
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return res
 
+            res = self.pre_check(entry, wechat_user, kwargs)
+            if res:return res
+
             # [{"goodsId":1,"number":3,"propertyChildIds":"1:1,2:4,","logisticsType":0, "inviter_id":0}]
             goods_json = json.loads(kwargs.pop('goodsJsonStr'))
             province_id = int(kwargs.pop('provinceId'))
@@ -179,6 +182,9 @@ class WxappOrder(http.Controller, BaseController):
 
     def calculate_logistics_fee(self, goods, amount, transport_type, province_id, city_id, district_id):
         return 0
+
+    def pre_check(self, entry, wechat_user, post_data):
+        return
 
 
     @http.route('/<string:sub_domain>/order/statistics', auth='public', method=['GET', 'POST'], csrf=False)
