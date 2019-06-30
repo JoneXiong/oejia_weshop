@@ -23,6 +23,9 @@
             <field name="priority">999</field>
             <field name="arch" type="xml">
                 <form string="小程序设置" create="0" delete="0" duplicate="0">
+					<header>
+						<button name="clean_all_token_window" type="object" string="清空Token缓存"/>
+					</header>
                     <sheet>
 
                      <group string="基础配置" colspan="4">

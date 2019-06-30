@@ -47,3 +47,26 @@ class WxappConfig(models.Model):
             return config
         else:
             return False
+
+    @api.multi
+    def clean_all_token(self):
+        self.env['wxapp.access_token'].search([]).unlink()
+
+    @api.multi
+    def clean_all_token_window(self):
+        new_context = dict(self._context) or {}
+        new_context['default_info'] = "确认将所有小程序会话 token 清除？"
+        new_context['default_model'] = 'wxapp.config'
+        new_context['default_method'] = 'clean_all_token'
+        new_context['record_ids'] = [obj.id for obj in self]
+        return {
+            'name': u'确认清除',
+            'type': 'ir.actions.act_window',
+            'res_model': 'wxapp.confirm',
+            'res_id': None,
+            'view_mode': 'form',
+            'view_type': 'form',
+            'context': new_context,
+            'view_id': self.env.ref('oejia_weshop.confirm_view_form').id,
+            'target': 'new'
+        }
