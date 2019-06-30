@@ -62,6 +62,16 @@ class WxappProduct(http.Controller, BaseController):
         }
         return _dict
 
+    def get_goods_domain(self, category_id, nameLike):
+        domain = [('sale_ok', '=', True), ('wxapp_published', '=', True)]
+        if category_id:
+            cate_ids = [int(category_id)] + request.env['wxapp.product.category'].sudo().browse(int(category_id)).child_ids.ids
+            domain.append(('wxpp_category_id', 'in', cate_ids))
+        if nameLike:
+            domain.append(('name', 'ilike', nameLike))
+
+        return domain
+
     @http.route('/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, categoryId=False, nameLike=False, page=1, pageSize=20, **kwargs):
         page = int(page)
@@ -74,12 +84,7 @@ class WxappProduct(http.Controller, BaseController):
             if ret:return ret
             self.check_userid(token, userid)
 
-            domain = [('sale_ok', '=', True), ('wxapp_published', '=', True)]
-            if category_id:
-                cate_ids = [int(category_id)] + request.env['wxapp.product.category'].sudo().browse(int(category_id)).child_ids.ids
-                domain.append(('wxpp_category_id', 'in', cate_ids))
-            if nameLike:
-                domain.append(('name', 'ilike', nameLike))
+            domain = self.get_goods_domain(category_id, nameLike)
 
             goods_list = request.env['product.template'].sudo().search(domain, offset=(page-1)*pageSize, limit=pageSize, order="sequence")
 
