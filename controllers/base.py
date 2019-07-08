@@ -40,6 +40,10 @@ error_code = {
 }
 
 
+class UserException(Exception):
+    pass
+
+
 def json_default(obj):
     """
     Properly serializes date and datetime objects.
@@ -90,7 +94,6 @@ class BaseController(object):
 
     def check_userid(self, token, userid):
         if token and userid:
-            _logger.info('>>> check_userid: %s %s', userid, token)
             access_token = request.env(user=1)['wxapp.access_token'].search([
                 ('token', '=', token),
             ])
