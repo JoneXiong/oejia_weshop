@@ -136,7 +136,7 @@ class WxappProduct(http.Controller, BaseController):
             }
             self.product_info_ext(data, goods, product)
 
-            goods.sudo().write({'views': goods.views + 1}) #同时同用户多次重复请求的事务问题
+            # goods.sudo().write({'views': goods.views + 1}) #同时同用户多次重复请求的事务问题
             return self.res_ok(data['data'])
 
         except Exception as e:
