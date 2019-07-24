@@ -70,3 +70,6 @@ class WxappConfig(models.Model):
             'view_id': self.env.ref('oejia_weshop.confirm_view_form').id,
             'target': 'new'
         }
+
+    def get_level(self):
+        return 0

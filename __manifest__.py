@@ -29,6 +29,7 @@
         'views/wxapp_product_category_views.xml',
         'views/wxapp_payment_views.xml',
         'views/wxapp_confirm_views.xml',
+        'views/wxapp_notice_views.xml',
 
         'views/product_template_views.xml',
         'views/sale_order_views.xml',

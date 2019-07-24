@@ -17,3 +17,5 @@ access_oe_shipper_group_wxapp_config,oe_shipper.group_wxapp_config,model_oe_ship
 access_oe_shipper_group_wxapp_sale,oe_shipper.group_wxapp_sale,model_oe_shipper,group_wxapp_sale,1,0,0,0
 access_wxapp_banner_all,wxapp_banner.group_False,model_wxapp_banner,,1,0,0,0
 access_product_template_all,product_template.group_False,account.model_product_template,,1,0,0,0
+access_wxapp_notice_group_wxapp_config,wxapp_notice.group_wxapp_config,model_wxapp_notice,group_wxapp_config,1,1,1,1
+access_wxapp_notice_group_wxapp_sale,wxapp_notice.group_wxapp_sale,model_wxapp_notice,group_wxapp_sale,1,1,1,1
