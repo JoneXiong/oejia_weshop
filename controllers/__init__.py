@@ -13,6 +13,7 @@ from . import address
 from . import order
 from . import notice
 from . import score
+from . import region
 
 
 from odoo.http import root, JsonRequest, HttpRequest
