@@ -315,6 +315,7 @@ class WxappOrder(http.Controller, BaseController):
                             "orderId": order.id,
                             "pic": each_goods.product_id.product_tmpl_id.get_main_image(),
                             "property": each_goods.product_id.get_property_str(),
+                            "propertyChildIds": each_goods.product_id.attr_val_str,
                         } for each_goods in order.order_line if each_goods.product_id.id!=delivery_product_id
                     ],
                     "logistics": {
