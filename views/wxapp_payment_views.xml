@@ -10,15 +10,13 @@
             <field name="arch" type="xml">
                 <tree string="支付记录" create="0" delete="0">
                <field name="wechat_user_id"/>
-               <field name="order_id"/>
                <field name="payment_number"/>
+               <field name="price"/>
                <field name="cash_fee"/>
                <field name="cash_fee_type"/>
                <field name="coupon_count"/>
                <field name="coupon_fee"/>
                <field name="fee_type"/>
-               <field name="openid"/>
-               <field name="price"/>
                <field name="result_code"/>
                <field name="settlement_total_fee"/>
                <field name="total_fee"/>
@@ -36,6 +34,9 @@
                 <form string="支付记录" version="7.0">
                     <sheet>
                     <group>
+               <field name="wechat_user_id"/>
+               <field name="order_id"/>
+               <field name="price"/>
                <field name="bank_type"/>
                <field name="cash_fee"/>
                <field name="cash_fee_type"/>
@@ -45,15 +46,13 @@
                <field name="err_code_des"/>
                <field name="fee_type"/>
                <field name="openid"/>
-               <field name="order_id"/>
                <field name="payment_number"/>
-               <field name="price"/>
                <field name="result_code"/>
                <field name="settlement_total_fee"/>
                <field name="status"/>
                <field name="total_fee"/>
                <field name="transaction_id"/>
-               <field name="wechat_user_id"/>
+               <field name="create_date"/>
                     </group>
                     </sheet>
                 </form>
