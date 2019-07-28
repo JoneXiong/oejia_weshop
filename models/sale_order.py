@@ -92,7 +92,7 @@ class SaleOrder(models.Model):
         }
 
     @api.multi
-    def check_paid(self):
+    def action_paid(self):
         self.write({'customer_status': 'pending'})
 
     @api.multi
@@ -100,7 +100,7 @@ class SaleOrder(models.Model):
         new_context = dict(self._context) or {}
         new_context['default_info'] = "此订单客户尚未在线支付，确认将其变为已支付状态？"
         new_context['default_model'] = 'sale.order'
-        new_context['default_method'] = 'check_paid'
+        new_context['default_method'] = 'action_paid'
         new_context['record_ids'] = [obj.id for obj in self]
         return {
             'name': u'确认订单已支付',

@@ -9,6 +9,7 @@ class Payment(models.Model):
 
     _name = 'wxapp.payment'
     _description = u'支付记录'
+    _order = 'id desc'
 
     wechat_user_id = fields.Many2one('wxapp.user', string='微信用户')
     order_id = fields.Many2one('sale.order', string='订单')
