@@ -25,6 +25,7 @@
                     <group>
                <field name="title"/>
                <field name="content"/>
+               <field name="active"/>
                     </group>
                     </sheet>
                 </form>

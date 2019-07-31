@@ -11,3 +11,4 @@ class WxappNotice(models.Model):
 
     title = fields.Char(string='标题', required=True)
     content = fields.Text('内容')
+    active = fields.Boolean('是否有效', default=True)
