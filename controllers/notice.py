@@ -21,7 +21,30 @@ class WxappNotice(http.Controller, BaseController):
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
 
-            data = []
+            notices = request.env['wxapp.notice'].sudo().search([])
+            data = {
+                'dataList': [
+                    {'id': e.id, 'title': e.title} for e in notices
+                ]
+            }
+
+            return self.res_ok(data)
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, str(e))
+
+    @http.route('/<string:sub_domain>/notice/detail', auth='public', methods=['GET'], csrf=False)
+    def detail(self, sub_domain, id=False, **kwargs):
+        try:
+            ret, entry = self._check_domain(sub_domain)
+            if ret:return ret
+
+            notice = request.env['wxapp.notice'].sudo().browse(int(id))
+            data = {
+                'title': notice.title,
+                'content': notice.content,
+            }
 
             return self.res_ok(data)
 

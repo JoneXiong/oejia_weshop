@@ -50,7 +50,7 @@ class WxappConfig(http.Controller, BaseController):
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
 
-            return self.res_ok(0)
+            return self.res_ok(entry.get_level())
 
         except Exception as e:
             _logger.exception(e)

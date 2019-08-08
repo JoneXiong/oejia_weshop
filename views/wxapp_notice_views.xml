@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="wxapp_notice_view_tree_1726" model="ir.ui.view">
+            <field name="name">wxapp.notice.view_tree</field>
+            <field name="model">wxapp.notice</field>
+            <field name="type">tree</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <tree string="公告">
+               <field name="title"/>
+               <field name="content"/>
+                </tree>
+            </field>
+        </record>
+        <record id="wxapp_notice_view_form_1727" model="ir.ui.view">
+            <field name="name">wxapp.notice.view_form</field>
+            <field name="model">wxapp.notice</field>
+            <field name="type">form</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <form string="公告" version="7.0">
+                    <sheet>
+                    <group>
+               <field name="title"/>
+               <field name="content"/>
+               <field name="active"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="wxapp_notice_action_596" model="ir.actions.act_window">
+            <field name="name">公告</field>
+            <field name="res_model">wxapp.notice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('wxapp_notice_view_tree_1726')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_notice_view_form_1727')}),
+                    ]"/>
+        </record>
+        <menuitem action="wxapp_notice_action_596" id="wxapp_notice_menuitem_448_1563988113" name="公告" parent="parent_menu_327_1536754696" sequence="10"/>
+
+    </data>
+</openerp>

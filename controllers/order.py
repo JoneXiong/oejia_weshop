@@ -2,11 +2,11 @@
 
 import json
 
-from odoo import http, exceptions
+from odoo import http
 from odoo.http import request
 
 from .. import defs
-from .base import BaseController, dt_convert
+from .base import BaseController, dt_convert, UserException
 
 import logging
 
@@ -95,6 +95,8 @@ class WxappOrder(http.Controller, BaseController):
 
             return self.res_ok(_data)
 
+        except UserException as e:
+            return self.res_err(-99, str(e))
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, str(e))
@@ -126,8 +128,8 @@ class WxappOrder(http.Controller, BaseController):
         ])
         template_dict = {template.id: template for template in template_list}
 
-        if set(template_dict.keys()) - goods_id_set:
-            raise exceptions.ValidationError('订单中包含已下架的商品')
+        if goods_id_set - set(template_dict.keys()):
+            raise UserException('订单中包含已下架的商品')
 
         for each_goods in goods_json:
             property_child_ids = each_goods.get('propertyChildIds')
@@ -158,7 +160,7 @@ class WxappOrder(http.Controller, BaseController):
                 ('attr_val_str', '=', property_child_ids)
             ])
             if not product:
-                raise exceptions.ValidationError('商品不存在！')
+                raise UserException('商品不存在！')
 
             price = product.get_present_price()
             total = price * amount
@@ -169,7 +171,7 @@ class WxappOrder(http.Controller, BaseController):
                 stores = goods.get_present_qty() - amount
 
             if stores < 0:
-                raise exceptions.ValidationError('库存不足！')
+                raise UserException('库存不足！')
             if stores == 0:
                 # todo 发送库存空预警
                 pass
@@ -313,6 +315,7 @@ class WxappOrder(http.Controller, BaseController):
                             "orderId": order.id,
                             "pic": each_goods.product_id.product_tmpl_id.get_main_image(),
                             "property": each_goods.product_id.get_property_str(),
+                            "propertyChildIds": each_goods.product_id.attr_val_str,
                         } for each_goods in order.order_line if each_goods.product_id.id!=delivery_product_id
                     ],
                     "logistics": {

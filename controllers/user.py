@@ -146,7 +146,9 @@ class WxappUser(http.Controller, BaseController):
                 vals['user_id'] = user_id
                 vals['partner_id'] = request.env['res.users'].sudo().browse(user_id).partner_id.id
                 vals.pop('name')
-            request.env(user=1)['wxapp.user'].create(vals)
+            wechat_user = request.env(user=1)['wxapp.user'].create(vals)
+            request.wechat_user = wechat_user
+            request.entry = entry
             return self.res_ok()
 
         except AttributeError:
