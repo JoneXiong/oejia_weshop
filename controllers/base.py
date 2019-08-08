@@ -55,6 +55,16 @@ def json_default(obj):
         return fields.Date.to_string(obj)
     return ustr(obj)
 
+class WechatUser(object):
+
+    def __init__(self, partner, user):
+        self.partner_id = partner
+        self.user_id = user
+        self.id = user.id
+
+    @property
+    def address_ids(self):
+        return self.partner_id.child_ids.filtered(lambda r: r.type == 'delivery')
 
 class BaseController(object):
 
@@ -72,6 +82,11 @@ class BaseController(object):
         wxapp_entry =wxapp_entry[0]
         if not token:
             return self.res_err(300), None, wxapp_entry
+
+        if request.uid != request.env.ref('base.public_user').id:
+            if str(request.uid)==token:# request.session.sid==token:
+                _logger.info('>>> login user %s', request.env.user)
+                return None, WechatUser(request.env.user.partner_id, request.env.user), wxapp_entry
 
         access_token = request.env['wxapp.access_token'].sudo().search([
             ('token', '=', token),

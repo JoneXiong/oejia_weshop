@@ -28,6 +28,11 @@ class WxappUser(http.Controller, BaseController):
             if not token:
                 return self.res_err(300)
 
+            if request.uid != request.env.ref('base.public_user').id:
+                if str(request.uid)==token:
+                    _logger.info('>>> check_token user %s', request.env.user)
+                    return self.res_ok()
+
             access_token = request.env(user=1)['wxapp.access_token'].search([
                 ('token', '=', token),
             ])
@@ -159,9 +164,14 @@ class WxappUser(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
     def get_user_info(self, wechat_user):
+        mobile = ''
+        if hasattr(wechat_user, 'phone'):
+            mobile = wechat_user.phone
+        else:
+            mobile = wechat_user.partner_id.mobile
         data = {
             'base':{
-                'mobile': wechat_user.phone,
+                'mobile': mobile,
                 'userid': '',
             },
         }
