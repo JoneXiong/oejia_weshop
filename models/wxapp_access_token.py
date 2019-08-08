@@ -12,7 +12,7 @@ class AccessToken(models.TransientModel):
     _description = u'assess token'
 
     # allow session to survive for 30min in case user is slow
-    _transient_max_hours = 2
+    _transient_max_hours = 24
 
     token = fields.Char('token', index=True)
     session_key = fields.Char('session_key', required=True)
