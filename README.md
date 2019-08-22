@@ -54,6 +54,10 @@ Odoo后台
 
 小程序客服集成 [http://oejia.net/blog/2018/12/21/odoo_kf.html](http://oejia.net/blog/2018/12/21/odoo_kf.html)
 
+小程序分销模块[weshop_commission](https://www.calluu.cn/shop/product/odoo-23)
+
+Odoo H5商城模块[weshop_h5](https://www.calluu.cn/shop/product/odoo-h5-24)
+
 
 ## 交流
 技术分享
