@@ -24,7 +24,8 @@ class WxappBanner(http.Controller, BaseController):
             if ret:return ret
 
             banner_list = request.env['wxapp.banner'].sudo().search([
-                ('status', '=', True)
+                ('status', '=', True),
+                ('ptype', '=', banner_type)
             ])
 
             data = []
@@ -42,42 +43,41 @@ class WxappBanner(http.Controller, BaseController):
                         "status": 0 if each_banner.status else 1,
                         "statusStr": defs.BannerStatus.attrs[each_banner.status],
                         "title": each_banner.title,
-                        "type": each_banner.type_mark,
+                        "type": each_banner.ptype,
                         "userId": each_banner.create_uid.id
                     } for each_banner in banner_list
                 ]
                 if banner_type=='app':
-                    if len(data)>=3:
-                        return self.res_ok(data)
-                    else:
+                    if len(data)<3:
                         return self.res_err(700)
-            else:
-                if banner_type=='app':
-                    return self.res_err(700)
 
-            recommend_goods = request.env(user=1)['product.template'].search([
-                ('recommend_status', '=', True),
-                ('wxapp_published', '=', True)
-            ], limit=5)
+            if banner_type=='index'
+                recommend_goods = request.env(user=1)['product.template'].search([
+                    ('recommend_status', '=', True),
+                    ('wxapp_published', '=', True)
+                ], limit=5)
 
-            data += [
-                {
-                    "goods": True,
-                    "businessId": goods.id,
-                    "dateAdd": goods.create_date,
-                    "dateUpdate": goods.write_date,
-                    "id": goods.id,
-                    "linkUrl": '',
-                    "paixu": goods.sequence or 0,
-                    "picUrl": goods.get_main_image(),
-                    "remark": '',
-                    "status": 0 if goods.wxapp_published else 1,
-                    "statusStr": '',
-                    "title": goods.name,
-                    "type": 0,
-                    "userId": goods.create_uid.id
-                } for goods in recommend_goods
-            ]
+                data += [
+                    {
+                        "goods": True,
+                        "businessId": goods.id,
+                        "dateAdd": goods.create_date,
+                        "dateUpdate": goods.write_date,
+                        "id": goods.id,
+                        "linkUrl": '',
+                        "paixu": goods.sequence or 0,
+                        "picUrl": goods.get_main_image(),
+                        "remark": '',
+                        "status": 0 if goods.wxapp_published else 1,
+                        "statusStr": '',
+                        "title": goods.name,
+                        "type": 0,
+                        "userId": goods.create_uid.id
+                    } for goods in recommend_goods
+                ]
+
+            if not data:
+                return self.res_err(700)
 
             return self.res_ok(data)
 

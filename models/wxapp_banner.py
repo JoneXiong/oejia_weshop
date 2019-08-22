@@ -22,6 +22,7 @@ class Banner(models.Model):
     remark = fields.Text(string='备注')
 
     type_mark = fields.Integer(string='类型标记', default=0)
+    ptype = fields.Selection([('index', '首页'), ('app', '启动页')], string='位置', default='index')
 
     @api.depends('image')
     def _compute_display_pic(self):

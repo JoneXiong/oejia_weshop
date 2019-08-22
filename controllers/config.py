@@ -26,6 +26,7 @@ class WxappConfig(http.Controller, BaseController):
                 return self.res_err(300)
 
             data = {
+                'dbname': request.env.cr.dbname,
                 'creatAt': entry.create_date,
                 'dateType': 0,
                 'id': entry.id,
