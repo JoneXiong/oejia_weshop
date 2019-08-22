@@ -13,6 +13,7 @@
                         <group>
                             <field name="wxapp_published"/>
                             <field name="wxpp_category_id"/>
+                            <field name="recommend_status"/>
                         </group>
                         <group>
                             <field name="qty_public_tpl"/>
