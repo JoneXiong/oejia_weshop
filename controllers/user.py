@@ -28,6 +28,11 @@ class WxappUser(http.Controller, BaseController):
             if not token:
                 return self.res_err(300)
 
+            if request.uid != request.env.ref('base.public_user').id:
+                if str(request.uid)==token:
+                    _logger.info('>>> check_token user %s', request.env.user)
+                    return self.res_ok()
+
             access_token = request.env(user=1)['wxapp.access_token'].search([
                 ('token', '=', token),
             ])
@@ -159,9 +164,14 @@ class WxappUser(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
     def get_user_info(self, wechat_user):
+        mobile = ''
+        if hasattr(wechat_user, 'phone'):
+            mobile = wechat_user.phone
+        else:
+            mobile = wechat_user.partner_id.mobile
         data = {
             'base':{
-                'mobile': wechat_user.phone,
+                'mobile': mobile,
                 'userid': '',
             },
         }
@@ -216,3 +226,19 @@ class WxappUser(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
+    @http.route('/<string:sub_domain>/user/amount', auth='public', methods=['GET'])
+    def user_amount(self, sub_domain, token=None):
+        try:
+            res, wechat_user, entry = self._check_user(sub_domain, token)
+            if res:return res
+            _data = {
+                'balance': hasattr(wechat_user, 'balance') and wechat_user.balance or 0,
+                'freeze': 0,
+                'score': hasattr(wechat_user, 'score') and wechat_user.score or 0,
+                'totleConsumed': 0,
+            }
+            return self.res_ok(_data)
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, str(e))

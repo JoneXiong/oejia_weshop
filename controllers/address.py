@@ -15,23 +15,6 @@ _logger = logging.getLogger(__name__)
 
 class WxappAddress(http.Controller, BaseController):
 
-    @http.route('/<string:sub_domain>/user/amount', auth='public', methods=['GET'])
-    def user_amount(self, sub_domain, token=None):
-        try:
-            res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
-            _data = {
-                'balance': hasattr(wechat_user, 'balance') and wechat_user.balance or 0,
-                'freeze': 0,
-                'score': 0,
-                'totleConsumed': 0,
-            }
-            return self.res_ok(_data)
-
-        except Exception as e:
-            _logger.exception(e)
-            return self.res_err(-1, str(e))
-
     def _get_address_dict(self, each_address, wxapp_user_id):
         _dict = {
             "address": each_address.street,
