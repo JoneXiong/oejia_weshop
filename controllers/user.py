@@ -226,3 +226,19 @@ class WxappUser(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
+    @http.route('/<string:sub_domain>/user/amount', auth='public', methods=['GET'])
+    def user_amount(self, sub_domain, token=None):
+        try:
+            res, wechat_user, entry = self._check_user(sub_domain, token)
+            if res:return res
+            _data = {
+                'balance': hasattr(wechat_user, 'balance') and wechat_user.balance or 0,
+                'freeze': 0,
+                'score': hasattr(wechat_user, 'score') and wechat_user.score or 0,
+                'totleConsumed': 0,
+            }
+            return self.res_ok(_data)
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, str(e))
