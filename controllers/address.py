@@ -122,7 +122,7 @@ class WxappAddress(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
-    @http.route('/<string:sub_domain>/user/shipping-address/delete', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/user/shipping-address/delete', auth='public', methods=['GET', 'POST'], csrf=False)
     def delete(self, sub_domain, token=None, id=None, **kwargs):
         address_id = id
         try:
@@ -137,7 +137,7 @@ class WxappAddress(http.Controller, BaseController):
             if not address:
                 return self.res_err(404)
 
-            address.unlink()
+            address.write({'active': False})
 
             if wechat_user.address_ids:
                 wechat_user.address_ids[0].write({'is_default': True})
