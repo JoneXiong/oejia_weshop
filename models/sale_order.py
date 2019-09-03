@@ -96,6 +96,10 @@ class SaleOrder(models.Model):
         self.write({'customer_status': 'pending'})
 
     @api.multi
+    def action_created(self):
+        pass
+
+    @api.multi
     def check_pay_window(self):
         new_context = dict(self._context) or {}
         new_context['default_info'] = "此订单客户尚未在线支付，确认将其变为已支付状态？"

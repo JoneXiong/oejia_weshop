@@ -84,6 +84,7 @@ class WxappOrder(http.Controller, BaseController):
 
                 #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
+                order.action_created()
                 _data = {
                     "amountReal": round(order.amount_total, 2),
                     "dateAdd": dt_convert(order.create_date),
