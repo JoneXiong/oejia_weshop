@@ -30,7 +30,7 @@
                <field name="name"/>
                <field name="pid"/>
                <field name="sort"/>
-               <field name="icon"/>
+               <field name="icon" widget="image"/>
                <field name="is_use"/>
                <field name="key"/>
                <field name="product_template_ids"/>
