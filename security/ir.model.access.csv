@@ -19,3 +19,4 @@ access_wxapp_banner_all,wxapp_banner.group_False,model_wxapp_banner,,1,0,0,0
 access_product_template_all,product_template.group_False,account.model_product_template,,1,0,0,0
 access_wxapp_notice_group_wxapp_config,wxapp_notice.group_wxapp_config,model_wxapp_notice,group_wxapp_config,1,1,1,1
 access_wxapp_notice_group_wxapp_sale,wxapp_notice.group_wxapp_sale,model_wxapp_notice,group_wxapp_sale,1,1,1,1
+access_wxapp_product_category_all,wxapp_product_category.group_False,model_wxapp_product_category,,1,0,0,0

@@ -14,7 +14,7 @@ class Category(models.Model):
     pid = fields.Many2one('wxapp.product.category', string='上级分类', ondelete='cascade')
     child_ids = fields.One2many('wxapp.product.category', 'pid', string='子分类')
     key = fields.Char(string='编号')
-    icon = fields.Binary(string='图标')
+    icon = fields.Binary(string='图标/图片')
     level = fields.Integer(string='分类级别', compute='_compute_level')
     is_use = fields.Boolean(string='是否启用', default=True, required=True)
     sort = fields.Integer(string='排序')
@@ -34,3 +34,7 @@ class Category(models.Model):
             level += 1
 
         self.level = level
+
+    def get_icon_image(self):
+        base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        return '%s/web/image/wxapp.product.category/%s/icon/'%(base_url, self.id)

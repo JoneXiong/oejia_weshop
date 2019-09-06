@@ -9,7 +9,7 @@ class WxappConfig(models.Model):
     _description = u'对接设置'
     _rec_name = 'mall_name'
 
-    sub_domain = fields.Char('小程序接口前缀', help='小程序访问的接口url前缀', index=True, required=True)
+    sub_domain = fields.Char('接口前缀', help='商城访问的接口url前缀', index=True, required=True)
 
     mall_name = fields.Char('商城名称', help='显示在小程序顶部')
 

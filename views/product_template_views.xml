@@ -8,11 +8,13 @@
             <field name="inherit_id" ref="product.product_template_form_view" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <data><xpath expr="//page[@name='general_information']" position="inside">
+                <data><xpath expr="//page[@name='general_information']" position="after">
+                    <page name="weshop" string="小程序">
                     <group string="小程序相关">
                         <group>
                             <field name="wxapp_published"/>
                             <field name="wxpp_category_id"/>
+                            <field name="recommend_status"/>
                         </group>
                         <group>
                             <field name="qty_public_tpl"/>
@@ -20,6 +22,7 @@
                         </group>
                         <field name="description_wxapp"/>
                     </group>
+                    </page>
                     </xpath>
                 </data>
             </field>
