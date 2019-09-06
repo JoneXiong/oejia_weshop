@@ -36,6 +36,7 @@ class WxappConfig(http.Controller, BaseController):
                 'userId': entry.id,
                 'value': entry.get_config(key, sub_domain)
             }
+            data.update(entry.get_ext_config())
             return self.res_ok(data)
 
         except AttributeError:

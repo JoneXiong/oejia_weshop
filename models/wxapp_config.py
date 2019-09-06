@@ -70,3 +70,6 @@ class WxappConfig(models.Model):
 
     def get_level(self):
         return 0
+
+    def get_ext_config(self):
+        return {}
