@@ -70,6 +70,7 @@ class WxappOrder(http.Controller, BaseController):
                     'amountTotle': goods_price,
                     'amountLogistics': logistics_price,
                 }
+                _data.update(self.calculate_ext_info(wechat_user, order_dict, goods_list, _data))
             else:
                 order = request.env(user=1)['sale.order'].create(order_dict)
                 for each_goods in goods_list:
@@ -102,6 +103,9 @@ class WxappOrder(http.Controller, BaseController):
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, str(e))
+
+    def calculate_ext_info(self, wechat_user, order_dict, goods_list, init_info):
+        return {}
 
     def parse_goods_json(self, goods_json, province_id, city_id, district_id, calculate):
         """
