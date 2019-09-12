@@ -124,12 +124,21 @@ class WxappProduct(http.Controller, BaseController):
             if not goods.wxapp_published:
                 return self.res_err(404)
 
+            description_value = None
+            if goods.description_wxapp:
+                _content = goods.description_wxapp.replace('<p>', '').replace('</p>', '').replace('<br>', '').replace('<br/>', '')
+                if _content:
+                    description_value = goods.description_wxapp
+            if not description_value:
+                if hasattr(goods, 'website_description'):
+                    description_value = goods.website_description
+
             data = {
                 "code": 0,
                 "data": {
                     "category": self._product_category_dict(goods.wxpp_category_id),
                     "pics": goods.get_images(),
-                    "content": convert_static_link(request, goods.description_wxapp) if goods.description_wxapp else '',
+                    "content": convert_static_link(request, description_value) if description_value else '',
                     "basicInfo": self._product_basic_dict(goods)
                 },
                 "msg": "success"
