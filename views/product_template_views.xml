@@ -20,7 +20,9 @@
                             <field name="qty_public_tpl"/>
                             <field name="original_price"/>
                         </group>
-                        <field name="description_wxapp"/>
+                    </group>
+                    <group string="图文描述">
+                        <field name="description_wxapp" nolabel="1"/>
                     </group>
                     </page>
                     </xpath>
