@@ -46,6 +46,10 @@ class WxappConfig(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
+    @http.route('/<string:sub_domain>/config/values', auth='public', methods=['GET'])
+    def get_values(self, sub_domain, keys=None, **kwargs):
+        pass
+
     @http.route('/<string:sub_domain>/config/vipLevel', auth='public', methods=['GET'])
     def get_viplevel(self, sub_domain, key=None, **kwargs):
         try:
