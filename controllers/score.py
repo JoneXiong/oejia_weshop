@@ -35,7 +35,10 @@ class WxappScore(http.Controller, BaseController):
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
 
-            data = []
+            data = {
+                'result': [],
+                'goodsMap': {},
+            }
 
             return self.res_ok(data)
 
