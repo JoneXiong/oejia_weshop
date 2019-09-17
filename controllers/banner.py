@@ -23,6 +23,8 @@ class WxappBanner(http.Controller, BaseController):
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
 
+            if banner_type=='new':
+                banner_type = 'index'
             banner_list = request.env['wxapp.banner'].sudo().search([
                 ('status', '=', True),
                 ('ptype', '=', banner_type)

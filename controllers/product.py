@@ -62,7 +62,7 @@ class WxappProduct(http.Controller, BaseController):
         }
         return _dict
 
-    def get_goods_domain(self, category_id, nameLike):
+    def get_goods_domain(self, category_id, nameLike, **kwargs):
         domain = [('sale_ok', '=', True), ('wxapp_published', '=', True)]
         if category_id:
             cate_ids = [int(category_id)] + request.env['wxapp.product.category'].sudo().browse(int(category_id)).child_ids.ids
@@ -74,6 +74,7 @@ class WxappProduct(http.Controller, BaseController):
 
     @http.route('/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, categoryId=False, nameLike=False, page=1, pageSize=20, **kwargs):
+        _logger.info('>>> product list %s', kwargs)
         page = int(page)
         pageSize = int(pageSize)
         category_id = categoryId
@@ -84,7 +85,10 @@ class WxappProduct(http.Controller, BaseController):
             if ret:return ret
             self.check_userid(token, userid)
 
-            domain = self.get_goods_domain(category_id, nameLike)
+            if kwargs.get('recommendStatus')=='1' or kwargs.get('pingtuan')=='true':
+                return self.res_ok([])
+
+            domain = self.get_goods_domain(category_id, nameLike, **kwargs)
 
             goods_list = request.env['product.template'].sudo().search(domain, offset=(page-1)*pageSize, limit=pageSize, order="sequence")
 
@@ -124,12 +128,21 @@ class WxappProduct(http.Controller, BaseController):
             if not goods.wxapp_published:
                 return self.res_err(404)
 
+            description_value = None
+            if goods.description_wxapp:
+                _content = goods.description_wxapp.replace('<p>', '').replace('</p>', '').replace('<br>', '').replace('<br/>', '')
+                if _content:
+                    description_value = goods.description_wxapp
+            if not description_value:
+                if hasattr(goods, 'website_description'):
+                    description_value = goods.website_description
+
             data = {
                 "code": 0,
                 "data": {
                     "category": self._product_category_dict(goods.wxpp_category_id),
                     "pics": goods.get_images(),
-                    "content": convert_static_link(request, goods.description_wxapp) if goods.description_wxapp else '',
+                    "content": convert_static_link(request, description_value) if description_value else '',
                     "basicInfo": self._product_basic_dict(goods)
                 },
                 "msg": "success"

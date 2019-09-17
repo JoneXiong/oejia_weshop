@@ -36,6 +36,7 @@ class WxappConfig(http.Controller, BaseController):
                 'userId': entry.id,
                 'value': entry.get_config(key, sub_domain)
             }
+            data.update(entry.get_ext_config())
             return self.res_ok(data)
 
         except AttributeError:
@@ -44,6 +45,10 @@ class WxappConfig(http.Controller, BaseController):
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, str(e))
+
+    @http.route('/<string:sub_domain>/config/values', auth='public', methods=['GET'])
+    def get_values(self, sub_domain, keys=None, **kwargs):
+        pass
 
     @http.route('/<string:sub_domain>/config/vipLevel', auth='public', methods=['GET'])
     def get_viplevel(self, sub_domain, key=None, **kwargs):

@@ -19,6 +19,7 @@ class WxappOrder(http.Controller, BaseController):
                 auth='public', methods=['POST'], csrf=False, type='http')
     def create(self, sub_domain, **kwargs):
         token = kwargs.pop('token', None)
+        team_id = kwargs.pop('team', None)
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return res
@@ -53,7 +54,7 @@ class WxappOrder(http.Controller, BaseController):
                 'province_id': province_id,
                 'city_id': city_id,
                 'district_id': district_id,
-                'team_id': entry.team_id.id,
+                'team_id': team_id and int(team_id) or entry.team_id.id,
                 'note': remark,
                 'linkman': link_man,
                 'partner_shipping_id': address and address.id or None,
@@ -69,6 +70,7 @@ class WxappOrder(http.Controller, BaseController):
                     'amountTotle': goods_price,
                     'amountLogistics': logistics_price,
                 }
+                _data.update(self.calculate_ext_info(wechat_user, order_dict, goods_list, _data))
             else:
                 order = request.env(user=1)['sale.order'].create(order_dict)
                 for each_goods in goods_list:
@@ -101,6 +103,9 @@ class WxappOrder(http.Controller, BaseController):
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, str(e))
+
+    def calculate_ext_info(self, wechat_user, order_dict, goods_list, init_info):
+        return {}
 
     def parse_goods_json(self, goods_json, province_id, city_id, district_id, calculate):
         """

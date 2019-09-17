@@ -32,11 +32,11 @@
                 <data>
 		<xpath expr="//button[@name='action_view_invoice']" position="after">
                         <field name="number_goods" invisible="1"/>
-                        <button class="btn-warning" name="check_pay_window" string="确认支付" type="object" attrs="{'invisible': ['|', ('customer_status', '!=', 'unpaid'), ('number_goods', '=', 0)]}"/>
-                        <button class="btn-success" name="delivery_window" string="发货" type="object" attrs="{'invisible': ['|', ('customer_status', '!=', 'pending'), ('number_goods', '=', 0)]}"/>
+                        <button class="btn-warning" icon="fa-dollar" name="check_pay_window" string="确认支付" type="object" attrs="{'invisible': ['|', ('customer_status', '!=', 'unpaid'), ('number_goods', '=', 0)]}"/>
+                        <button class="btn-success" icon="fa-truck" name="delivery_window" string="确认发货" type="object" attrs="{'invisible': ['|', ('customer_status', '!=', 'pending'), ('number_goods', '=', 0)]}"/>
                 </xpath>
 		<xpath expr="//field[@name='validity_date']" position="before">
-                        <field name="customer_status" attrs="{'invisible': [('number_goods', '=', 0)]}" readonly="1" string="小程序单状态"/>
+                        <field name="customer_status" attrs="{'invisible': [('number_goods', '=', 0)]}" readonly="1" string="电商状态"/>
                 </xpath>
 		</data>
             </field>
@@ -67,12 +67,12 @@
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
                     <field name="create_date"/>
-                    <field name="customer_status" string="小程序单状态"/>
+                    <field name="customer_status" string="电商状态"/>
                 </tree>
             </field>
         </record>
         <record id="sale_order_action_476" model="ir.actions.act_window">
-            <field name="name">小程序订单</field>
+            <field name="name">电商订单</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
@@ -81,7 +81,7 @@
             <field name="context">{'hide_sale': True}</field>
             <field name="domain" eval="[('team_id', '=', ref('oejia_weshop.crm_team_data_3'))]"/>
             <field name="help" type="html"><p class="oe_view_nocontent_create">
-                暂无小程序订单
+                暂无订单
               </p></field>
         </record>
         <menuitem action="sale_order_action_476" id="sale_order_menuitem_335_1536754696" name="订单" parent="parent_menu_319_1536754696" sequence="0"/>
