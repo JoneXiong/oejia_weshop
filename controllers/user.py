@@ -219,6 +219,7 @@ class WxappUser(http.Controller, BaseController):
             user_info = get_decrypt_info(app_id, session_key, encrypted_data, iv)
             _logger.info('>>> bind_mobile: %s', user_info)
             wechat_user.write({'phone': user_info.get('phoneNumber')})
+            wechat_user.partner_id.write({'mobile': user_info.get('phoneNumber')})
 
             return self.res_ok()
 
