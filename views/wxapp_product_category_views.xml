@@ -13,8 +13,8 @@
                <field name="name"/>
                <field name="pid"/>
                <field name="is_use"/>
-               <field name="key"/>
                <field name="level"/>
+               <field name="key"/>
                 </tree>
             </field>
         </record>
@@ -33,7 +33,8 @@
                <field name="icon" widget="image"/>
                <field name="is_use"/>
                <field name="key"/>
-               <field name="product_template_ids"/>
+               <field name="product_template_ids" widget="many2many_tags"/>
+               <field name="child_ids" widget="many2many_tags"/>
                     </group>
                     </sheet>
                 </form>
