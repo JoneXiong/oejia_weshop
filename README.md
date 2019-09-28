@@ -28,7 +28,7 @@ oejia_weshop 是 Odoo 对接微信小程序实现的商城应用。
 
 小程序客户端
 
-![Odoo小程序商城](http://oejia.net/static/img/main_p.jpg)
+![Odoo小程序商城](http://oejia.net/static/img/odoo_wxapp.jpg)
 
 Odoo后台
 
