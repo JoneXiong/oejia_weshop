@@ -34,6 +34,8 @@ class Category(models.Model):
             level += 1
 
         self.level = level
+        for child in self.child_ids:
+            child._compute_level()
 
     def get_icon_image(self):
         base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url')
