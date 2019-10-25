@@ -20,22 +20,22 @@ class Category(models.Model):
     sort = fields.Integer(string='排序')
     product_template_ids = fields.One2many('product.template', 'wxpp_category_id', string='商品')
 
-    @api.one
     @api.depends('pid')
     def _compute_level(self):
-        level = 0
-        pid = self.pid
-        while True:
-            if not pid:
-                break
+        for cate in self:
+            level = 0
+            pid = cate.pid
+            while True:
+                if not pid:
+                    break
 
-            pid = pid.pid
+                pid = pid.pid
 
-            level += 1
+                level += 1
 
-        self.level = level
-        for child in self.child_ids:
-            child._compute_level()
+            cate.level = level
+            for child in cate.child_ids:
+                child._compute_level()
 
     def get_icon_image(self):
         base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url')
