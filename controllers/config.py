@@ -16,7 +16,7 @@ _logger = logging.getLogger(__name__)
 
 class WxappConfig(http.Controller, BaseController):
 
-    @http.route('/<string:sub_domain>/config/get-value', auth='public', methods=['GET'])
+    @http.route('/wxa/<string:sub_domain>/config/get-value', auth='public', methods=['GET'])
     def get_value(self, sub_domain, key=None, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
@@ -46,11 +46,11 @@ class WxappConfig(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
-    @http.route('/<string:sub_domain>/config/values', auth='public', methods=['GET'])
+    @http.route('/wxa/<string:sub_domain>/config/values', auth='public', methods=['GET'])
     def get_values(self, sub_domain, keys=None, **kwargs):
         pass
 
-    @http.route('/<string:sub_domain>/config/vipLevel', auth='public', methods=['GET'])
+    @http.route('/wxa/<string:sub_domain>/config/vipLevel', auth='public', methods=['GET'])
     def get_viplevel(self, sub_domain, key=None, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)

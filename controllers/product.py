@@ -72,7 +72,7 @@ class WxappProduct(http.Controller, BaseController):
 
         return domain
 
-    @http.route('/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET', 'POST'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, categoryId=False, nameLike=False, page=1, pageSize=20, **kwargs):
         _logger.info('>>> product list %s', kwargs)
         page = int(page)
@@ -103,7 +103,7 @@ class WxappProduct(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
-    @http.route('/<string:sub_domain>/shop/goods/detail', auth='public', methods=['GET'])
+    @http.route('/wxa/<string:sub_domain>/shop/goods/detail', auth='public', methods=['GET'])
     def detail(self, sub_domain, id=False, code=False, **kwargs):
         goods_id = id
         token = kwargs.get('token', None)

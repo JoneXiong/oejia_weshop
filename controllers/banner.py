@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 class WxappBanner(http.Controller, BaseController):
 
-    @http.route('/<string:sub_domain>/banner/list', auth='public', methods=['GET'])
+    @http.route('/wxa/<string:sub_domain>/banner/list', auth='public', methods=['GET'])
     def list(self, sub_domain, default_banner=True, **kwargs):
         _logger.info('>>> banner_list %s %s', default_banner, kwargs)
         banner_type = kwargs.get('type')

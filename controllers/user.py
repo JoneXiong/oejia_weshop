@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 class WxappUser(http.Controller, BaseController):
 
 
-    @http.route('/<string:sub_domain>/user/check-token', auth='public', methods=['GET'])
+    @http.route('/wxa/<string:sub_domain>/user/check-token', auth='public', methods=['GET'])
     def check_token(self, sub_domain, token=None, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
@@ -46,7 +46,7 @@ class WxappUser(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
-    @http.route('/<string:sub_domain>/user/wxapp/login', auth='public', methods=['GET', 'POST'],csrf=False)
+    @http.route('/wxa/<string:sub_domain>/user/wxapp/login', auth='public', methods=['GET', 'POST'],csrf=False)
     def login(self, sub_domain, code=None, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
@@ -106,7 +106,7 @@ class WxappUser(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
-    @http.route('/<string:sub_domain>/user/wxapp/register/complex', auth='public', methods=['GET', 'POST'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/user/wxapp/register/complex', auth='public', methods=['GET', 'POST'], csrf=False)
     def register(self, sub_domain, code=None, encryptedData=None, iv=None, **kwargs):
         '''
         用户注册
@@ -177,7 +177,7 @@ class WxappUser(http.Controller, BaseController):
         }
         return data
 
-    @http.route('/<string:sub_domain>/user/detail', auth='public', methods=['GET'])
+    @http.route('/wxa/<string:sub_domain>/user/detail', auth='public', methods=['GET'])
     def detail(self, sub_domain, token=None):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
@@ -190,7 +190,7 @@ class WxappUser(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
-    @http.route('/<string:sub_domain>/user/wxapp/bindMobile', auth='public', methods=['GET', 'POST'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/user/wxapp/bindMobile', auth='public', methods=['GET', 'POST'], csrf=False)
     def bind_mobile(self, sub_domain, token=None, encryptedData=None, iv=None, **kwargs):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
@@ -227,7 +227,7 @@ class WxappUser(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
-    @http.route('/<string:sub_domain>/user/amount', auth='public', methods=['GET'])
+    @http.route('/wxa/<string:sub_domain>/user/amount', auth='public', methods=['GET'])
     def user_amount(self, sub_domain, token=None):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)

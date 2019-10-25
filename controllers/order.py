@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 class WxappOrder(http.Controller, BaseController):
 
-    @http.route('/<string:sub_domain>/order/create',
+    @http.route('/wxa/<string:sub_domain>/order/create',
                 auth='public', methods=['POST'], csrf=False, type='http')
     def create(self, sub_domain, **kwargs):
         token = kwargs.pop('token', None)
@@ -197,7 +197,7 @@ class WxappOrder(http.Controller, BaseController):
         return
 
 
-    @http.route('/<string:sub_domain>/order/statistics', auth='public', method=['GET', 'POST'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/order/statistics', auth='public', method=['GET', 'POST'], csrf=False)
     def statistics(self, sub_domain, token=None, **kwargs):
         '''
         closed = ('closed', u'已关闭')
@@ -231,7 +231,7 @@ class WxappOrder(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
-    @http.route('/<string:sub_domain>/order/list', auth='public', method=['GET', 'POST'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/order/list', auth='public', method=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, token=None, status=None, **kwargs):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
@@ -275,7 +275,7 @@ class WxappOrder(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
-    @http.route('/<string:sub_domain>/order/detail', auth='public', method=['GET'])
+    @http.route('/wxa/<string:sub_domain>/order/detail', auth='public', method=['GET'])
     def detail(self, sub_domain, token=None, id=None, **kwargs):
         order_id = id
         try:
@@ -359,7 +359,7 @@ class WxappOrder(http.Controller, BaseController):
     def build_ext(self, order, data):
         pass
 
-    @http.route('/<string:sub_domain>/order/close', auth='public', method=['GET', 'POST'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/order/close', auth='public', method=['GET', 'POST'], csrf=False)
     def close(self, sub_domain, token=None, orderId=None, **kwargs):
         order_id = orderId
         try:
@@ -393,7 +393,7 @@ class WxappOrder(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
-    @http.route('/<string:sub_domain>/order/delivery', auth='public', method=['GET', 'POST'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/order/delivery', auth='public', method=['GET', 'POST'], csrf=False)
     def delivery(self, sub_domain, token=None, orderId=None, **kwargs):
         '''
         确认收货接口
@@ -426,7 +426,7 @@ class WxappOrder(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
-    @http.route('/<string:sub_domain>/order/reputation', auth='public', method=['GET'])
+    @http.route('/wxa/<string:sub_domain>/order/reputation', auth='public', method=['GET'])
     def reputation(self, sub_domain, token=None, order_id=None, reputation=2, **kwargs):
         '''
         评论接口
