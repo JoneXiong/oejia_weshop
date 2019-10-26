@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 class WxappMessage(http.Controller, BaseController):
 
-    @http.route('/<string:sub_domain>/template-msg/put', auth='public', methods=['POST'], csrf=False, type='http')
+    @http.route('/wxa/<string:sub_domain>/template-msg/put', auth='public', methods=['POST'], csrf=False, type='http')
     def send_template_msg(self, sub_domain, **kwargs):
         # https://www.it120.cc/apis/92
         # https://github.com/EastWorld/wechat-app-mall/blob/master/app.js

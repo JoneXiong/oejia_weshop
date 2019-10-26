@@ -16,7 +16,7 @@ _logger = logging.getLogger(__name__)
 
 class WxappCategory(http.Controller, BaseController):
 
-    @http.route('/<string:sub_domain>/shop/goods/category/all', auth='public', methods=['GET'])
+    @http.route('/wxa/<string:sub_domain>/shop/goods/category/all', auth='public', methods=['GET'])
     def all(self, sub_domain):
         ret, entry = self._check_domain(sub_domain)
         if ret:return ret

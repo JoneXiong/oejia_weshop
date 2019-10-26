@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 class WxappOrder(http.Controller, BaseController):
 
-    @http.route('/<string:sub_domain>/order/create',
+    @http.route('/wxa/<string:sub_domain>/order/create',
                 auth='public', methods=['POST'], csrf=False, type='http')
     def create(self, sub_domain, **kwargs):
         token = kwargs.pop('token', None)
@@ -197,7 +197,7 @@ class WxappOrder(http.Controller, BaseController):
         return
 
 
-    @http.route('/<string:sub_domain>/order/statistics', auth='public', method=['GET', 'POST'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/order/statistics', auth='public', method=['GET', 'POST'], csrf=False)
     def statistics(self, sub_domain, token=None, **kwargs):
         '''
         closed = ('closed', u'已关闭')
@@ -231,7 +231,7 @@ class WxappOrder(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
-    @http.route('/<string:sub_domain>/order/list', auth='public', method=['GET', 'POST'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/order/list', auth='public', method=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, token=None, status=None, **kwargs):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
@@ -262,7 +262,7 @@ class WxappOrder(http.Controller, BaseController):
                 "goodsMap": {
                     each_order.id: [
                         {
-                            "pic": each_goods.product_id.product_tmpl_id.get_main_image(),
+                            "pic": each_goods.product_id.product_tmpl_id.main_img,
                         } for each_goods in each_order.order_line if each_goods.product_id.id!=delivery_product_id]
                     for each_order in orders}
             }
@@ -275,7 +275,7 @@ class WxappOrder(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
-    @http.route('/<string:sub_domain>/order/detail', auth='public', method=['GET'])
+    @http.route('/wxa/<string:sub_domain>/order/detail', auth='public', method=['GET'])
     def detail(self, sub_domain, token=None, id=None, **kwargs):
         order_id = id
         try:
@@ -321,7 +321,7 @@ class WxappOrder(http.Controller, BaseController):
                             "id": each_goods.id,
                             "number": each_goods.product_uom_qty,
                             "orderId": order.id,
-                            "pic": each_goods.product_id.product_tmpl_id.get_main_image(),
+                            "pic": each_goods.product_id.product_tmpl_id.main_img,
                             "property": each_goods.product_id.get_property_str(),
                             "propertyChildIds": each_goods.product_id.attr_val_str,
                         } for each_goods in order.order_line if each_goods.product_id.id!=delivery_product_id
@@ -359,7 +359,7 @@ class WxappOrder(http.Controller, BaseController):
     def build_ext(self, order, data):
         pass
 
-    @http.route('/<string:sub_domain>/order/close', auth='public', method=['GET', 'POST'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/order/close', auth='public', method=['GET', 'POST'], csrf=False)
     def close(self, sub_domain, token=None, orderId=None, **kwargs):
         order_id = orderId
         try:
@@ -393,7 +393,7 @@ class WxappOrder(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
-    @http.route('/<string:sub_domain>/order/delivery', auth='public', method=['GET', 'POST'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/order/delivery', auth='public', method=['GET', 'POST'], csrf=False)
     def delivery(self, sub_domain, token=None, orderId=None, **kwargs):
         '''
         确认收货接口
@@ -426,7 +426,7 @@ class WxappOrder(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
-    @http.route('/<string:sub_domain>/order/reputation', auth='public', method=['GET'])
+    @http.route('/wxa/<string:sub_domain>/order/reputation', auth='public', method=['GET'])
     def reputation(self, sub_domain, token=None, order_id=None, reputation=2, **kwargs):
         '''
         评论接口

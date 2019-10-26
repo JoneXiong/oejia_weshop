@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 class WxappNotice(http.Controller, BaseController):
 
-    @http.route('/<string:sub_domain>/notice/list', auth='public', methods=['GET', 'POST'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/notice/list', auth='public', methods=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, pageSize=5, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
@@ -34,7 +34,7 @@ class WxappNotice(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
-    @http.route('/<string:sub_domain>/notice/detail', auth='public', methods=['GET'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/notice/detail', auth='public', methods=['GET'], csrf=False)
     def detail(self, sub_domain, id=False, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
