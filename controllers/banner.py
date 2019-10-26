@@ -68,7 +68,7 @@ class WxappBanner(http.Controller, BaseController):
                         "id": goods.id,
                         "linkUrl": '',
                         "paixu": goods.sequence or 0,
-                        "picUrl": goods.get_main_image(),
+                        "picUrl": goods.main_img,
                         "remark": '',
                         "status": 0 if goods.wxapp_published else 1,
                         "statusStr": '',
