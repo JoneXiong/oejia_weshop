@@ -14,13 +14,13 @@ _logger = logging.getLogger(__name__)
 
 class Region(http.Controller, BaseController):
 
-    @http.route('/common/region/v2/province', auth='public', methods=['GET'])
+    @http.route('/wxa/common/region/v2/province', auth='public', methods=['GET'])
     def province(self, **kwargs):
         provinces = request.env['oe.province'].sudo().search([])
         data = [{'id': e.id, 'name': e.name, 'level': 1} for e in provinces]
         return self.res_ok(data)
 
-    @http.route('/common/region/v2/child', auth='public', methods=['GET'])
+    @http.route('/wxa/common/region/v2/child', auth='public', methods=['GET'])
     def child(self, pid, **kwargs):
         model = None
         if pid[-4:]=='0000':
