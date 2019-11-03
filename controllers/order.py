@@ -39,7 +39,7 @@ class WxappOrder(http.Controller, BaseController):
             calculate = kwargs.pop('calculate', False)
             remark = kwargs.pop('remark', '')
 
-            goods_price, logistics_price, total, goods_list = self.parse_goods_json(
+            goods_price, logistics_price, total, order_lines = self.parse_goods_json(
                 goods_json, province_id, city_id, district_id, calculate
             )
 
@@ -51,7 +51,7 @@ class WxappOrder(http.Controller, BaseController):
             order_dict = {
                 'zipcode': zipcode,
                 'partner_id': wechat_user.partner_id.id,
-                'number_goods': sum(map(lambda r: r['product_uom_qty'], goods_list)),
+                'number_goods': sum(map(lambda r: r['product_uom_qty'], order_lines)),
                 'logistics_price': logistics_price,
                 'province_id': province_id,
                 'city_id': city_id,
@@ -72,12 +72,12 @@ class WxappOrder(http.Controller, BaseController):
                     'amountTotle': goods_price,
                     'amountLogistics': logistics_price,
                 }
-                _data.update(self.calculate_ext_info(wechat_user, order_dict, goods_list, _data))
+                _data.update(self.calculate_ext_info(wechat_user, order_dict, order_lines, _data))
             else:
                 order = request.env(user=1)['sale.order'].create(order_dict)
-                for each_goods in goods_list:
-                    each_goods['order_id'] = order.id
-                    request.env(user=1)['sale.order.line'].create(each_goods)
+                for line in order_lines:
+                    line['order_id'] = order.id
+                    request.env(user=1)['sale.order.line'].create(line)
                 if logistics_price>0:
                     request.env(user=1)['sale.order.line'].create({
                         'order_id': order.id,
@@ -88,7 +88,7 @@ class WxappOrder(http.Controller, BaseController):
 
                 #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
-                order.action_created()
+                order.action_created(kwargs)
                 _data = {
                     "amountReal": round(order.amount_total, 2),
                     "dateAdd": dt_convert(order.create_date),
@@ -115,11 +115,11 @@ class WxappOrder(http.Controller, BaseController):
         :param province_id: 省
         :param city_id: 市
         :param district_id: 区
-        :return: goods_price, logistics_price, total, goods_list
+        :return: goods_fee, logistics_fee, total, order_lines
         """
         # [{"goodsId":1,"number":3,"propertyChildIds":"1:1,2:4,","logisticsType":0, "inviter_id":0}]
-        goods_price, logistics_price = 0.0, 0.0
-        goods_list = []
+        goods_fee, logistics_fee = 0.0, 0.0
+        order_lines = []
 
         goods_id_set = set(map(lambda r: r['goodsId'], goods_json))
         product_list = []
@@ -145,17 +145,13 @@ class WxappOrder(http.Controller, BaseController):
             transport_type = each_goods['logisticsType']
             template = template_dict[each_goods['goodsId']]
 
-            each_goods_price, each_goods_total, property_str, product = self.calculate_goods_fee(template, amount, property_child_ids, calculate)
+            each_goods_total, line_dict = self.calculate_goods_fee(template, amount, property_child_ids, calculate)
             each_logistics_price = self.calculate_logistics_fee(template, amount, transport_type, province_id, city_id, district_id)
-            goods_list.append({
-                'product_id': product.id,
-                'price_unit': each_goods_price,
-                'product_uom_qty': amount,
-            })
-            goods_price += each_goods_total
-            logistics_price += each_logistics_price
+            order_lines.append(line_dict)
+            goods_fee += each_goods_total
+            logistics_fee += each_logistics_price
 
-        return goods_price, logistics_price, goods_price + logistics_price, goods_list
+        return goods_fee, logistics_fee, goods_fee + logistics_fee, order_lines
 
     def calculate_goods_fee(self, goods, amount, property_child_ids, calculate):
         _logger.info('>>> calculate_goods_fee %s %s %s', goods, amount, property_child_ids)
@@ -188,7 +184,12 @@ class WxappOrder(http.Controller, BaseController):
                 if not property_child_ids:
                     goods.sudo().change_qty(-amount)
 
-        return price, total, property_str, product
+        line_dict = {
+            'product_id': product.id,
+            'price_unit': price,
+            'product_uom_qty': amount,
+        }
+        return total, line_dict
 
     def calculate_logistics_fee(self, goods, amount, transport_type, province_id, city_id, district_id):
         return 0

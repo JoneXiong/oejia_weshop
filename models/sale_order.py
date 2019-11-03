@@ -95,7 +95,7 @@ class SaleOrder(models.Model):
         self.write({'customer_status': 'pending'})
 
     @api.multi
-    def action_created(self):
+    def action_created(self, data=None):
         pass
 
     @api.multi
