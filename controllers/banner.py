@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 class WxappBanner(http.Controller, BaseController):
 
-    @http.route('/<string:sub_domain>/banner/list', auth='public', methods=['GET'])
+    @http.route('/wxa/<string:sub_domain>/banner/list', auth='public', methods=['GET'])
     def list(self, sub_domain, default_banner=True, **kwargs):
         _logger.info('>>> banner_list %s %s', default_banner, kwargs)
         banner_type = kwargs.get('type')
@@ -68,7 +68,7 @@ class WxappBanner(http.Controller, BaseController):
                         "id": goods.id,
                         "linkUrl": '',
                         "paixu": goods.sequence or 0,
-                        "picUrl": goods.get_main_image(),
+                        "picUrl": goods.main_img,
                         "remark": '',
                         "status": 0 if goods.wxapp_published else 1,
                         "statusStr": '',

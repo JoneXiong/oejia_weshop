@@ -33,7 +33,7 @@ class WxappProduct(http.Controller, BaseController):
             "numberOrders": 0,#each_goods.sales_count,
             "originalPrice": each_goods.original_price,
             "paixu": each_goods.sequence or 0,
-            "pic": each_goods.get_main_image(),
+            "pic": each_goods.main_img,
             "recommendStatus": 0 if not each_goods.recommend_status else 1,
             "recommendStatusStr": defs.GoodsRecommendStatus.attrs[each_goods.recommend_status],
             "shopId": 0,
@@ -63,6 +63,8 @@ class WxappProduct(http.Controller, BaseController):
         return _dict
 
     def get_goods_domain(self, category_id, nameLike, **kwargs):
+        if 'recommendStatus' in kwargs or 'pingtuan' in kwargs:
+            return [('id', '=', 0)]
         domain = [('sale_ok', '=', True), ('wxapp_published', '=', True)]
         if category_id:
             cate_ids = [int(category_id)] + request.env['wxapp.product.category'].sudo().browse(int(category_id)).child_ids.ids
@@ -72,7 +74,7 @@ class WxappProduct(http.Controller, BaseController):
 
         return domain
 
-    @http.route('/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET', 'POST'], csrf=False)
+    @http.route('/wxa/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, categoryId=False, nameLike=False, page=1, pageSize=20, **kwargs):
         _logger.info('>>> product list %s', kwargs)
         page = int(page)
@@ -85,12 +87,10 @@ class WxappProduct(http.Controller, BaseController):
             if ret:return ret
             self.check_userid(token, userid)
 
-            if kwargs.get('recommendStatus')=='1' or kwargs.get('pingtuan')=='true':
-                return self.res_ok([])
-
             domain = self.get_goods_domain(category_id, nameLike, **kwargs)
 
             goods_list = request.env['product.template'].sudo().search(domain, offset=(page-1)*pageSize, limit=pageSize, order="sequence")
+            goods_list.batch_get_main_image()
 
             if not goods_list:
                 return self.res_err(404)
@@ -102,7 +102,7 @@ class WxappProduct(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
-    @http.route('/<string:sub_domain>/shop/goods/detail', auth='public', methods=['GET'])
+    @http.route('/wxa/<string:sub_domain>/shop/goods/detail', auth='public', methods=['GET'])
     def detail(self, sub_domain, id=False, code=False, **kwargs):
         goods_id = id
         token = kwargs.get('token', None)
@@ -141,7 +141,7 @@ class WxappProduct(http.Controller, BaseController):
                 "code": 0,
                 "data": {
                     "category": self._product_category_dict(goods.wxpp_category_id),
-                    "pics": goods.get_images(),
+                    "pics": json.loads(goods.images_data),
                     "content": convert_static_link(request, description_value) if description_value else '',
                     "basicInfo": self._product_basic_dict(goods)
                 },

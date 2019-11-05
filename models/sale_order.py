@@ -34,17 +34,16 @@ class SaleOrder(models.Model):
 
 
 
-    @api.one
     @api.depends('province_id', 'city_id', 'district_id', 'address')
     def _compute_full_address(self):
-        self.full_address = u'{province_name} {city_name} {district_name} {address}'.format(
-            province_name=self.province_id.name,
-            city_name=self.city_id.name,
-            district_name=self.district_id.name or '',
-            address=self.address
-        )
+        for order in self:
+            order.full_address = u'{province_name} {city_name} {district_name} {address}'.format(
+                province_name=order.province_id.name,
+                city_name=order.city_id.name,
+                district_name=order.district_id.name or '',
+                address=order.address
+            )
 
-    @api.one
     @api.depends('shipper_id', 'shipper_no')
     def _compute_traces(self):
         pass
@@ -52,11 +51,11 @@ class SaleOrder(models.Model):
     def get_traces(self, refresh=False):
         return self.shipper_traces
 
-    @api.one
     @api.depends('logistics_price', 'amount_total')
     def _compute_pay_total(self):
-        self.total = self.amount_total
-        self.goods_price = self.amount_total - self.logistics_price
+        for order in self:
+            order.total = order.amount_total
+            order.goods_price = order.amount_total - order.logistics_price
 
 
     @api.multi
@@ -96,7 +95,7 @@ class SaleOrder(models.Model):
         self.write({'customer_status': 'pending'})
 
     @api.multi
-    def action_created(self):
+    def action_created(self, data=None):
         pass
 
     @api.multi

@@ -1,5 +1,6 @@
 # coding=utf-8
 import logging
+import json
 
 from openerp import models, fields, api
 
@@ -20,29 +21,38 @@ class ProductTemplate(models.Model):
     number_good_reputation = fields.Integer('好评数', default=0)
     number_fav = fields.Integer('收藏数', default=0)
     views = fields.Integer('浏览量', default=0)
+    main_img = fields.Char('主图', compute='_get_main_image')
+    images_data = fields.Char('图片', compute='_get_images')
 
 
-    def get_main_image(self):
+    def _get_main_image(self):
+        _logger.info('>>> _get_main_image ...')
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        return '%s/web/image/product.template/%s/image/300x300'%(base_url, self.id)
+        for obj in self:
+            obj.main_img = '%s/web/image/product.template/%s/image/300x300'%(base_url, obj.id)
 
-    def get_images(self):
+    def _get_images(self):
+        _logger.info('>>> _get_images ...')
         base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        _list = []
-        if hasattr(self, 'product_image_ids'):
-            for obj in self.product_image_ids:
-                _dict = {
-                    "id": obj.id,
-                    "goodsId": self.id,
-                    "pic": '%s/web/image/product.image/%s/image/'%(base_url, obj.id)
-                }
-                _list.append(_dict)
-        _list.append({
-            'id': self.id,
-            'goodsId': self.id,
-            'pic': '%s/web/image/product.template/%s/image/'%(base_url, self.id)
-        })
-        return _list
+        for product in self:
+            _list = []
+            if hasattr(product, 'product_image_ids'):
+                for obj in product.product_image_ids:
+                    _dict = {
+                        "id": obj.id,
+                        "goodsId": product.id,
+                        "pic": '%s/web/image/product.image/%s/image/'%(base_url, obj.id)
+                    }
+                    _list.append(_dict)
+            _list.append({
+                'id': product.id,
+                'goodsId': product.id,
+                'pic': '%s/web/image/product.template/%s/image/'%(base_url, product.id)
+            })
+            product.images_data =  json.dumps(_list)
+
+    def batch_get_main_image(self):
+        self._get_main_image()
 
     def get_present_qty(self):
         return self.qty_public_tpl
