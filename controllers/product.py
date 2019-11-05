@@ -63,6 +63,8 @@ class WxappProduct(http.Controller, BaseController):
         return _dict
 
     def get_goods_domain(self, category_id, nameLike, **kwargs):
+        if 'recommendStatus' in kwargs or 'pingtuan' in kwargs:
+            return [('id', '=', 0)]
         domain = [('sale_ok', '=', True), ('wxapp_published', '=', True)]
         if category_id:
             cate_ids = [int(category_id)] + request.env['wxapp.product.category'].sudo().browse(int(category_id)).child_ids.ids
@@ -84,9 +86,6 @@ class WxappProduct(http.Controller, BaseController):
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
             self.check_userid(token, userid)
-
-            if kwargs.get('recommendStatus')=='1' or kwargs.get('pingtuan')=='true':
-                return self.res_ok([])
 
             domain = self.get_goods_domain(category_id, nameLike, **kwargs)
 
