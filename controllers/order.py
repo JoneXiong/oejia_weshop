@@ -257,6 +257,7 @@ class WxappOrder(http.Controller, BaseController):
                     "remark": each_order.note,
                     "orderNumber": each_order.name,
                     "status": defs.OrderResponseStatus.attrs[each_order.customer_status],
+                    "state": defs.OrderResponseState.attrs[each_order.state],
                     "statusStr": defs.OrderStatus.attrs[each_order.customer_status],
                     "score": 0,
                 } for each_order in orders],

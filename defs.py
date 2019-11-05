@@ -25,6 +25,15 @@ class OrderRequestStatus(Const):
     unevaluated = (3, 'unevaluated')
     completed = (4, 'completed')
 
+
+class OrderResponseState(Const):
+    draft = ('draft', 0)
+    sent = ('sent', 1)
+    sale = ('sale', 2)
+    done = ('done', 3)
+    cancel = ('cancel', 4)
+
+
 class OrderResponseStatus(Const):
     closed = ('closed', -1)
     unpaid = ('unpaid', 0)
