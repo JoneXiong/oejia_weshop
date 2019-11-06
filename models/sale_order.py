@@ -73,6 +73,7 @@ class SaleOrder(models.Model):
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
+    @api.multi
     def delivery_window(self):
         self.ensure_one()
         return {
