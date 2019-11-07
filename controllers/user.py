@@ -38,13 +38,13 @@ class WxappUser(http.Controller, BaseController):
             ])
 
             if not access_token:
-                return self.res_err(901)
+                return self.res_err(902)
 
             wechat_user = request.env(user=1)['wxapp.user'].search([
                 ('open_id', '=', access_token.open_id),
             ])
             if not wechat_user:
-                return self.res_err(901)
+                return self.res_err(902)
             data = self.get_user_info(wechat_user)
 
             return self.res_ok(data)
