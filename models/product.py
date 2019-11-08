@@ -70,7 +70,7 @@ class ProductProduct(models.Model):
 
     present_price = fields.Float('现价', default=0, required=True) #暂未用,目前取Odoo的价格
     qty_public = fields.Integer('库存', default=0, required=True)
-    attr_val_str = fields.Char('规格', compute='_compute_attr_val_str', store=True)
+    attr_val_str = fields.Char('规格', compute='_compute_attr_val_str', store=True, default='')
 
     @api.multi
     @api.depends('attribute_value_ids')
