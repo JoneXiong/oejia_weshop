@@ -16,9 +16,6 @@ class WxappConfig(models.Model):
     app_id = fields.Char('appid')
     secret = fields.Char('secret')
 
-    wechat_pay_id = fields.Char('微信支付商户号')
-    wechat_pay_secret = fields.Char('微信支付商户秘钥')
-
     team_id = fields.Many2one('crm.team', string='所属销售渠道', required=True)
 
     @api.model

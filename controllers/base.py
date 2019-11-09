@@ -31,6 +31,7 @@ error_code = {
     701: u'该功能暂未开通',
     702: u'资源余额不足',
     901: u'登录超时',
+    902: u'登录超时',# 不触发授权登录
     300: u'缺少参数',
     400: u'域名错误',
     401: u'该域名已删除',
@@ -107,8 +108,8 @@ class BaseController(object):
         request.wechat_user = wechat_user
         return None, wechat_user, wxapp_entry
 
-    def check_userid(self, token, userid):
-        if token and userid:
+    def check_userid(self, token):
+        if token:
             access_token = request.env(user=1)['wxapp.access_token'].search([
                 ('token', '=', token),
             ])
@@ -117,10 +118,7 @@ class BaseController(object):
             wechat_user = request.env(user=1)['wxapp.user'].search([
                 ('open_id', '=', access_token.open_id),
             ])
-            if not wechat_user:
-                return
-
-            if hasattr(wechat_user, 'user_id') and str(wechat_user.user_id.id)==str(userid):
+            if wechat_user:
                 request.wechat_user = wechat_user
 
 

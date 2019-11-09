@@ -231,6 +231,19 @@ class WxappOrder(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
+    def _order_basic_dict(self, each_order):
+        ret = {
+            "amountReal": round(each_order.amount_total, 2),
+            "dateAdd": dt_convert(each_order.create_date),
+            "id": each_order.id,
+            "remark": each_order.note,
+            "orderNumber": each_order.name,
+            "status": defs.OrderResponseStatus.attrs[each_order.customer_status],
+            "statusStr": defs.OrderStatus.attrs[each_order.customer_status],
+            "score": 0,
+        }
+        return ret
+
 
     @http.route('/wxa/<string:sub_domain>/order/list', auth='public', method=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, token=None, status=None, **kwargs):
@@ -250,16 +263,7 @@ class WxappOrder(http.Controller, BaseController):
             delivery_product_id = request.env.ref('oejia_weshop.product_product_delivery_weshop').id
             data = {
                 "logisticsMap": {},
-                "orderList": [{
-                    "amountReal": round(each_order.amount_total, 2),
-                    "dateAdd": dt_convert(each_order.create_date),
-                    "id": each_order.id,
-                    "remark": each_order.note,
-                    "orderNumber": each_order.name,
-                    "status": defs.OrderResponseStatus.attrs[each_order.customer_status],
-                    "statusStr": defs.OrderStatus.attrs[each_order.customer_status],
-                    "score": 0,
-                } for each_order in orders],
+                "orderList": [self._order_basic_dict(each_order) for each_order in orders],
                 "goodsMap": {
                     each_order.id: [
                         {

@@ -81,11 +81,10 @@ class WxappProduct(http.Controller, BaseController):
         pageSize = int(pageSize)
         category_id = categoryId
         token = kwargs.get('token', None)
-        userid = kwargs.get('userid', None)
         try:
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
-            self.check_userid(token, userid)
+            self.check_userid(token)
 
             domain = self.get_goods_domain(category_id, nameLike, **kwargs)
 
@@ -106,11 +105,10 @@ class WxappProduct(http.Controller, BaseController):
     def detail(self, sub_domain, id=False, code=False, **kwargs):
         goods_id = id
         token = kwargs.get('token', None)
-        userid = kwargs.get('userid', None)
         try:
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
-            self.check_userid(token, userid)
+            self.check_userid(token)
 
             if not goods_id and not code:
                 return self.res_err(300)

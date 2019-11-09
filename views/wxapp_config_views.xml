@@ -36,10 +36,6 @@
                         <field name="team_id"/>
                     </group>
 
-                     <group string="支付配置" colspan="4">
-                        <field name="wechat_pay_id"/>
-                        <field name="wechat_pay_secret"/>
-                    </group>
 
                     </sheet>
                 </form>
