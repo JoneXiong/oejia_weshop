@@ -163,6 +163,11 @@ class WxappOrder(http.Controller, BaseController):
                 ('product_tmpl_id', '=', goods.id),
                 ('attr_val_str', '=', property_child_ids)
             ])
+            if not property_child_ids and not product:
+                product = request.env['product.product'].sudo().search([
+                    ('product_tmpl_id', '=', goods.id),
+                    ('attr_val_str', '=', False)
+                ])
             if not product:
                 raise UserException('商品不存在！')
 
