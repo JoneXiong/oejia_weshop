@@ -29,6 +29,40 @@
                 </data>
             </field>
         </record>
+        <record id="product_template_action_server_541" model="ir.actions.server">
+            <field name="name">上架到小程序</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_product_template"></field>
+            <field name="state">code</field>
+            <field name="code">records.write({'wxapp_published': True})</field>
+        </record>
+        <record model="ir.values" id="product_template_action_server_541_src_value">
+            <field name="name">product_template_action_server_541_src_value</field>
+            <field name="action_id" ref="product_template_action_server_541"></field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('product_template_action_server_541'))"></field>
+            <field name="key">action</field>
+            <field name="model">product.template</field>
+            <field name="model_id" ref="model_product_template"></field>
+            <field name="key2">client_action_multi</field>
+        </record>
+        <record id="product_template_action_server_542" model="ir.actions.server">
+            <field name="name">从小程序下架</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_product_template"></field>
+            <field name="state">code</field>
+            <field name="code">records.write({'wxapp_published': False})</field>
+        </record>
+        <record model="ir.values" id="product_template_action_server_542_src_value">
+            <field name="name">product_template_action_server_542_src_value</field>
+            <field name="action_id" ref="product_template_action_server_542"></field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('product_template_action_server_542'))"></field>
+            <field name="key">action</field>
+            <field name="model">product.template</field>
+            <field name="model_id" ref="model_product_template"></field>
+            <field name="key2">client_action_multi</field>
+        </record>
         <menuitem action="product.product_template_action" id="product_template_menuitem_325_1536754696" name="产品" parent="parent_menu_319_1536754696" sequence="10"/>
 
     </data>
