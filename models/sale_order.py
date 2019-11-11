@@ -10,12 +10,12 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     customer_status = fields.Selection(defs.OrderStatus.attrs.items(), default=defs.OrderStatus.unpaid,
-                              required=True, string='状态', track_visibility='onchange')
+                              required=True, string='状态', track_visibility='onchange', copy=False)
 
     number_goods = fields.Integer('商品数量')
     goods_price = fields.Float('商品总金额', requried=True, default=0, compute='_compute_pay_total', store=True)
     logistics_price = fields.Float('物流费用', requried=True, default=0)
-    total = fields.Float('实际支付', requried=True, default=0, track_visibility='onchange', compute='_compute_pay_total', store=True)
+    total = fields.Float('实际支付', requried=True, default=0, track_visibility='onchange', compute='_compute_pay_total', store=True, copy=False)
 
     province_id = fields.Many2one('oe.province', string='省')
     city_id = fields.Many2one('oe.city', string='市')
@@ -28,9 +28,9 @@ class SaleOrder(models.Model):
     zipcode = fields.Char('邮编', requried=True)
 
 
-    shipper_id = fields.Many2one('oe.shipper', string='承运商', track_visibility='onchange')
-    shipper_no = fields.Char('运单号', track_visibility='onchange')
-    shipper_traces = fields.Text('物流信息')
+    shipper_id = fields.Many2one('oe.shipper', string='承运商', track_visibility='onchange', copy=False)
+    shipper_no = fields.Char('运单号', track_visibility='onchange', copy=False)
+    shipper_traces = fields.Text('物流信息', copy=False)
 
 
 

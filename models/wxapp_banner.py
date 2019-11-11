@@ -18,7 +18,7 @@ class Banner(models.Model):
     image = fields.Binary(string='图片')
     link_url = fields.Char(string='链接地址')
     sort = fields.Integer(string='排序')
-    status = fields.Boolean('显示', default=True, required=True)
+    status = fields.Boolean('显示', default=True)
     remark = fields.Text(string='备注')
 
     type_mark = fields.Integer(string='类型标记', default=0)
