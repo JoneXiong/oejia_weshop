@@ -328,7 +328,7 @@ class WxappOrder(http.Controller, BaseController):
                             "amount": each_goods.price_unit,
                             "goodsId": each_goods.product_id.product_tmpl_id.id,
                             "goodsName": each_goods.name,
-                            "id": each_goods.id,
+                            "id": each_goods.product_id.id,
                             "number": each_goods.product_uom_qty,
                             "orderId": order.id,
                             "pic": each_goods.product_id.product_tmpl_id.main_img,
@@ -434,53 +434,5 @@ class WxappOrder(http.Controller, BaseController):
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, str(e))
-
-
-    @http.route('/wxa/<string:sub_domain>/order/reputation', auth='public', method=['GET'])
-    def reputation(self, sub_domain, token=None, order_id=None, reputation=2, **kwargs):
-        '''
-        评论接口
-        {
-            "token": "xxx",
-            "orderId": "4",
-            "reputations": [{
-                "id": "4",
-                "reputation": "2",
-                "remark": "xxx"
-            }]
-        }
-        '''
-        try:
-            post_json = json.loads(kwargs.pop('postJsonString'))
-            token = post_json.get('token',None)
-            order_id = post_json.get('orderId',None)
-            reputations = post_json.get('reputations',[])
-
-            res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
-
-            if not order_id:
-                return self.res_err(300)
-
-            order = request.env['sale.order'].sudo().search([
-                ('partner_id', '=', wechat_user.partner_id.id),
-                ('id', '=', int(order_id))
-            ])
-
-            if not order:
-                return self.res_err(404)
-
-            order.write({'customer_status': 'completed'})
-
-            for reputation in reputations:
-                # 保存评论
-                pass
-
-            return request.make_response(json.dumps({'code': 0, 'msg': 'success'}))
-
-        except Exception as e:
-            _logger.exception(e)
-            return self.res_err(-1, str(e))
-
 
 
