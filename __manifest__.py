@@ -36,6 +36,7 @@
 
         'data/wxapp_config_datas.xml',
         'data/product_product_datas.xml',
+        'data/res_partner_category_datas.xml',
 
     ],
     'demo': [
