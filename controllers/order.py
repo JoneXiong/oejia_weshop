@@ -249,6 +249,11 @@ class WxappOrder(http.Controller, BaseController):
         }
         return ret
 
+    def get_orders_domain(self, status, **kwargs):
+        domain = [('partner_id', '=', request.wechat_user.partner_id.id)]
+        if status:
+            domain.append(('customer_status', '=', defs.OrderRequestStatus.attrs[int(status)]))
+        return domain
 
     @http.route('/wxa/<string:sub_domain>/order/list', auth='public', method=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, token=None, status=None, **kwargs):
@@ -256,15 +261,8 @@ class WxappOrder(http.Controller, BaseController):
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return res
 
-            if status is not None:
-                orders = request.env['sale.order'].sudo().search([
-                    ('partner_id', '=', wechat_user.partner_id.id),
-                    ('customer_status', '=', defs.OrderRequestStatus.attrs[int(status)])
-                ], limit=30)
-            else:
-                orders = request.env['sale.order'].search([
-                    ('partner_id', '=', wechat_user.partner_id)
-                ], limit=30)
+            domain = self.get_orders_domain(status, **kwargs)
+            orders = request.env['sale.order'].sudo().search(domain, order='id desc', limit=30)
             delivery_product_id = request.env.ref('oejia_weshop.product_product_delivery_weshop').id
             data = {
                 "logisticsMap": {},
