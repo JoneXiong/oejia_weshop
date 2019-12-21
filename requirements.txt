@@ -1,4 +1,3 @@
 pycrypto
-itsdangerous==0.24
-kdniao==0.1.2
 xmltodict==0.11.0
+itsdangerous==0.24
