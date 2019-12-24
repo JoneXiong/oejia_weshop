@@ -28,8 +28,9 @@ class WxappUser(http.Controller, BaseController):
             if not token:
                 return self.res_err(300)
 
-            if request.uid != request.env.ref('base.public_user').id:
-                if str(request.uid)==token:
+            login_uid = request.session.get('login_uid')
+            if login_uid:
+                if str(login_uid)==token:
                     _logger.info('>>> check_token user %s', request.env.user)
                     return self.res_ok()
 

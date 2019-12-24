@@ -62,6 +62,7 @@ class WechatUser(object):
         self.partner_id = partner
         self.user_id = user
         self.id = user.id
+        self.open_id = ''
 
     @property
     def address_ids(self):
@@ -84,10 +85,15 @@ class BaseController(object):
         if not token:
             return self.res_err(300), None, wxapp_entry
 
-        if request.uid != request.env.ref('base.public_user').id:
-            if str(request.uid)==token:# request.session.sid==token:
-                _logger.info('>>> login user %s', request.env.user)
-                return None, WechatUser(request.env.user.partner_id, request.env.user), wxapp_entry
+        login_uid = request.session.get('login_uid')
+        _logger.info('>>> get session login_uid %s', login_uid)
+        if login_uid:
+            if str(login_uid)==token:# request.session.sid==token:
+                wechat_user = request.env['wxapp.user'].sudo().search([('partner_id', '=', request.env.user.partner_id.id)], limit=1)
+                #wechat_user = WechatUser(request.env.user.partner_id, request.env.user)
+                if wechat_user:
+                    request.wechat_user = wechat_user
+                return None, wechat_user, wxapp_entry
 
         access_token = request.env['wxapp.access_token'].sudo().search([
             ('token', '=', token),
