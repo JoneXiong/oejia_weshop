@@ -171,7 +171,7 @@ class WxappOrder(http.Controller, BaseController):
             if not product:
                 raise UserException('商品不存在！')
 
-            price = product.get_present_price()
+            price = product.get_present_price(amount)
             total = price * amount
             property_str = product.name
 
