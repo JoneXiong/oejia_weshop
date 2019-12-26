@@ -77,6 +77,8 @@ class WxappOrder(http.Controller, BaseController):
                     'extra': order_dict['extra']
                 }
                 _data.update(self.calculate_ext_info(wechat_user, order_dict, order_lines, _data))
+                for line in order_lines:
+                    line['price_unit'] = round(line['price_unit'], 2)
                 _data['orderLines'] = order_lines
             else:
                 order_dict.pop('goods_price')
