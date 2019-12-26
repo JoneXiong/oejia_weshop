@@ -39,7 +39,7 @@ class WxappOrder(http.Controller, BaseController):
             calculate = kwargs.pop('calculate', False)
             remark = kwargs.pop('remark', '')
 
-            goods_price, logistics_price, total, order_lines = self.parse_goods_json(
+            goods_price, logistics_price, order_lines = self.parse_goods_json(
                 goods_json, province_id, city_id, district_id, calculate
             )
 
@@ -61,19 +61,28 @@ class WxappOrder(http.Controller, BaseController):
                 'linkman': link_man,
                 'partner_shipping_id': address and address.id or None,
                 'user_id': wechat_user.partner_id.user_id.id,
+                'goods_price': goods_price,
+                'extra': {},
             }
             order_dict.update(kwargs)
             _logger.info('>>> order_dict %s', order_dict)
+            self.after_calculate(wechat_user, order_dict, order_lines)
 
             if calculate:
                 _data = {
                     'score': 0,
                     'isNeedLogistics': 1,
-                    'amountTotle': goods_price,
-                    'amountLogistics': logistics_price,
+                    'amountTotle': order_dict['goods_price'],
+                    'amountLogistics': order_dict['logistics_price'],
+                    'extra': order_dict['extra']
                 }
                 _data.update(self.calculate_ext_info(wechat_user, order_dict, order_lines, _data))
+                for line in order_lines:
+                    line['price_unit'] = round(line['price_unit'], 2)
+                _data['orderLines'] = order_lines
             else:
+                order_dict.pop('goods_price')
+                order_dict.pop('extra')
                 order = request.env(user=1)['sale.order'].create(order_dict)
                 for line in order_lines:
                     line['order_id'] = order.id
@@ -106,6 +115,9 @@ class WxappOrder(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
+    def after_calculate(self, wechat_user, order_dict, order_lines):
+        pass
+
     def calculate_ext_info(self, wechat_user, order_dict, goods_list, init_info):
         return {}
 
@@ -115,7 +127,7 @@ class WxappOrder(http.Controller, BaseController):
         :param province_id: 省
         :param city_id: 市
         :param district_id: 区
-        :return: goods_fee, logistics_fee, total, order_lines
+        :return: goods_fee, logistics_fee, order_lines
         """
         # [{"goodsId":1,"number":3,"propertyChildIds":"1:1,2:4,","logisticsType":0, "inviter_id":0}]
         goods_fee, logistics_fee = 0.0, 0.0
@@ -151,7 +163,7 @@ class WxappOrder(http.Controller, BaseController):
             goods_fee += each_goods_total
             logistics_fee += each_logistics_price
 
-        return goods_fee, logistics_fee, goods_fee + logistics_fee, order_lines
+        return goods_fee, logistics_fee, order_lines
 
     def calculate_goods_fee(self, goods, amount, property_child_ids, calculate):
         _logger.info('>>> calculate_goods_fee %s %s %s', goods, amount, property_child_ids)

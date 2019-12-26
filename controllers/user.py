@@ -154,7 +154,7 @@ class WxappUser(http.Controller, BaseController):
                 'register_ip': request.httprequest.remote_addr,
                 'user_id': user_id,
                 'partner_id': user_id and request.env['res.users'].sudo().browse(user_id).partner_id.id or None,
-                'category_id': [(4, request.env.ref('oejia_weshop.res_partner_category_data_1').id)],
+                'category_id': [(4, request.env.ref('oejia_weshop.res_partner_category_data_1').sudo().id)],
             }
             if user_id:
                 vals['user_id'] = user_id
