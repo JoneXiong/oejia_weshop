@@ -73,7 +73,7 @@ class ProductProduct(models.Model):
     attr_val_str = fields.Char('规格', compute='_compute_attr_val_str', store=True, default='')
 
     @api.multi
-    @api.depends('attribute_value_ids')
+    @api.depends('product_template_attribute_value_ids')
     def _compute_attr_val_str(self):
         for obj in self:
             obj.attr_val_str = ''
