@@ -14,6 +14,7 @@ from . import order
 from . import notice
 from . import score
 from . import region
+from . import message
 
 
 from odoo.http import root, JsonRequest, HttpRequest

@@ -164,3 +164,6 @@ class WxappProduct(http.Controller, BaseController):
                 "details": []
             }
 
+    @http.route('/wxa/<string:sub_domain>/shop/goods/reputation', auth='public', methods=['GET', 'POST'], csrf=False)
+    def reputation(self, sub_domain, goodsId=None, **kwargs):
+        return self.res_ok([])
