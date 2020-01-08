@@ -90,8 +90,10 @@ class BaseController(object):
         if login_uid:
             if str(login_uid)==token:# request.session.sid==token:
                 wechat_user = request.env['wxapp.user'].sudo().search([('partner_id', '=', request.env.user.partner_id.id)], limit=1)
-                #wechat_user = WechatUser(request.env.user.partner_id, request.env.user)
                 if wechat_user:
+                    request.wechat_user = wechat_user
+                else:
+                    wechat_user = WechatUser(request.env.user.partner_id, request.env.user)
                     request.wechat_user = wechat_user
                 return None, wechat_user, wxapp_entry
 
