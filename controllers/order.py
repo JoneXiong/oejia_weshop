@@ -30,11 +30,11 @@ class WxappOrder(http.Controller, BaseController):
             # [{"goodsId":1,"number":3,"propertyChildIds":"1:1,2:4,","logisticsType":0, "inviter_id":0}]
             goods_json = json.loads(kwargs.pop('goodsJsonStr'))
 
-            province_id = int(kwargs.pop('provinceId'))
-            city_id = int(kwargs.pop('cityId'))
-            district_id = int(kwargs.pop('districtId')) if 'districtId' in kwargs.keys() else False
-            zipcode = kwargs.pop('code')
-            link_man = kwargs.pop('linkMan')
+            province_id = int(kwargs.pop('provinceId')) if 'provinceId' in kwargs else False
+            city_id = int(kwargs.pop('cityId')) if 'cityId' in kwargs else False
+            district_id = int(kwargs.pop('districtId')) if 'districtId' in kwargs else False
+            zipcode = kwargs.pop('code') if 'code' in kwargs else False
+            link_man = kwargs.pop('linkMan') if 'linkMan' in kwargs else False
 
             calculate = kwargs.pop('calculate', False)
             remark = kwargs.pop('remark', '')
