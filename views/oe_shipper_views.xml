@@ -20,7 +20,7 @@
             <field name="type">form</field>
             <field name="priority">999</field>
             <field name="arch" type="xml">
-                <form string="承运商" version="7.0">
+                <form string="承运商" version="7.0" duplicate="0">
                     <sheet>
                     <group>
                <field name="code"/>

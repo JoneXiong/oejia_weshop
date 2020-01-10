@@ -8,7 +8,7 @@
             <field name="type">tree</field>
             <field name="priority">999</field>
             <field name="arch" type="xml">
-                <tree string="区" create="0" delete="0">
+                <tree string="区">
                <field name="name"/>
                <field name="pid"/>
                 </tree>
@@ -20,7 +20,7 @@
             <field name="type">form</field>
             <field name="priority">999</field>
             <field name="arch" type="xml">
-                <form string="区" version="7.0" create="0" delete="0" edit="0" save="0" cancel="0" duplicate="0">
+                <form string="区" version="7.0" duplicate="0">
                     <sheet>
                     <group>
                <field name="name"/>
