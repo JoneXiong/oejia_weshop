@@ -18,4 +18,5 @@ class Shipper(models.Model):
     def init(self):
         from ..data.oe_shipper_datas import init_sql
         self.env.cr.execute(init_sql)
+        self.env.cr.execute("select setval('oe_shipper_id_seq', max(id)) from oe_shipper;")
 
