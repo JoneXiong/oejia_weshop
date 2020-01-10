@@ -262,7 +262,7 @@ class WxappOrder(http.Controller, BaseController):
         return ret
 
     def get_orders_domain(self, status, **kwargs):
-        domain = [('partner_id', '=', request.wechat_user.partner_id.id)]
+        domain = [('partner_id', '=', request.wechat_user.partner_id.id), ('number_goods', '>', 0)]
         if status:
             domain.append(('customer_status', '=', defs.OrderRequestStatus.attrs[int(status)]))
         return domain
