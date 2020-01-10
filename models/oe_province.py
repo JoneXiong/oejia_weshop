@@ -16,3 +16,4 @@ class Province(models.Model):
     def init(self):
         from ..data.oe_province_datas import init_sql
         self.env.cr.execute(init_sql)
+        self.env.cr.execute("select setval('oe_province_id_seq', max(id)) from oe_province;")

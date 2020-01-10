@@ -17,4 +17,5 @@ class City(models.Model):
     def init(self):
         from ..data.oe_city_datas import init_sql
         self.env.cr.execute(init_sql)
+        self.env.cr.execute("select setval('oe_city_id_seq', max(id)) from oe_city;")
 
