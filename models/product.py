@@ -10,11 +10,11 @@ class ProductTemplate(models.Model):
 
     _inherit = "product.template"
 
-    wxpp_category_id = fields.Many2one('wxapp.product.category', string='小程序商城分类', ondelete='set null')
+    wxpp_category_id = fields.Many2one('wxapp.product.category', string='电商分类', ondelete='set null')
     characteristic = fields.Text('商品特色')
     recommend_status = fields.Boolean('是否推荐')
     wxapp_published = fields.Boolean('是否上架', default=True)
-    description_wxapp = fields.Html('小程序描述')
+    description_wxapp = fields.Html('商品描述')
     original_price = fields.Float('原始价格', default=0)
     qty_public_tpl = fields.Integer('库存', default=0)
 

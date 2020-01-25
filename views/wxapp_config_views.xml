@@ -8,7 +8,7 @@
             <field name="type">tree</field>
             <field name="priority">999</field>
             <field name="arch" type="xml">
-                <tree string="小程序设置">
+                <tree string="电商设置">
                <field name="mall_name"/>
                <field name="sub_domain"/>
                <field name="team_id"/>
@@ -22,7 +22,7 @@
             <field name="type">form</field>
             <field name="priority">999</field>
             <field name="arch" type="xml">
-                <form string="小程序设置" create="0" delete="0" duplicate="0">
+                <form string="电商设置" create="0" delete="0" duplicate="0">
 					<header>
 						<button name="clean_all_token_window" type="object" string="清空Token缓存"/>
 					</header>
@@ -42,7 +42,7 @@
             </field>
         </record>
         <record id="wxapp_config_action_404" model="ir.actions.act_window">
-            <field name="name">小程序设置</field>
+            <field name="name">电商设置</field>
             <field name="res_model">wxapp.config</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -54,7 +54,7 @@
                           (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_config_view_form_1003')}),
                     ]"/>
         </record>
-        <menuitem action="wxapp_config_action_404" id="wxapp_config_menuitem_322_1536754696" name="对接设置" parent="parent_menu_327_1536754696" sequence="0"/>
+        <menuitem action="wxapp_config_action_404" id="wxapp_config_menuitem_322_1536754696" name="设置" parent="parent_menu_327_1536754696" sequence="0"/>
 
     </data>
 </openerp>

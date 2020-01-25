@@ -11,7 +11,7 @@ class WxappConfig(models.Model):
 
     sub_domain = fields.Char('接口前缀', help='商城访问的接口url前缀', index=True, required=True)
 
-    mall_name = fields.Char('商城名称', help='显示在小程序顶部')
+    mall_name = fields.Char('商城名称', help='显示在顶部')
 
     app_id = fields.Char('appid')
     secret = fields.Char('secret')
@@ -49,7 +49,7 @@ class WxappConfig(models.Model):
     @api.multi
     def clean_all_token_window(self):
         new_context = dict(self._context) or {}
-        new_context['default_info'] = "确认将所有小程序会话 token 清除？"
+        new_context['default_info'] = "确认将所有会话 token 清除？"
         new_context['default_model'] = 'wxapp.config'
         new_context['default_method'] = 'clean_all_token'
         new_context['record_ids'] = [obj.id for obj in self]
