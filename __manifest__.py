@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "WeChat APP Shop",
+    'name': "OE商城",
     'version': '1.0.0',
     'category': '',
-    'summary': '电商、小程序商城',
+    'summary': 'Odoo OE商城,电商、小程序商城',
     'author': 'Oejia',
     'website': 'http://www.oejia.net/',
     'application': True,

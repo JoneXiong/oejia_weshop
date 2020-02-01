@@ -25,9 +25,14 @@ class WxappConfig(models.Model):
 
     @api.model
     def get_entry(self, sub_domain):
+        if sub_domain in ['h5']:
+            entry = self.env.ref('oejia_weshop.wxapp_config_data_1')
+            entry._platform = sub_domain
+            return entry
         config = self.search([('sub_domain', '=', sub_domain)])
         if config:
             config.ensure_one()
+            config._platform = 'wxapp'
             return config
         else:
             return False
