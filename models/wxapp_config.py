@@ -24,7 +24,7 @@ class WxappConfig(models.Model):
         return self.__getattribute__(key)
 
     @api.model
-    def get_entry(sub_domain):
+    def get_entry(self, sub_domain):
         config = self.search([('sub_domain', '=', sub_domain)])
         if config:
             config.ensure_one()
