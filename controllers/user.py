@@ -65,8 +65,8 @@ class WxappUser(http.Controller, BaseController):
             if not code:
                 return self.res_err(300)
 
-            app_id = config.get_config('app_id', sub_domain)
-            secret = config.get_config('secret', sub_domain)
+            app_id = entry.get_config('app_id')
+            secret = entry.get_config('secret')
 
             if not app_id or not secret:
                 return self.res_err(404)
@@ -129,8 +129,8 @@ class WxappUser(http.Controller, BaseController):
             if not code or not encrypted_data or not iv:
                 return self.res_err(300)
 
-            app_id = config.get_config('app_id', sub_domain)
-            secret = config.get_config('secret', sub_domain)
+            app_id = entry.get_config('app_id')
+            secret = entry.get_config('secret')
 
             if not app_id or not secret:
                 return self.res_err(404)
@@ -211,8 +211,8 @@ class WxappUser(http.Controller, BaseController):
             if not token or not encrypted_data or not iv:
                 return self.res_err(300)
 
-            app_id = config.get_config('app_id', sub_domain)
-            secret = config.get_config('secret', sub_domain)
+            app_id = entry.get_config('app_id')
+            secret = entry.get_config('secret')
 
             if not app_id or not secret:
                 return self.res_err(404)

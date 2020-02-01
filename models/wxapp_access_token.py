@@ -25,9 +25,9 @@ class AccessToken(models.TransientModel):
         return record
 
     def generate_token(self, sub_domain):
-        config = self.env['wxapp.config']
-        secret_key = config.get_config('secret', sub_domain)
-        app_id = config.get_config('app_id', sub_domain)
+        entry = self.env['wxapp.config'].get_entry(sub_domain)
+        secret_key = entry.get_config('secret')
+        app_id = entry.get_config('app_id')
         if not secret_key or not app_id:
             raise exceptions.ValidationError('未设置 secret_key 或 appId')
 

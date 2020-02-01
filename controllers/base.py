@@ -71,13 +71,13 @@ class WechatUser(object):
 class BaseController(object):
 
     def _check_domain(self, sub_domain):
-        wxapp_entry = request.env['wxapp.config'].sudo().search([('sub_domain', '=', sub_domain)])
+        wxapp_entry = request.env['wxapp.config'].sudo().get_entry(sub_domain)
         if not wxapp_entry:
             return self.res_err(404), None
         return None, wxapp_entry[0]
 
     def _check_user(self, sub_domain, token):
-        wxapp_entry = request.env['wxapp.config'].sudo().search([('sub_domain', '=', sub_domain)])
+        wxapp_entry = request.env['wxapp.config'].sudo().get_entry(sub_domain)
         if not wxapp_entry:
             return self.res_err(404), None, wxapp_entry
 
