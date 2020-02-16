@@ -10,27 +10,19 @@
             <field name="arch" type="xml">
                 <tree string="微信用户">
 
-                    <field name="name"/>
                     <field name="nickname"/>
                     <field name="avatar"/>
                     <field name="phone"/>
 
-                    <field name="country"/>
                     <field name="province"/>
                     <field name="city"/>
-               <field name="language"/>
                <field name="gender"/>
 
-               <field name="partner_id"/>
                     <field name="create_date" string="注册时间"/>
                     <field name="last_login"/>
                     <field name="status"/>
 
                     <field name="register_type"/>
-               <field name="register_ip"/>
-               <field name="ip"/>
-
-               <field name="address_ids"/>
 
                 </tree>
             </field>
@@ -44,28 +36,27 @@
                 <form string="微信用户" version="7.0">
                     <sheet>
                     <group>
-                    <field name="name"/>
-                    <field name="nickname"/>
-                    <field name="avatar"/>
-                    <field name="phone"/>
+                    <field name="nickname" readonly="1"/>
+                    <field name="avatar" readonly="1"/>
+                    <field name="phone" readonly="1"/>
 
-                    <field name="country"/>
-                    <field name="province"/>
-                    <field name="city"/>
-               <field name="language"/>
-               <field name="gender"/>
+                    <field name="country" readonly="1"/>
+                    <field name="province" readonly="1"/>
+                    <field name="city" readonly="1"/>
+               <field name="language" readonly="1"/>
+               <field name="gender" readonly="1"/>
 
-                    <field name="open_id"/>
-                    <field name="union_id"/>
+                    <field name="open_id" readonly="1"/>
+                    <field name="union_id" readonly="1"/>
+                    <field name="create_date" string="注册时间" readonly="1"/>
+                    <field name="last_login" readonly="1"/>
+                    <field name="status" readonly="1"/>
+
+                    <field name="register_type" readonly="1"/>
+               <field name="register_ip" readonly="1"/>
+               <field name="ip" readonly="1"/>
+
                <field name="partner_id"/>
-                    <field name="create_date" string="注册时间"/>
-                    <field name="last_login"/>
-                    <field name="status"/>
-
-                    <field name="register_type"/>
-               <field name="register_ip"/>
-               <field name="ip"/>
-
                <field name="address_ids"/>
                     </group>
                     </sheet>
