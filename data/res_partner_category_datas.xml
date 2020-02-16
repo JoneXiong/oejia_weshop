@@ -3,7 +3,7 @@
     <data>
     
         <record id="res_partner_category_data_1" model="res.partner.category">
-            <field name="name">小程序客户</field>
+            <field name="name">微信客户</field>
             <field name="active">True</field>
             <field name="color">1</field>
         </record>

@@ -28,8 +28,9 @@ class WxappUser(http.Controller, BaseController):
             if not token:
                 return self.res_err(300)
 
-            if request.uid != request.env.ref('base.public_user').id:
-                if str(request.uid)==token:
+            login_uid = request.session.get('login_uid')
+            if login_uid:
+                if str(login_uid)==token:
                     _logger.info('>>> check_token user %s', request.env.user)
                     return self.res_ok()
 
@@ -64,8 +65,8 @@ class WxappUser(http.Controller, BaseController):
             if not code:
                 return self.res_err(300)
 
-            app_id = config.get_config('app_id', sub_domain)
-            secret = config.get_config('secret', sub_domain)
+            app_id = entry.get_config('app_id')
+            secret = entry.get_config('secret')
 
             if not app_id or not secret:
                 return self.res_err(404)
@@ -128,8 +129,8 @@ class WxappUser(http.Controller, BaseController):
             if not code or not encrypted_data or not iv:
                 return self.res_err(300)
 
-            app_id = config.get_config('app_id', sub_domain)
-            secret = config.get_config('secret', sub_domain)
+            app_id = entry.get_config('app_id')
+            secret = entry.get_config('secret')
 
             if not app_id or not secret:
                 return self.res_err(404)
@@ -153,7 +154,7 @@ class WxappUser(http.Controller, BaseController):
                 'register_ip': request.httprequest.remote_addr,
                 'user_id': user_id,
                 'partner_id': user_id and request.env['res.users'].sudo().browse(user_id).partner_id.id or None,
-                'category_id': [(4, request.env.ref('oejia_weshop.res_partner_category_data_1').id)],
+                'category_id': [(4, request.env.ref('oejia_weshop.res_partner_category_data_1').sudo().id)],
             }
             if user_id:
                 vals['user_id'] = user_id
@@ -210,8 +211,8 @@ class WxappUser(http.Controller, BaseController):
             if not token or not encrypted_data or not iv:
                 return self.res_err(300)
 
-            app_id = config.get_config('app_id', sub_domain)
-            secret = config.get_config('secret', sub_domain)
+            app_id = entry.get_config('app_id')
+            secret = entry.get_config('secret')
 
             if not app_id or not secret:
                 return self.res_err(404)

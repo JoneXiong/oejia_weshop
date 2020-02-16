@@ -25,7 +25,7 @@ class WxappProduct(http.Controller, BaseController):
             "dateUpdate": each_goods.write_date,
             "id": each_goods.id,
             "logisticsId": 1,
-            "minPrice": each_goods.get_present_price(),
+            "minPrice": round(each_goods.get_present_price(1), 2),
             "minScore": 0,
             "name": '[%s] %s'%(each_goods.default_code, each_goods.name) if each_goods.default_code else each_goods.name,
             "numberFav": each_goods.number_fav,
@@ -164,3 +164,6 @@ class WxappProduct(http.Controller, BaseController):
                 "details": []
             }
 
+    @http.route('/wxa/<string:sub_domain>/shop/goods/reputation', auth='public', methods=['GET', 'POST'], csrf=False)
+    def reputation(self, sub_domain, goodsId=None, **kwargs):
+        return self.res_ok([])

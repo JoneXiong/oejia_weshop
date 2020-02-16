@@ -9,8 +9,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <data><xpath expr="//page[@name='general_information']" position="after">
-                    <page name="weshop" string="小程序">
-                    <group string="小程序相关">
+                    <page name="weshop" string="电商">
+                    <group string="电商相关">
                         <group>
                             <field name="wxapp_published"/>
                             <field name="wxpp_category_id"/>

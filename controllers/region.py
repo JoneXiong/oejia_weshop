@@ -23,9 +23,9 @@ class Region(http.Controller, BaseController):
     @http.route('/wxa/common/region/v2/child', auth='public', methods=['GET'])
     def child(self, pid, **kwargs):
         model = None
-        if pid[-4:]=='0000':
+        if pid[-4:]=='0000' or int(pid)>820000:
             model = 'oe.city'
-        elif pid[-2:]=='00':
+        else:
             model = 'oe.district'
 
         if model:

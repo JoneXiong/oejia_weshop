@@ -26,3 +26,4 @@ class District(models.Model):
         _logger.info('>>> init...')
         from ..data.oe_district_datas import init_sql
         self.env.cr.execute(init_sql)
+        self.env.cr.execute("select setval('oe_district_id_seq', max(id)) from oe_district;")

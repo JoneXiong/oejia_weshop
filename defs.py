@@ -40,6 +40,7 @@ class BannerStatus(Const):
 
 class WechatUserRegisterType(Const):
     app = ('app', u'小程序')
+    gzh = ('gzh', u'公众号')
 
 class WechatUserStatus(Const):
     default = ('default', u'默认')

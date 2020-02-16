@@ -34,7 +34,7 @@ class WxappConfig(http.Controller, BaseController):
                 'remark': '',
                 'updateAt': entry.write_date,
                 'userId': entry.id,
-                'value': entry.get_config(key, sub_domain)
+                'value': entry.get_config(key)
             }
             data.update(entry.get_ext_config())
             return self.res_ok(data)

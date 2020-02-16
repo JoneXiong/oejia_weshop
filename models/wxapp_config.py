@@ -11,25 +11,29 @@ class WxappConfig(models.Model):
 
     sub_domain = fields.Char('接口前缀', help='商城访问的接口url前缀', index=True, required=True)
 
-    mall_name = fields.Char('商城名称', help='显示在小程序顶部')
+    mall_name = fields.Char('商城名称', help='显示在顶部')
 
     app_id = fields.Char('appid')
     secret = fields.Char('secret')
 
     team_id = fields.Many2one('crm.team', string='所属销售渠道', required=True)
 
+    def get_config(self, key):
+        if key=='mallName':
+            key = 'mall_name'
+        return self.__getattribute__(key)
+
     @api.model
-    def get_config(self, key, sub_domain, obj=False):
+    def get_entry(self, sub_domain):
+        if sub_domain in ['h5']:
+            entry = self.env.ref('oejia_weshop.wxapp_config_data_1')
+            entry._platform = sub_domain
+            return entry
         config = self.search([('sub_domain', '=', sub_domain)])
         if config:
-            config = config[0]
             config.ensure_one()
-            if obj:
-                return config
-
-            if key=='mallName':
-                key = 'mall_name'
-            return config.__getattribute__(key)
+            config._platform = 'wxapp'
+            return config
         else:
             return False
 
@@ -49,7 +53,7 @@ class WxappConfig(models.Model):
     @api.multi
     def clean_all_token_window(self):
         new_context = dict(self._context) or {}
-        new_context['default_info'] = "确认将所有小程序会话 token 清除？"
+        new_context['default_info'] = "确认将所有会话 token 清除？"
         new_context['default_model'] = 'wxapp.config'
         new_context['default_method'] = 'clean_all_token'
         new_context['record_ids'] = [obj.id for obj in self]
