@@ -8,8 +8,9 @@ from .. import defs
 class WxappUser(models.Model):
 
     _name = 'wxapp.user'
-    _description = u'小程序用户'
+    _description = u'微信用户'
     _inherits = {'res.partner': 'partner_id'}
+    _order = 'id desc'
 
     name = fields.Char(related='partner_id.name',string='名称', inherited=True)
     nickname = fields.Char('昵称')

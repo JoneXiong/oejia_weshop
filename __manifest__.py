@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "WeChat APP Shop",
+    'name': "OE商城",
     'version': '1.0.0',
     'category': '',
-    'summary': '微信小程序商城',
+    'summary': 'Odoo OE商城,电商、小程序商城',
     'author': 'Oejia',
     'website': 'http://www.oejia.net/',
     'application': True,
@@ -42,7 +42,7 @@
     'demo': [
     ],
     'images': [],
-    'description': """oejia_weshop 是 Odoo 对接微信小程序实现的商城应用
+    'description': """oejia_weshop 是 Odoo 电商基础模块，对接微信小程序实现的微商城应用
     """,
     'license': 'GPL-3',
 }
