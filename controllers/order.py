@@ -72,7 +72,7 @@ class WxappOrder(http.Controller, BaseController):
                 _data = {
                     'score': 0,
                     'isNeedLogistics': 1,
-                    'amountTotle': order_dict['goods_price'],
+                    'amountTotle': round(order_dict['goods_price'], 2),
                     'amountLogistics': order_dict['logistics_price'],
                     'extra': order_dict['extra']
                 }
