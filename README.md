@@ -1,5 +1,6 @@
 ## oejia_weshop
-Odoo 微信小程序商城模块
+
+oejia_weshop（OE商城） 是一套包含强大电商ERP后台的小程序商城系统。
 
 oejia_weshop 是 Odoo 对接微信小程序实现的商城应用。
 
@@ -17,7 +18,7 @@ oejia_weshop 是 Odoo 对接微信小程序实现的商城应用。
 2. 将整个oejia_weshop目录(名称不能变)放到你的 addons 目录下
 3. 安装依赖的python库：xmltodict、pycrypto、itsdangerous；安装模块，可以看到产生了顶部“小程序”主菜单
 4. 进入【设置】-【对接设置】页填写你的微信小程序相关对接信息
-5. 小程序客户端: 使用的开源项目 [wechat-app-mall](https://github.com/EastWorld/wechat-app-mall), 下载后修改接口api调用路径为您的odoo url即可，可参考[这里](https://github.com/JoneXiong/wechat-app-mall/pull/4/files)修改，也可使用我们[fork的版本](https://github.com/JoneXiong/wechat-app-mall)
+5. 小程序客户端: 见项目 [wechat-app-mall](https://github.com/JoneXiong/wechat-app-mall), 下载后修改接口api调用路径为您的odoo url即可，可参考[这里](https://github.com/JoneXiong/wechat-app-mall/pull/4/files)修改
 
 - 只需将 wxapi/main.js 中的 API_BASE_URL 改为https://您的odoo地址 
 - 将config.js中的subDomain改为您设置的小程序接口前缀 （“小程序接口前缀”为您在odoo后台对接配置中设置的值），appid 改为您的小程序的appid
@@ -34,7 +35,10 @@ Odoo后台
 
 [https://sale.calluu.cn/](https://sale.calluu.cn/)
 
-## 效果
+## 效果图
+
+详见 [http://oejia.net/blog/2018/09/13/oejia_weshop_about.html](http://oejia.net/blog/2018/09/13/oejia_weshop_about.html)
+
 ![用户管理](http://oejia.net/files/201809/13165725703.jpeg)
 
 ![产品管理](http://oejia.net/files/201809/13172849146.jpeg)
@@ -48,16 +52,13 @@ Odoo后台
 
 ## 商业版及扩展
 
-扩展功能模块 [oejia_weshop_ent](https://www.calluu.cn/shop/product/odoo-12)
+商业扩展模块 [oejia_weshop_ent](https://www.calluu.cn/shop/product/odoo-12)
 
-包含微信商城的全功能进销存系统套件 [https://sale.calluu.cn/](https://sale.calluu.cn/)
+分销模块 [weshop_commission](https://www.calluu.cn/shop/product/odoo-23)
 
-小程序客服集成 [http://oejia.net/blog/2018/12/21/odoo_kf.html](http://oejia.net/blog/2018/12/21/odoo_kf.html)
+H5商城模块 [weshop_h5](https://www.calluu.cn/shop/product/odoo-h5-24)
 
-小程序分销模块[weshop_commission](https://www.calluu.cn/shop/product/odoo-23)
-
-Odoo H5商城模块[weshop_h5](https://www.calluu.cn/shop/product/odoo-h5-24)
-
+OE商城系统（全功能进销存系统套件） [https://sale.calluu.cn/](https://sale.calluu.cn/)
 
 ## 交流
 技术分享
