@@ -92,7 +92,7 @@ class WxappProduct(http.Controller, BaseController):
             goods_list.batch_get_main_image()
 
             if not goods_list:
-                return self.res_err(404)
+                return self.res_err(700)
 
             return self.res_ok([ self._product_basic_dict(each_goods) for each_goods in goods_list])
 

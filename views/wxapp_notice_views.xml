@@ -24,7 +24,7 @@
                     <sheet>
                     <group>
                <field name="title"/>
-               <field name="content"/>
+               <field name="content" widget='html'/>
                <field name="active"/>
                     </group>
                     </sheet>
