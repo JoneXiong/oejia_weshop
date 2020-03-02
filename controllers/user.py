@@ -60,8 +60,6 @@ class WxappUser(http.Controller, BaseController):
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
 
-            config = request.env['wxapp.config'].sudo()
-
             if not code:
                 return self.res_err(300)
 
@@ -107,6 +105,7 @@ class WxappUser(http.Controller, BaseController):
             return self.res_ok(data)
 
         except AttributeError:
+            import traceback;traceback.print_exc()
             return self.res_err(404)
 
         except Exception as e:
@@ -122,8 +121,6 @@ class WxappUser(http.Controller, BaseController):
         try:
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
-
-            config = request.env['wxapp.config'].sudo()
 
             encrypted_data = encryptedData
             if not code or not encrypted_data or not iv:
@@ -204,8 +201,6 @@ class WxappUser(http.Controller, BaseController):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return res
-
-            config = request.env['wxapp.config'].sudo()
 
             encrypted_data = encryptedData
             if not token or not encrypted_data or not iv:

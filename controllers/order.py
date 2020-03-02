@@ -72,7 +72,7 @@ class WxappOrder(http.Controller, BaseController):
                 _data = {
                     'score': 0,
                     'isNeedLogistics': 1,
-                    'amountTotle': order_dict['goods_price'],
+                    'amountTotle': round(order_dict['goods_price'], 2),
                     'amountLogistics': order_dict['logistics_price'],
                     'extra': order_dict['extra']
                 }
@@ -229,7 +229,7 @@ class WxappOrder(http.Controller, BaseController):
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return res
 
-            orders = request.env['sale.order'].sudo().search([('partner_id', '=', wechat_user.partner_id.id)])
+            orders = request.env['sale.order'].sudo().search([('partner_id', '=', wechat_user.partner_id.id), ('number_goods', '>', 0)])
             order_statistics_dict = {order_status: 0 for order_status in defs.OrderStatus.attrs.keys()}
             for each_order in orders:
                 order_statistics_dict[each_order.customer_status] += 1
