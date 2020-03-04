@@ -128,7 +128,7 @@ class WxappProduct(http.Controller, BaseController):
 
             description_value = None
             if goods.description_wxapp:
-                _content = goods.description_wxapp.replace('<p>', '').replace('</p>', '').replace('<br>', '').replace('<br/>', '')
+                _content = goods.description_wxapp
                 if _content:
                     description_value = goods.description_wxapp
             if not description_value:
