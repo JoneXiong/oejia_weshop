@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <tree string="公告">
                <field name="title"/>
-               <field name="content"/>
+               <field name="active"/>
                 </tree>
             </field>
         </record>
