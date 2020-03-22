@@ -24,6 +24,7 @@ class WxappProduct(http.Controller, BaseController):
             "dateAdd": each_goods.create_date,
             "dateUpdate": each_goods.write_date,
             "id": each_goods.id,
+            "index": each_goods.id,
             "logisticsId": 1,
             "minPrice": round(each_goods.get_present_price(1), 2),
             "minScore": 0,
