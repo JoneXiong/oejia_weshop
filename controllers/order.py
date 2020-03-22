@@ -59,7 +59,7 @@ class WxappOrder(http.Controller, BaseController):
                 'team_id': team_id and int(team_id) or entry.team_id.id,
                 'note': remark,
                 'linkman': link_man,
-                'partner_shipping_id': address and address.id or None,
+                'partner_shipping_id': address and address.id or wechat_user.partner_id.id,
                 'user_id': wechat_user.partner_id.user_id.id,
                 'goods_price': goods_price,
                 'extra': {},
