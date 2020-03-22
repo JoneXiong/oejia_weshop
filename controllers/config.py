@@ -48,7 +48,23 @@ class WxappConfig(http.Controller, BaseController):
 
     @http.route('/wxa/<string:sub_domain>/config/values', auth='public', methods=['GET'])
     def get_values(self, sub_domain, keys=None, **kwargs):
-        pass
+        keys = keys.split(',')
+        try:
+            ret, entry = self._check_domain(sub_domain)
+            if ret:return ret
+
+            if not keys:
+                return self.res_err(300)
+
+            data = []
+            for key in keys:
+                data.append({'key': key, 'value': entry.get_config(key)})
+
+            return self.res_ok(data)
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, str(e))
 
     @http.route('/wxa/<string:sub_domain>/config/vipLevel', auth='public', methods=['GET'])
     def get_viplevel(self, sub_domain, key=None, **kwargs):
