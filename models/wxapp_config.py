@@ -23,7 +23,10 @@ class WxappConfig(models.Model):
     def get_config(self, key):
         if key=='mallName':
             key = 'mall_name'
-        return self.__getattribute__(key)
+        if hasattr(self, key):
+            return self.__getattribute__(key)
+        else:
+            return None
 
     @api.model
     def get_entry(self, sub_domain):

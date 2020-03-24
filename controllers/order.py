@@ -161,7 +161,10 @@ class WxappOrder(http.Controller, BaseController):
             each_logistics_price = self.calculate_logistics_fee(template, amount, transport_type, province_id, city_id, district_id)
             order_lines.append(line_dict)
             goods_fee += each_goods_total
-            logistics_fee += each_logistics_price
+            if each_logistics_price<0:
+                logistics_fee = abs(each_logistics_price)
+            else:
+                logistics_fee += each_logistics_price
 
         return goods_fee, logistics_fee, order_lines
 
@@ -192,7 +195,7 @@ class WxappOrder(http.Controller, BaseController):
                 stores = goods.get_present_qty() - amount
 
             if stores < 0:
-                raise UserException('库存不足！')
+                raise UserException('%s 库存不足！'%goods.name)
             if stores == 0:
                 # todo 发送库存空预警
                 pass
