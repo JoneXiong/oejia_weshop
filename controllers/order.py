@@ -66,6 +66,7 @@ class WxappOrder(http.Controller, BaseController):
             }
             order_dict.update(kwargs)
             _logger.info('>>> order_dict %s', order_dict)
+            self.calculate_order_logistics(wechat_user, order_dict, order_lines)
             self.after_calculate(wechat_user, order_dict, order_lines)
 
             if calculate:
@@ -97,7 +98,7 @@ class WxappOrder(http.Controller, BaseController):
 
                 #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
-                order.action_created(kwargs)
+                order.action_created(order_dict)
                 _data = {
                     "amountReal": round(order.amount_total, 2),
                     "dateAdd": dt_convert(order.create_date),
@@ -114,6 +115,9 @@ class WxappOrder(http.Controller, BaseController):
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, str(e))
+
+    def calculate_order_logistics(self, wechat_user, order_dict, order_lines):
+        pass
 
     def after_calculate(self, wechat_user, order_dict, order_lines):
         pass
@@ -206,6 +210,7 @@ class WxappOrder(http.Controller, BaseController):
 
         line_dict = {
             'product_id': product.id,
+            'goods_id': goods.id,
             'price_unit': price,
             'product_uom_qty': amount,
         }
