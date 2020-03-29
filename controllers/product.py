@@ -75,6 +75,16 @@ class WxappProduct(http.Controller, BaseController):
 
         return domain
 
+    def get_order_by(self, order_by):
+        ret = 'sequence'
+        if order_by=='priceUp':
+            ret = 'list_price'
+        elif order_by=='ordersDown':
+            pass
+        elif order_by=='addedDown':
+            ret = 'create_date'
+        return ret
+
     @http.route('/wxa/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, categoryId=False, nameLike=False, page=1, pageSize=20, **kwargs):
         _logger.info('>>> product list %s', kwargs)
@@ -82,12 +92,14 @@ class WxappProduct(http.Controller, BaseController):
         pageSize = int(pageSize)
         category_id = categoryId
         token = kwargs.get('token', None)
+        order_by = kwargs.get('orderBy', None)
         try:
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
             self.check_userid(token)
 
             domain = self.get_goods_domain(category_id, nameLike, **kwargs)
+            order = self.get_order_by(order_by)
 
             goods_list = request.env['product.template'].sudo().search(domain, offset=(page-1)*pageSize, limit=pageSize, order="sequence")
             goods_list.batch_get_main_image()
