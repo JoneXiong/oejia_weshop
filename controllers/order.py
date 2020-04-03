@@ -90,11 +90,11 @@ class WxappOrder(http.Controller, BaseController):
                 for line in order_lines:
                     line['order_id'] = order.id
                     request.env(user=1)['sale.order.line'].create(line)
-                if logistics_price>0:
+                if order_dict['logistics_price']>0:
                     request.env(user=1)['sale.order.line'].create({
                         'order_id': order.id,
                         'product_id': request.env.ref('oejia_weshop.product_product_delivery_weshop').id,
-                        'price_unit': logistics_price,
+                        'price_unit': order_dict['logistics_price'],
                         'product_uom_qty': 1,
                     })
 
