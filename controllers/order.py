@@ -66,7 +66,9 @@ class WxappOrder(http.Controller, BaseController):
             }
             order_dict.update(kwargs)
             _logger.info('>>> order_dict %s', order_dict)
-            self.calculate_order_logistics(wechat_user, order_dict, order_lines)
+            order_logistics = self.calculate_order_logistics(wechat_user, order_dict, order_lines)
+            if order_logistics:
+                order_dict['logistics_price'] = order_logistics
             self.after_calculate(wechat_user, order_dict, order_lines)
 
             if calculate:
