@@ -2,7 +2,7 @@
 <odoo>
 	
     <record id="module_cate62" model="ir.module.category">
-        <field name="name">小程序</field>
+        <field name="name">电商</field>
         <field name="description">False</field>
         <field name="sequence">0</field>
     </record>

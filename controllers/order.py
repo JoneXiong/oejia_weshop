@@ -59,13 +59,16 @@ class WxappOrder(http.Controller, BaseController):
                 'team_id': team_id and int(team_id) or entry.team_id.id,
                 'note': remark,
                 'linkman': link_man,
-                'partner_shipping_id': address and address.id or None,
+                'partner_shipping_id': address and address.id or wechat_user.partner_id.id,
                 'user_id': wechat_user.partner_id.user_id.id,
                 'goods_price': goods_price,
                 'extra': {},
             }
             order_dict.update(kwargs)
             _logger.info('>>> order_dict %s', order_dict)
+            order_logistics = self.calculate_order_logistics(wechat_user, order_dict, order_lines)
+            if order_logistics:
+                order_dict['logistics_price'] = order_logistics
             self.after_calculate(wechat_user, order_dict, order_lines)
 
             if calculate:
@@ -87,17 +90,17 @@ class WxappOrder(http.Controller, BaseController):
                 for line in order_lines:
                     line['order_id'] = order.id
                     request.env(user=1)['sale.order.line'].create(line)
-                if logistics_price>0:
+                if order_dict['logistics_price']>0:
                     request.env(user=1)['sale.order.line'].create({
                         'order_id': order.id,
                         'product_id': request.env.ref('oejia_weshop.product_product_delivery_weshop').id,
-                        'price_unit': logistics_price,
+                        'price_unit': order_dict['logistics_price'],
                         'product_uom_qty': 1,
                     })
 
                 #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
-                order.action_created(kwargs)
+                order.action_created(order_dict)
                 _data = {
                     "amountReal": round(order.amount_total, 2),
                     "dateAdd": dt_convert(order.create_date),
@@ -114,6 +117,9 @@ class WxappOrder(http.Controller, BaseController):
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, str(e))
+
+    def calculate_order_logistics(self, wechat_user, order_dict, order_lines):
+        pass
 
     def after_calculate(self, wechat_user, order_dict, order_lines):
         pass
@@ -161,7 +167,10 @@ class WxappOrder(http.Controller, BaseController):
             each_logistics_price = self.calculate_logistics_fee(template, amount, transport_type, province_id, city_id, district_id)
             order_lines.append(line_dict)
             goods_fee += each_goods_total
-            logistics_fee += each_logistics_price
+            if each_logistics_price<0:
+                logistics_fee = abs(each_logistics_price)
+            else:
+                logistics_fee += each_logistics_price
 
         return goods_fee, logistics_fee, order_lines
 
@@ -192,7 +201,7 @@ class WxappOrder(http.Controller, BaseController):
                 stores = goods.get_present_qty() - amount
 
             if stores < 0:
-                raise UserException('库存不足！')
+                raise UserException('%s 库存不足！'%goods.name)
             if stores == 0:
                 # todo 发送库存空预警
                 pass
@@ -203,6 +212,7 @@ class WxappOrder(http.Controller, BaseController):
 
         line_dict = {
             'product_id': product.id,
+            'goods_id': goods.id,
             'price_unit': price,
             'product_uom_qty': amount,
         }

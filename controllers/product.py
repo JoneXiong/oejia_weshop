@@ -24,6 +24,7 @@ class WxappProduct(http.Controller, BaseController):
             "dateAdd": each_goods.create_date,
             "dateUpdate": each_goods.write_date,
             "id": each_goods.id,
+            "index": each_goods.id,
             "logisticsId": 1,
             "minPrice": round(each_goods.get_present_price(1), 2),
             "minScore": 0,
@@ -74,6 +75,16 @@ class WxappProduct(http.Controller, BaseController):
 
         return domain
 
+    def get_order_by(self, order_by):
+        ret = 'sequence'
+        if order_by=='priceUp':
+            ret = 'list_price'
+        elif order_by=='ordersDown':
+            pass
+        elif order_by=='addedDown':
+            ret = 'create_date'
+        return ret
+
     @http.route('/wxa/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, categoryId=False, nameLike=False, page=1, pageSize=20, **kwargs):
         _logger.info('>>> product list %s', kwargs)
@@ -81,14 +92,16 @@ class WxappProduct(http.Controller, BaseController):
         pageSize = int(pageSize)
         category_id = categoryId
         token = kwargs.get('token', None)
+        order_by = kwargs.get('orderBy', None)
         try:
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
             self.check_userid(token)
 
             domain = self.get_goods_domain(category_id, nameLike, **kwargs)
+            order = self.get_order_by(order_by)
 
-            goods_list = request.env['product.template'].sudo().search(domain, offset=(page-1)*pageSize, limit=pageSize, order="sequence")
+            goods_list = request.env['product.template'].sudo().search(domain, offset=(page-1)*pageSize, limit=pageSize, order=order)
             goods_list.batch_get_main_image()
 
             if not goods_list:
@@ -128,7 +141,7 @@ class WxappProduct(http.Controller, BaseController):
 
             description_value = None
             if goods.description_wxapp:
-                _content = goods.description_wxapp.replace('<p>', '').replace('</p>', '').replace('<br>', '').replace('<br/>', '')
+                _content = goods.description_wxapp.replace('<p><br></p>', '')
                 if _content:
                     description_value = goods.description_wxapp
             if not description_value:

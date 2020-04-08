@@ -7,6 +7,7 @@ from odoo.http import request
 
 from .. import defs
 from .base import BaseController
+from .base import convert_static_link
 
 import logging
 
@@ -43,7 +44,7 @@ class WxappNotice(http.Controller, BaseController):
             notice = request.env['wxapp.notice'].sudo().browse(int(id))
             data = {
                 'title': notice.title,
-                'content': notice.content,
+                'content': convert_static_link(request, notice.content),
             }
 
             return self.res_ok(data)
