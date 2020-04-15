@@ -46,33 +46,3 @@ class WxappScore(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
-    @http.route('/wxa/<string:sub_domain>/discounts/coupons', auth='public', methods=['GET', 'POST'], csrf=False)
-    def coupons(self, sub_domain, type=None, **kwargs):
-        try:
-            ret, entry = self._check_domain(sub_domain)
-            if ret:return ret
-
-            data = []
-
-            return self.res_err(700)
-
-        except Exception as e:
-            _logger.exception(e)
-            return self.res_err(-1, str(e))
-
-    @http.route('/wxa/<string:sub_domain>/discounts/my', auth='public', methods=['GET', 'POST'], csrf=False)
-    def my_coupons(self, sub_domain, type=None, **kwargs):
-        try:
-            ret, entry = self._check_domain(sub_domain)
-            if ret:return ret
-
-            data = []
-
-            return self.res_err(700)
-
-        except Exception as e:
-            _logger.exception(e)
-            return self.res_err(-1, str(e))
-
-
-
