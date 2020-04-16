@@ -88,6 +88,8 @@ class WxappOrder(http.Controller, BaseController):
                 order_dict.pop('extra')
                 order = request.env(user=1)['sale.order'].create(order_dict)
                 for line in order_lines:
+                    if 'goods_id' in line:
+                        line.pop('goods_id')
                     line['order_id'] = order.id
                     request.env(user=1)['sale.order.line'].create(line)
                 if order_dict['logistics_price']>0:
