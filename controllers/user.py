@@ -22,34 +22,11 @@ class WxappUser(http.Controller, BaseController):
     @http.route('/wxa/<string:sub_domain>/user/check-token', auth='public', methods=['GET'])
     def check_token(self, sub_domain, token=None, **kwargs):
         try:
-            ret, entry = self._check_domain(sub_domain)
-            if ret:return ret
+            res, wechat_user, entry = self._check_user(sub_domain, token)
+            if res:return res
 
-            if not token:
-                return self.res_err(300)
-
-            login_uid = request.session.get('login_uid')
-            if login_uid:
-                if str(login_uid)==token:
-                    _logger.info('>>> check_token user %s', request.env.user)
-                    return self.res_ok()
-
-            access_token = request.env(user=1)['wxapp.access_token'].search([
-                ('token', '=', token),
-            ])
-
-            if not access_token:
-                return self.res_err(902)
-
-            wechat_user = request.env(user=1)['wxapp.user'].search([
-                ('open_id', '=', access_token.open_id),
-            ])
-            if not wechat_user:
-                return self.res_err(902)
             data = self.get_user_info(wechat_user)
-
             return self.res_ok(data)
-
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, str(e))
