@@ -82,7 +82,7 @@ class WxappProduct(http.Controller, BaseController):
         elif order_by=='ordersDown':
             pass
         elif order_by=='addedDown':
-            ret = 'create_date'
+            ret = 'create_date desc'
         return ret
 
     @http.route('/wxa/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET', 'POST'], csrf=False)
