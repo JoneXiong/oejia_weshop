@@ -77,6 +77,7 @@ class WxappOrder(http.Controller, BaseController):
                     'isNeedLogistics': 1,
                     'amountTotle': round(order_dict['goods_price'], 2),
                     'amountLogistics': order_dict['logistics_price'],
+                    'amountTax': order_dict.get('amount_tax', 0),
                     'extra': order_dict['extra']
                 }
                 _data.update(self.calculate_ext_info(wechat_user, order_dict, order_lines, _data))
@@ -333,6 +334,7 @@ class WxappOrder(http.Controller, BaseController):
                     "orderInfo": {
                         "amount": order.goods_price,
                         "amountLogistics": order.logistics_price,
+                        "amountTax": round(order.amount_tax, 2),
                         "amountReal": round(order.amount_total, 2),
                         "dateAdd": dt_convert(order.create_date),
                         "dateUpdate": dt_convert(order.write_date),
