@@ -196,7 +196,7 @@ class WxappOrder(http.Controller, BaseController):
                     ('attr_val_str', '=', False)
                 ])
             if not product:
-                raise UserException('商品不存在！')
+                raise UserException(u'商品不存在！')
 
             price = product.get_present_price(amount)
             total = price * amount
@@ -207,7 +207,7 @@ class WxappOrder(http.Controller, BaseController):
                 stores = goods.get_present_qty() - amount
 
             if stores < 0:
-                raise UserException('%s 库存不足！'%goods.name)
+                raise UserException(u'%s 库存不足！'%goods.name)
             if stores == 0:
                 # todo 发送库存空预警
                 pass
