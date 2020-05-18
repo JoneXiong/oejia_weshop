@@ -158,7 +158,10 @@ class WxappOrder(http.Controller, BaseController):
         template_dict = {template.id: template for template in template_list}
 
         if goods_id_set - set(template_dict.keys()):
-            raise UserException('订单中包含已下架的商品')
+            _ids = goods_id_set - set(template_dict.keys())
+            _logger.info('>>> _ids %s', _ids)
+            _name_list = [e.name for e in request.env['product.template'].sudo().search([('id', 'in', list(_ids))])]
+            raise UserException(u'订单中包含已下架的商品: %s' % ','.join(_name_list))
 
         for each_goods in goods_json:
             property_child_ids = each_goods.get('propertyChildIds')
