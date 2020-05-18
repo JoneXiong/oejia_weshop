@@ -53,7 +53,7 @@ class WxappBanner(http.Controller, BaseController):
                     if len(data)<3:
                         return self.res_err(700)
 
-            if banner_type=='index':
+            if 0 and banner_type=='index':
                 recommend_goods = request.env(user=1)['product.template'].search([
                     ('recommend_status', '=', True),
                     ('wxapp_published', '=', True)
