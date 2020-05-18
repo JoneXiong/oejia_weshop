@@ -58,6 +58,7 @@ class WxappConfig(http.Controller, BaseController):
 
             data = []
             for key in keys:
+                key = key.strip()
                 data.append({'key': key, 'value': entry.get_config(key)})
             data.append({'key': 'dbname', 'value': request.env.cr.dbname})
             ext_config = entry.get_ext_config()
