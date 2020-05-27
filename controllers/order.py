@@ -77,6 +77,7 @@ class WxappOrder(http.Controller, BaseController):
                     'isNeedLogistics': 1,
                     'amountTotle': round(order_dict['goods_price'], 2),
                     'amountLogistics': order_dict['logistics_price'],
+                    'amountTax': order_dict.get('amount_tax', 0),
                     'extra': order_dict['extra']
                 }
                 _data.update(self.calculate_ext_info(wechat_user, order_dict, order_lines, _data))
@@ -157,7 +158,10 @@ class WxappOrder(http.Controller, BaseController):
         template_dict = {template.id: template for template in template_list}
 
         if goods_id_set - set(template_dict.keys()):
-            raise UserException('订单中包含已下架的商品')
+            _ids = goods_id_set - set(template_dict.keys())
+            _logger.info('>>> _ids %s', _ids)
+            _name_list = [e.name for e in request.env['product.template'].sudo().search([('id', 'in', list(_ids))])]
+            raise UserException(u'订单中包含已下架的商品: %s' % ','.join(_name_list))
 
         for each_goods in goods_json:
             property_child_ids = each_goods.get('propertyChildIds')
@@ -192,7 +196,7 @@ class WxappOrder(http.Controller, BaseController):
                     ('attr_val_str', '=', False)
                 ])
             if not product:
-                raise UserException('商品不存在！')
+                raise UserException(u'商品不存在！')
 
             price = product.get_present_price(amount)
             total = price * amount
@@ -203,7 +207,7 @@ class WxappOrder(http.Controller, BaseController):
                 stores = goods.get_present_qty() - amount
 
             if stores < 0:
-                raise UserException('%s 库存不足！'%goods.name)
+                raise UserException(u'%s 库存不足！'%goods.name)
             if stores == 0:
                 # todo 发送库存空预警
                 pass
@@ -333,6 +337,7 @@ class WxappOrder(http.Controller, BaseController):
                     "orderInfo": {
                         "amount": order.goods_price,
                         "amountLogistics": order.logistics_price,
+                        "amountTax": round(order.amount_tax, 2),
                         "amountReal": round(order.amount_total, 2),
                         "dateAdd": dt_convert(order.create_date),
                         "dateUpdate": dt_convert(order.write_date),
