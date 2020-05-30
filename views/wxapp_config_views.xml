@@ -27,7 +27,7 @@
 						<button name="clean_all_token_window" type="object" string="清空Token缓存"/>
 					</header>
                     <sheet>
-                     <group string="小程序相关" colspan="4">
+                     <group name="miniapp" string="小程序相关" colspan="4">
                         <field name="app_id"/>
                         <field name="secret" password="True"/>
                         <field name="sub_domain"/>
