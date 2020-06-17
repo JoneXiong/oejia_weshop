@@ -26,13 +26,11 @@ class ProductTemplate(models.Model):
 
 
     def _get_main_image(self):
-        _logger.info('>>> _get_main_image ...')
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for obj in self:
             obj.main_img = '%s/web/image/product.template/%s/image/300x300'%(base_url, obj.id)
 
     def _get_images(self):
-        _logger.info('>>> _get_images ...')
         base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for product in self:
             _list = []
