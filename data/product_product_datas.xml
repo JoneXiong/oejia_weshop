@@ -9,7 +9,7 @@
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
             <field name="list_price">10.0</field>
-            <field name="taxes_id" eval="[(5)]" />
+            <field name="taxes_id" eval="[(5,)]" />
         </record>
 
     </data>
