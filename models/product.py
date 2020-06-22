@@ -21,18 +21,16 @@ class ProductTemplate(models.Model):
     number_good_reputation = fields.Integer('好评数', default=0)
     number_fav = fields.Integer('收藏数', default=0)
     views = fields.Integer('浏览量', default=0)
-    main_img = fields.Char('主图', compute='_get_main_image', store=True)
-    images_data = fields.Char('图片', compute='_get_images', store=True)
+    main_img = fields.Char('主图', compute='_get_main_image')
+    images_data = fields.Char('图片', compute='_get_images')
 
 
-    @api.depends('image')
     def _get_main_image(self):
         _logger.info('>>> _get_main_image')
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for obj in self:
             obj.main_img = '%s/web/image/product.template/%s/image/300x300'%(base_url, obj.id)
 
-    @api.depends('image')
     def _get_images(self):
         _logger.info('>>> _get_images')
         base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url')
