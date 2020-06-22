@@ -102,7 +102,6 @@ class WxappProduct(http.Controller, BaseController):
             order = self.get_order_by(order_by)
 
             goods_list = request.env['product.template'].sudo().search(domain, offset=(page-1)*pageSize, limit=pageSize, order=order)
-            goods_list.batch_get_main_image()
 
             if not goods_list:
                 return self.res_err(700)
