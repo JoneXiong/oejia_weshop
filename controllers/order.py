@@ -290,6 +290,7 @@ class WxappOrder(http.Controller, BaseController):
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return res
 
+            kwargs['entry'] = entry
             domain = self.get_orders_domain(status, **kwargs)
             orders = request.env['sale.order'].sudo().search(domain, order='id desc', limit=30)
             delivery_product_id = request.env.ref('oejia_weshop.product_product_delivery_weshop').id
