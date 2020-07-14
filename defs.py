@@ -70,3 +70,6 @@ def underline2hump(underline_str):
     '''
     sub = re.sub(r'(_\w)',lambda x:x.group(1)[1].upper(),underline_str)
     return sub
+
+def get_precision():
+    return 16, 2
