@@ -29,25 +29,25 @@ class ProductTemplate(models.Model):
         _logger.info('>>> _get_main_image')
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for obj in self:
-            obj.main_img = '%s/web/image/product.template/%s/image/300x300'%(base_url, obj.id)
+            obj.main_img = '%s/web/image/product.template/%s/image_256/'%(base_url, obj.id)
 
     def _get_multi_images(self):
         _logger.info('>>> _get_multi_images')
         base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for product in self:
             _list = []
-            if hasattr(product, 'product_image_ids'):
-                for obj in product.product_image_ids:
+            if hasattr(product, 'product_template_image_ids'):
+                for obj in product.product_template_image_ids:
                     _dict = {
                         "id": obj.id,
                         "goodsId": product.id,
-                        "pic": '%s/web/image/product.image/%s/image/'%(base_url, obj.id)
+                        "pic": '%s/web/image/product.image/%s/image_1024/'%(base_url, obj.id)
                     }
                     _list.append(_dict)
             _list.append({
                 'id': product.id,
                 'goodsId': product.id,
-                'pic': '%s/web/image/product.template/%s/image/'%(base_url, product.id)
+                'pic': '%s/web/image/product.template/%s/image_1024/'%(base_url, product.id)
             })
             product.images_data =  json.dumps(_list)
 
