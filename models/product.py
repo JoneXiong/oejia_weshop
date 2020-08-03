@@ -17,6 +17,7 @@ class ProductTemplate(models.Model):
     description_wxapp = fields.Html('商品描述')
     original_price = fields.Float('原始价格', default=0)
     qty_public_tpl = fields.Integer('库存', default=0)
+    qty_show = fields.Integer('库存数量', compute='_compute_qty_show')
 
     number_good_reputation = fields.Integer('好评数', default=0)
     number_fav = fields.Integer('收藏数', default=0)
@@ -56,6 +57,10 @@ class ProductTemplate(models.Model):
 
     def get_present_qty(self):
         return self.qty_public_tpl
+
+    def _compute_qty_show(self):
+        for obj in self:
+            obj.qty_show = obj.get_present_qty()
 
     def change_qty(self, val):
         self.write({'qty_public_tpl': self.qty_public_tpl + val})

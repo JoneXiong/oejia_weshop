@@ -75,6 +75,9 @@ class WxappAddress(http.Controller, BaseController):
                 'type': 'delivery',
                 'is_default': json.loads(kwargs['isDefault'])
             })
+            address = new_address
+            _main = '%s %s %s'%(address.province_id.name, address.city_id.name, address.district_id.name)
+            address.write({'street2': _main})
 
             address_ids = wechat_user.address_ids.filtered(lambda r: r.id != new_address.id)
             if address_ids:
@@ -110,6 +113,8 @@ class WxappAddress(http.Controller, BaseController):
                 'zip': kwargs['code'] if kwargs.get('code') else address.zip,
                 'is_default': json.loads(kwargs['isDefault'])
             })
+            _main = '%s %s %s'%(address.province_id.name, address.city_id.name, address.district_id.name)
+            address.write({'street2': _main})
 
             address_ids = wechat_user.address_ids.filtered(lambda r: r.id != address.id)
             if address_ids:
