@@ -23,7 +23,7 @@ class WxappUser(http.Controller, BaseController):
     def check_token(self, sub_domain, token=None, **kwargs):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
+            if res:return self.res_err(609)
 
             data = self.get_user_info(wechat_user)
             return self.res_ok(data)
