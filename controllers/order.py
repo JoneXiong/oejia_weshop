@@ -2,7 +2,7 @@
 
 import json
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 
 from .. import defs
@@ -161,7 +161,7 @@ class WxappOrder(http.Controller, BaseController):
             _ids = goods_id_set - set(template_dict.keys())
             _logger.info('>>> _ids %s', _ids)
             _name_list = [e.name for e in request.env['product.template'].sudo().search([('id', 'in', list(_ids))])]
-            raise UserException(u'订单中包含已下架的商品: %s' % ','.join(_name_list))
+            raise UserException(_(u'订单中包含已下架的商品: %s') % ','.join(_name_list))
 
         for each_goods in goods_json:
             property_child_ids = each_goods.get('propertyChildIds')
@@ -196,7 +196,7 @@ class WxappOrder(http.Controller, BaseController):
                     ('attr_val_str', '=', False)
                 ])
             if not product:
-                raise UserException(u'商品不存在！')
+                raise UserException(_(u'商品不存在！'))
 
             price = product.get_present_price(amount)
             total = price * amount
@@ -207,7 +207,7 @@ class WxappOrder(http.Controller, BaseController):
                 stores = goods.get_present_qty() - amount
 
             if stores < 0:
-                raise UserException(u'%s 库存不足！'%goods.name)
+                raise UserException(_(u'%s 库存不足！')%goods.name)
             if stores == 0:
                 # todo 发送库存空预警
                 pass
@@ -417,7 +417,7 @@ class WxappOrder(http.Controller, BaseController):
                 return self.res_err(404)
 
             if order.state=='sale':
-                return self.res_err(-99, u'该订单已被确认，无法取消')
+                return self.res_err(-99, _(u'该订单已被确认，无法取消'))
 
             #order.write({'customer_status': 'closed'})
             order.action_cancel()

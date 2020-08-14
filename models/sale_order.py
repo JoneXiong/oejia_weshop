@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from openerp import models, fields, api
+from openerp import models, fields, api, _
 
 from .. import defs
 
@@ -77,7 +77,7 @@ class SaleOrder(models.Model):
     def delivery_window(self):
         self.ensure_one()
         return {
-            'name': '送货',
+            'name': _('送货'),
             'type': 'ir.actions.act_window',
             'res_model': 'sale.order',
             'res_id': self.id,
@@ -102,12 +102,12 @@ class SaleOrder(models.Model):
     @api.multi
     def check_pay_window(self):
         new_context = dict(self._context) or {}
-        new_context['default_info'] = "此订单客户尚未在线支付，确认将其变为已支付状态？"
+        new_context['default_info'] = _("此订单客户尚未在线支付，确认将其变为已支付状态？")
         new_context['default_model'] = 'sale.order'
         new_context['default_method'] = 'action_paid'
         new_context['record_ids'] = [obj.id for obj in self]
         return {
-            'name': u'确认订单已支付',
+            'name': _(u'确认订单已支付'),
             'type': 'ir.actions.act_window',
             'res_model': 'wxapp.confirm',
             'res_id': None,

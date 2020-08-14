@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 
 _logger = logging.getLogger(__name__)
 
@@ -58,12 +58,12 @@ class WxappConfig(models.Model):
     @api.multi
     def clean_all_token_window(self):
         new_context = dict(self._context) or {}
-        new_context['default_info'] = "确认将所有会话 token 清除？"
+        new_context['default_info'] = _("确认将所有会话 token 清除？")
         new_context['default_model'] = 'wxapp.config'
         new_context['default_method'] = 'clean_all_token'
         new_context['record_ids'] = [obj.id for obj in self]
         return {
-            'name': u'确认清除',
+            'name': _(u'确认清除'),
             'type': 'ir.actions.act_window',
             'res_model': 'wxapp.confirm',
             'res_id': None,

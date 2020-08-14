@@ -2,7 +2,7 @@
 
 import json
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 
 from .. import defs
@@ -39,7 +39,7 @@ class WxappProduct(http.Controller, BaseController):
             "recommendStatusStr": defs.GoodsRecommendStatus.attrs[each_goods.recommend_status],
             "shopId": 0,
             "status": 0 if each_goods.wxapp_published else 1,
-            "statusStr": '上架' if each_goods.wxapp_published else '下架',
+            "statusStr": _('上架') if each_goods.wxapp_published else _('下架'),
             "stores": each_goods.get_present_qty(),
             "userId": each_goods.create_uid.id,
             "views": each_goods.views,
@@ -172,7 +172,7 @@ class WxappProduct(http.Controller, BaseController):
                 "isFree": False,
                 "by_self": False,
                 "feeType": 0,
-                "feeTypeStr": '按件',
+                "feeTypeStr": _('按件'),
                 "details": []
             }
 

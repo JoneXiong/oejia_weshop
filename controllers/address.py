@@ -2,7 +2,7 @@
 
 import json
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 
 from .. import defs
@@ -32,7 +32,7 @@ class WxappAddress(http.Controller, BaseController):
             "provinceId": each_address.province_id.id,
             "provinceStr": each_address.province_id.name,
             "status": 0 if each_address.active else 1,
-            "statusStr": '正常' if each_address.active else '禁用',
+            "statusStr": _('正常') if each_address.active else _('禁用'),
             "uid": each_address.create_uid.id,
             "userId": wxapp_user_id
         }
