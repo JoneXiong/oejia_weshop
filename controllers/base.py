@@ -167,7 +167,7 @@ def convert_static_link(request, html):
 
 def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S'):
     """
-    时间的时区转换
+    UTC时间转为本地时间
     """
     if not value:
         return value
@@ -180,7 +180,7 @@ def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S'):
 
 def dt_utc(value, return_format='%Y-%m-%d %H:%M:%S'):
     """
-    时间的时区转换
+    本地时间转为UTC时间
     """
     if not value:
         return value
