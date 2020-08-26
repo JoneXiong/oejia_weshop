@@ -61,3 +61,9 @@ class WxappUser(models.Model):
     def _compute_address_ids(self):
         for obj in self:
             obj.address_ids = obj.partner_id.child_ids.filtered(lambda r: r.type == 'delivery')
+
+    def bind_mobile(self, mobile):
+        self.partner_id.write({'mobile': mobile})
+
+    def check_account_ok(self):
+        return True
