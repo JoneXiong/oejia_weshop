@@ -44,3 +44,6 @@ class res_partner(models.Model):
     @api.depends('city_id')
     def _compute_district_domain_ids(self):
         self.district_domain_ids = self.city_id.child_ids if self.city_id else False
+
+    def check_account_ok(self):
+        return True
