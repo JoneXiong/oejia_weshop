@@ -12,7 +12,7 @@
 
                     <field name="nickname"/>
                     <field name="avatar"/>
-                    <field name="phone"/>
+                    <field name="mobile"/>
 
                     <field name="province"/>
                     <field name="city"/>
@@ -61,6 +61,16 @@
                     </group>
                     </sheet>
                 </form>
+            </field>
+        </record>
+        <record id="wxapp_user_filter_624" model="ir.ui.view">
+            <field name="name">wxapp_user_filter</field>
+            <field name="model">wxapp.user</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="微信用户查找">
+                    <field name="nickname" string="昵称"/>
+                </search>
             </field>
         </record>
         <record id="wxapp_user_action_405" model="ir.actions.act_window">

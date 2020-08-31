@@ -3,6 +3,7 @@
 import json
 from datetime import date, datetime, time
 import pytz
+import functools
 
 from odoo import http, exceptions
 from odoo.http import request
@@ -27,6 +28,7 @@ error_code = {
     600: u'缺少参数',
     601: u'无权操作:缺少 token',
     602: u'签名错误',
+    609: u'token无效',
     700: u'暂无数据',
     701: u'该功能暂未开通',
     702: u'资源余额不足',
@@ -39,6 +41,17 @@ error_code = {
     404: u'暂无数据',
     10000: u'微信用户未注册'
 }
+
+def jsonapi(f):
+    @functools.wraps(f)
+    def wrap(*args, **kw):
+        try:
+            return f(*args, **kw)
+        except Exception as e:
+            _logger.exception(str(e))
+            ret = {'code': -1, 'msg': str(e)}
+            return request.make_response(json.dumps(ret))
+    return wrap
 
 
 class UserException(Exception):
@@ -63,6 +76,7 @@ class WechatUser(object):
         self.user_id = user
         self.id = user.id
         self.open_id = ''
+        self.avatar_url = ''
 
     @property
     def address_ids(self):
@@ -153,7 +167,7 @@ def convert_static_link(request, html):
 
 def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S'):
     """
-    时间的时区转换
+    UTC时间转为本地时间
     """
     if not value:
         return value
@@ -166,7 +180,7 @@ def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S'):
 
 def dt_utc(value, return_format='%Y-%m-%d %H:%M:%S'):
     """
-    时间的时区转换
+    本地时间转为UTC时间
     """
     if not value:
         return value
