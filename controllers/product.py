@@ -101,6 +101,7 @@ class WxappProduct(http.Controller, BaseController):
             domain = self.get_goods_domain(category_id, nameLike, **kwargs)
             order = self.get_order_by(order_by)
 
+            _logger.info('>>> list domain %s', domain)
             goods_list = request.env['product.template'].sudo().search(domain, offset=(page-1)*pageSize, limit=pageSize, order=order)
 
             if not goods_list:
