@@ -41,6 +41,7 @@ class WxappCategory(http.Controller, BaseController):
                     "paixu": each_category.sort or 0,
                     "pid": each_category.pid.id if each_category.pid else 0,
                     "type": each_category.category_type,
+                    "tag_id": hasattr(each_category, 'tag_id') and each_category.tag_id.id or '',
                     "userId": each_category.create_uid.id
                 } for each_category in all_category
             ]
