@@ -137,7 +137,11 @@ class WxappUser(http.Controller, BaseController):
                 vals['user_id'] = user_id
                 vals['partner_id'] = request.env['res.users'].sudo().browse(user_id).partner_id.id
                 vals.pop('name')
-            wechat_user = request.env(user=1)['wxapp.user'].create(vals)
+            try:
+                wechat_user = request.env(user=1)['wxapp.user'].create(vals)
+            except:
+                import traceback;traceback.print_exc()
+                return self.res_err(-99, u'账号状态异常')
             request.wechat_user = wechat_user
             request.entry = entry
             return self.res_ok()
