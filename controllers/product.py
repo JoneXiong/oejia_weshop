@@ -28,7 +28,7 @@ class WxappProduct(http.Controller, BaseController):
             "logisticsId": 1,
             "minPrice": round(each_goods.get_present_price(1), 2),
             "minScore": 0,
-            "name": '[%s] %s'%(each_goods.default_code, each_goods.name) if each_goods.default_code else each_goods.name,
+            "name": each_goods.name,
             "numberFav": each_goods.number_fav,
             "numberGoodReputation": 0,
             "numberOrders": 0,#each_goods.sales_count,
