@@ -71,7 +71,9 @@ class WxappProduct(http.Controller, BaseController):
             cate_ids = [int(category_id)] + request.env['wxapp.product.category'].sudo().browse(int(category_id)).child_ids.ids
             domain.append(('wxpp_category_id', 'in', cate_ids))
         if nameLike:
+            domain.append('|')
             domain.append(('name', 'ilike', nameLike))
+            domain.append(('barcode', '=', nameLike))
 
         return domain
 
