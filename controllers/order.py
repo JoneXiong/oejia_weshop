@@ -42,6 +42,8 @@ class WxappOrder(http.Controller, BaseController):
             goods_price, logistics_price, order_lines = self.parse_goods_json(
                 goods_json, province_id, city_id, district_id, calculate
             )
+            if kwargs.get('peisongType')=='zq':
+                logistics_price = 0
 
             address = request.env(user=1)['res.partner'].search([
                 ('parent_id', '=', wechat_user.partner_id.id),
