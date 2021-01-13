@@ -8,8 +8,10 @@ class Category(models.Model):
     _name = 'wxapp.product.category'
     _description = u'商品分类'
     _order = 'level,sort'
+    _rec_name = 'complete_name'
 
     name = fields.Char(string='名称', required=True)
+    complete_name = fields.Char(string='全名', compute='_compute_complete_name', store=True)
     category_type = fields.Char(string='类型')
     pid = fields.Many2one('wxapp.product.category', string='上级分类', ondelete='cascade')
     child_ids = fields.One2many('wxapp.product.category', 'pid', string='子分类')
@@ -36,6 +38,14 @@ class Category(models.Model):
             cate.level = level
             for child in cate.child_ids:
                 child._compute_level()
+
+    @api.depends('name','pid.complete_name')
+    def _compute_complete_name(self):
+        for cate in self:
+            if cate.pid:
+                cate.complete_name = '%s / %s'%(cate.pid.complete_name, cate.name)
+            else:
+                cate.complete_name = cate.name
 
     def get_icon_image(self):
         base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url')
