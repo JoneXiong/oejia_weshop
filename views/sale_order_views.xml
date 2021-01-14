@@ -84,7 +84,7 @@
                 暂无订单
               </p></field>
         </record>
-        <menuitem action="sale_order_action_476" id="sale_order_menuitem_335_1536754696" name="订单" parent="parent_menu_319_1536754696" sequence="0"/>
+        <menuitem action="sale_order_action_476" id="sale_order_menuitem_335_1536754696" name="订单" parent="parent_menu_319_1536754696" sequence="0" groups="oejia_weshop.group_wxapp_sale"/>
 
     </data>
 </openerp>
