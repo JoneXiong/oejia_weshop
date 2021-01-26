@@ -75,7 +75,7 @@ class WxappOrder(http.Controller, BaseController):
 
             if calculate:
                 _data = {
-                    'score': 0,
+                    'score': order_dict.get('need_score', 0),
                     'isNeedLogistics': 1,
                     'amountTotle': round(order_dict['goods_price'], 2),
                     'amountLogistics': order_dict['logistics_price'],
