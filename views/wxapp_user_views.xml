@@ -86,7 +86,7 @@
                           (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_user_view_form_1005')}),
                     ]"/>
         </record>
-        <menuitem action="wxapp_user_action_405" id="wxapp_user_menuitem_323_1536754696" name="微信客户" parent="parent_menu_319_1536754696" sequence="10"/>
+        <menuitem action="wxapp_user_action_405" id="wxapp_user_menuitem_323_1536754696" name="微信客户" parent="parent_menu_757_1611842705" sequence="10"/>
 
     </data>
 </openerp>
