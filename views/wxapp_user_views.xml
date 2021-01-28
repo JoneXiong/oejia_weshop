@@ -8,7 +8,7 @@
             <field name="type">tree</field>
             <field name="priority">999</field>
             <field name="arch" type="xml">
-                <tree string="微信用户">
+                <tree string="微信客户">
 
                     <field name="nickname"/>
                     <field name="avatar"/>
@@ -33,12 +33,12 @@
             <field name="type">form</field>
             <field name="priority">999</field>
             <field name="arch" type="xml">
-                <form string="微信用户" version="7.0">
+                <form string="微信客户" version="7.0">
                     <sheet>
                     <group>
                     <field name="nickname" readonly="1"/>
                     <field name="avatar" readonly="1"/>
-                    <field name="phone" readonly="1"/>
+                    <field name="mobile" readonly="1"/>
 
                     <field name="country" readonly="1"/>
                     <field name="province" readonly="1"/>
@@ -68,13 +68,13 @@
             <field name="model">wxapp.user</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="微信用户查找">
+                <search string="查找">
                     <field name="nickname" string="昵称"/>
                 </search>
             </field>
         </record>
         <record id="wxapp_user_action_405" model="ir.actions.act_window">
-            <field name="name">微信用户</field>
+            <field name="name">微信客户</field>
             <field name="res_model">wxapp.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -86,7 +86,7 @@
                           (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_user_view_form_1005')}),
                     ]"/>
         </record>
-        <menuitem action="wxapp_user_action_405" id="wxapp_user_menuitem_323_1536754696" name="微信用户" parent="parent_menu_319_1536754696" sequence="10"/>
+        <menuitem action="wxapp_user_action_405" id="wxapp_user_menuitem_323_1536754696" name="微信客户" parent="parent_menu_319_1536754696" sequence="10"/>
 
     </data>
 </openerp>
