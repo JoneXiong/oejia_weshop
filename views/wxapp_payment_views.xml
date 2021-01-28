@@ -70,7 +70,7 @@
                           (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_payment_view_form_1019')}),
                     ]"/>
         </record>
-        <menuitem action="wxapp_payment_action_413" id="wxapp_payment_menuitem_336_1536754696" name="支付记录" parent="parent_menu_319_1536754696" sequence="12"/>
+        <menuitem action="wxapp_payment_action_413" id="wxapp_payment_menuitem_336_1536754696" name="支付记录" parent="parent_menu_757_1611842705" sequence="12"/>
 
     </data>
 </openerp>
