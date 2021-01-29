@@ -24,7 +24,7 @@
             <field name="arch" type="xml">
                 <form string="电商设置" create="0" delete="0" duplicate="0">
 					<header>
-						<button name="clean_all_token_window" type="object" string="清空Token缓存"/>
+						<button name="clean_all_token_window" type="object" string="清空Token缓存" groups="base.group_no_one"/>
 					</header>
                     <sheet>
                      <group name="miniapp" string="小程序相关" colspan="4">
