@@ -26,7 +26,7 @@ class WxappProduct(http.Controller, BaseController):
             "id": each_goods.id,
             "index": each_goods.id,
             "logisticsId": 1,
-            "minPrice": round(each_goods.get_present_price(1), 2),
+            "minPrice": request.env['product.template'].cli_price(each_goods.get_present_price(1)),
             "minScore": 0,
             "name": each_goods.name,
             "numberFav": each_goods.number_fav,
