@@ -8,7 +8,7 @@ from .. import defs
 class WxappUser(models.Model):
 
     _name = 'wxapp.user'
-    _description = u'微信用户'
+    _description = u'微信客户'
     _inherits = {'res.partner': 'partner_id'}
     _order = 'id desc'
 

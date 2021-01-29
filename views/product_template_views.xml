@@ -76,7 +76,7 @@
             <field name="state">code</field>
             <field name="code">records.write({'wxapp_published': False})</field>
         </record>
-        <menuitem action="product.product_template_action" id="product_template_menuitem_325_1536754696" name="产品" parent="parent_menu_319_1536754696" sequence="10" groups="oejia_weshop.group_wxapp_sale"/>
+        <menuitem action="product.product_template_action" id="product_template_menuitem_325_1536754696" name="产品" parent="parent_menu_319_1536754696" sequence="2" groups="oejia_weshop.group_wxapp_sale"/>
 
     </data>
 </openerp>
