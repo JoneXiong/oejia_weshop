@@ -455,7 +455,7 @@ class WxappOrder(http.Controller, BaseController):
             if not order:
                 return self.res_err(404)
 
-            order.write({'customer_status': 'unevaluated'})
+            order.action_receive()
 
             #mail_template = request.env.ref('wechat_mall_order_confirmed')
             #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
