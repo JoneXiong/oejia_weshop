@@ -205,8 +205,10 @@ class WxappUser(http.Controller, BaseController):
             user_info = get_decrypt_info(app_id, session_key, encrypted_data, iv)
             _logger.info('>>> bind_mobile: %s', user_info)
             wechat_user.bind_mobile(user_info.get('phoneNumber'))
-
-            return self.res_ok()
+            ret = {
+                'account_ok': wechat_user.check_account_ok(),
+            }
+            return self.res_ok(ret)
 
         except Exception as e:
             _logger.exception(e)
