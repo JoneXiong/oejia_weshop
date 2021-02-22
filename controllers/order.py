@@ -89,19 +89,19 @@ class WxappOrder(http.Controller, BaseController):
             else:
                 order_dict.pop('goods_price')
                 order_dict.pop('extra')
-                order = request.env(user=1)['sale.order'].create(order_dict)
+                line_value_list = []
                 for line in order_lines:
                     if 'goods_id' in line:
                         line.pop('goods_id')
-                    line['order_id'] = order.id
-                    request.env(user=1)['sale.order.line'].create(line)
+                    line_value_list.append((0, 0, line))
                 if order_dict['logistics_price']>0:
-                    request.env(user=1)['sale.order.line'].create({
-                        'order_id': order.id,
+                    line_value_list.append((0, 0, {
                         'product_id': request.env.ref('oejia_weshop.product_product_delivery_weshop').id,
                         'price_unit': order_dict['logistics_price'],
                         'product_uom_qty': 1,
-                    })
+                    }))
+                order_dict['order_line'] = line_value_list
+                order = request.env(user=1)['sale.order'].create(order_dict)
 
                 #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
