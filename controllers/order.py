@@ -15,6 +15,12 @@ _logger = logging.getLogger(__name__)
 
 class WxappOrder(http.Controller, BaseController):
 
+    def _get_user(self):
+        user = None
+        if hasattr(request, 'wechat_user') and request.wechat_user:
+            user = request.wechat_user.user_id
+        return user
+
     @http.route('/wxa/<string:sub_domain>/order/create',
                 auth='public', methods=['POST'], csrf=False, type='http')
     def create(self, sub_domain, **kwargs):
@@ -87,6 +93,10 @@ class WxappOrder(http.Controller, BaseController):
                     line['price_unit'] = round(line['price_unit'], 2)
                 _data['orderLines'] = order_lines
             else:
+                OrderModel = request.env(user=1)['sale.order']
+                user = self._get_user()
+                if user:
+                    OrderModel = OrderModel.with_context(force_company=user.company_id.id)
                 order_dict.pop('goods_price')
                 order_dict.pop('extra')
                 line_value_list = []
@@ -101,7 +111,7 @@ class WxappOrder(http.Controller, BaseController):
                         'product_uom_qty': 1,
                     }))
                 order_dict['order_line'] = line_value_list
-                order = request.env(user=1)['sale.order'].create(order_dict)
+                order = OrderModel.create(order_dict)
 
                 #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
