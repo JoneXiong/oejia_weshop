@@ -5,11 +5,24 @@ from odoo import models, fields, api
 
 _logger = logging.getLogger(__name__)
 
+class Platform(object):
+
+    def __init__(self, val):
+        self.val = val
+
+    def __get__(self, obj, objtype):
+        return self.val
+
+    def __set__(self, obj, val):
+        self.val = val
+
+
 class WxappConfig(models.Model):
 
     _name = 'wxapp.config'
     _description = u'对接设置'
     _rec_name = 'mall_name'
+    _platform = Platform('wxapp')
 
     sub_domain = fields.Char('接口前缀', help='商城访问的接口url前缀', index=True, required=True)
 
