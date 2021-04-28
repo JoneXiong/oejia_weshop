@@ -15,8 +15,8 @@ class WxappConfig(models.Model):
 
     mall_name = fields.Char('商城名称', help='显示在顶部')
 
-    app_id = fields.Char('appid')
-    secret = fields.Char('secret')
+    app_id = fields.Char('AppId')
+    secret = fields.Char('Secret')
 
     team_id = fields.Many2one('crm.team', string='所属销售渠道', required=True)
 
@@ -30,7 +30,7 @@ class WxappConfig(models.Model):
 
     @api.model
     def get_entry(self, sub_domain):
-        if sub_domain in ['h5']:
+        if sub_domain in ['h5', 'mirror']:
             entry = self.env.ref('oejia_weshop.wxapp_config_data_1')
             entry._platform = sub_domain
             return entry
