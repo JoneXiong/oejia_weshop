@@ -6,7 +6,6 @@
     'summary': 'Odoo OE商城,电商、小程序商城',
     'author': 'Oejia',
     'website': 'http://www.oejia.net/',
-    'application': True,
     'depends': ['base', 'mail', 'sale'],
     'external_dependencies': {
         'python': ['Crypto', 'xmltodict', 'itsdangerous'],
