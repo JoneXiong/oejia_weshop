@@ -113,6 +113,8 @@ class WxappUser(http.Controller, BaseController):
                 return self.res_err(404)
 
             session_key, user_info = get_wx_user_info(app_id, secret, code, encrypted_data, iv)
+            if kwargs.get('userInfo'):
+                user_info.update(json.loads(kwargs.get('userInfo')))
 
             user_id = None
             if hasattr(request, 'user_id'):
