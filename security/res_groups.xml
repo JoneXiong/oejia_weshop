@@ -12,7 +12,6 @@
         <field name="name">电商配置</field>
         <field name="category_id" ref="oejia_weshop.module_cate62"/>
         <field name="users" eval="[
-			(4, ref('base.user_admin')),
 		]"/>
     </record>
 	
@@ -20,7 +19,6 @@
         <field name="name">电商销售</field>
         <field name="category_id" ref="oejia_weshop.module_cate62"/>
         <field name="users" eval="[
-			(4, ref('base.user_admin')),
 		]"/>
     </record>
 	
