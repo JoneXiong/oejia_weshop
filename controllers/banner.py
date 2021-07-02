@@ -50,7 +50,7 @@ class WxappBanner(http.Controller, BaseController):
                     } for each_banner in banner_list
                 ]
                 if banner_type=='app':
-                    if len(data)<3:
+                    if len(data)<1:
                         return self.res_err(700)
 
             if 0 and banner_type=='index':
