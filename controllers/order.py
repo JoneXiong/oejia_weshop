@@ -122,7 +122,7 @@ class WxappOrder(http.Controller, BaseController):
                     "id": order.id,
                     "orderNumber": order.name,
                     "status": defs.OrderResponseStatus.attrs[order.customer_status],
-                    "statusStr": defs.OrderStatus.attrs[order.customer_status],
+                    "statusStr": self.get_statusStr(order),
                 }
 
             return self.res_ok(_data)
@@ -257,7 +257,8 @@ class WxappOrder(http.Controller, BaseController):
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return res
 
-            orders = request.env['sale.order'].sudo().search([('partner_id', '=', wechat_user.partner_id.id), ('number_goods', '>', 0)])
+            domain = self.get_orders_domain(None, **kwargs)
+            orders = request.env['sale.order'].sudo().search(domain)
             order_statistics_dict = {order_status: 0 for order_status in defs.OrderStatus.attrs.keys()}
             for each_order in orders:
                 order_statistics_dict[each_order.customer_status] += 1
@@ -285,10 +286,13 @@ class WxappOrder(http.Controller, BaseController):
             "orderNumber": each_order.name,
             "goodsNumber": each_order.number_goods,
             "status": defs.OrderResponseStatus.attrs[each_order.customer_status],
-            "statusStr": defs.OrderStatus.attrs[each_order.customer_status],
+            "statusStr": self.get_statusStr(each_order),
             "score": 0,
         }
         return ret
+
+    def get_statusStr(self, order):
+        return defs.OrderStatus.attrs[order.customer_status]
 
     def get_orders_domain(self, status, **kwargs):
         domain = [('partner_id', '=', request.wechat_user.partner_id.id), ('number_goods', '>', 0)]
@@ -313,6 +317,7 @@ class WxappOrder(http.Controller, BaseController):
                     each_order.id: [
                         {
                             "pic": each_goods.product_id.product_tmpl_id.main_img,
+                            "number": each_goods.product_uom_qty,
                         } for each_goods in each_order.order_line if each_goods.product_id.id!=delivery_product_id]
                     for each_order in orders}
             }
