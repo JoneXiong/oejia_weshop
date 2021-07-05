@@ -24,7 +24,7 @@ from .helper import (error_parser, get_encoding, url_encode, iteritems,
                      text_type, smart_str)
 
 
-TIMEOUT = 2
+TIMEOUT = 5
 
 
 class OAuth2AuthExchangeError(Exception):
