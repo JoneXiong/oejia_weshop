@@ -77,6 +77,12 @@ class WechatUser(object):
         self.id = user.id
         self.open_id = ''
         self.avatar_url = ''
+        self.parent_id = False
+        self.name = partner.name
+        self.vat = ''
+
+    def check_account_ok(self):
+        return True
 
     @property
     def address_ids(self):
@@ -108,9 +114,9 @@ class BaseController(object):
                     request.wechat_user = wechat_user
                     return None, wechat_user, wxapp_entry
                 else:
-                    #wechat_user = WechatUser(request.env.user.partner_id, request.env.user)
-                    #request.wechat_user = wechat_user
-                    return self.res_err(609), None, wxapp_entry
+                    wechat_user = WechatUser(request.env.user.partner_id, request.env.user)
+                    request.wechat_user = wechat_user
+                    return None, wechat_user, wxapp_entry
 
         access_token = request.env['wxapp.access_token'].sudo().search([
             ('token', '=', token),
