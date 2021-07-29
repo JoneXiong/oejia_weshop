@@ -16,7 +16,7 @@ class Region(http.Controller, BaseController):
 
     @http.route('/wxa/common/region/v2/province', auth='public', methods=['GET'])
     def province(self, **kwargs):
-        provinces = request.env['oe.province'].sudo().search([])
+        provinces = request.env['oe.province'].sudo().search([]).sorted(key=lambda o: o.name[0])
         data = [{'id': e.id, 'name': e.name, 'level': 1} for e in provinces]
         return self.res_ok(data)
 
@@ -29,8 +29,17 @@ class Region(http.Controller, BaseController):
             model = 'oe.district'
 
         if model:
-            objs = request.env[model].sudo().search([('pid', '=', int(pid))])
+            objs = request.env[model].sudo().search([('pid', '=', int(pid))]).sorted(key=lambda o: o.name[0])
             data = [{'id': e.id, 'name': e.name, 'level': 2, 'pid': e.pid} for e in objs]
             return self.res_ok(data)
         else:
             return self.res_ok([{'id': 0, 'name':' ', 'pid': pid}])
+
+    @http.route('/wxa/common/region/v2/search', auth='public', methods=['POST'], csrf=False)
+    def search(self, nameLike=False, **kwargs):
+        if nameLike:
+            objs = request.env['oe.district'].sudo().search([('name', 'ilike', nameLike)]).sorted(key=lambda o: o.name[0])
+            data = [{'value': {'dObject': {'id': e.id,'name': e.name}, 'cObject': {'id': e.pid.id, 'name': e.pid.name}, 'pObject': {'id': e.pid.pid.id, 'name': e.pid.pid.name}}, 'text': '%s %s %s'%(e.pid.pid.name, e.pid.name, e.name)} for e in objs]
+            return self.res_ok(data)
+        else:
+            return self.res_ok([])
