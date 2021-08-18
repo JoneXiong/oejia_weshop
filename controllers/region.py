@@ -39,6 +39,11 @@ class Region(http.Controller, BaseController):
     def search(self, nameLike=False, **kwargs):
         if nameLike:
             objs = request.env['oe.district'].sudo().search([('name', 'ilike', nameLike)]).sorted(key=lambda o: o.name[0])
+            if not objs:
+                citys = request.env['oe.city'].sudo().search([('name', 'ilike', nameLike)]).sorted(key=lambda o: o.name[0])
+                objs = []
+                for city in citys:
+                    objs = objs + [e for e in city.child_ids]
             data = [{'value': {'dObject': {'id': e.id,'name': e.name}, 'cObject': {'id': e.pid.id, 'name': e.pid.name}, 'pObject': {'id': e.pid.pid.id, 'name': e.pid.pid.name}}, 'text': '%s %s %s'%(e.pid.pid.name, e.pid.name, e.name)} for e in objs]
             return self.res_ok(data)
         else:
