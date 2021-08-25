@@ -115,6 +115,9 @@ class WxappProduct(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
+    def pre_check(self, entry, kwargs):
+        return
+
     @http.route('/wxa/<string:sub_domain>/shop/goods/detail', auth='public', methods=['GET'])
     def detail(self, sub_domain, id=False, code=False, **kwargs):
         goods_id = id
@@ -123,6 +126,9 @@ class WxappProduct(http.Controller, BaseController):
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
             self.check_userid(token)
+
+            res = self.pre_check(entry, kwargs)
+            if res:return res
 
             if not goods_id and not code:
                 return self.res_err(300)
