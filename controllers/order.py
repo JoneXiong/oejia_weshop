@@ -128,10 +128,10 @@ class WxappOrder(http.Controller, BaseController):
             return self.res_ok(_data)
 
         except UserException as e:
-            return self.res_err(-99, str(e))
+            return self.res_err(-99, e.args[0])
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, str(e))
+            return self.res_err(-1, '%s'%e)
 
     def calculate_order_logistics(self, wechat_user, order_dict, order_lines):
         pass
