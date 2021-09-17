@@ -71,6 +71,7 @@ class WxappOrder(http.Controller, BaseController):
                 'user_id': wechat_user.partner_id.user_id.id,
                 'goods_price': goods_price,
                 'extra': {},
+                'entry': entry,
             }
             order_dict.update(kwargs)
             _logger.info('>>> order_dict %s', order_dict)
@@ -111,7 +112,9 @@ class WxappOrder(http.Controller, BaseController):
                         'product_uom_qty': 1,
                     }))
                 order_dict['order_line'] = line_value_list
-                order = OrderModel.create(order_dict)
+                vals = order_dict.copy()
+                vals.pop('entry', None)
+                order = OrderModel.create(vals)
 
                 #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
