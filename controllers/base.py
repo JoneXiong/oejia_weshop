@@ -94,14 +94,14 @@ class BaseController(object):
         wxapp_entry = request.env['wxapp.config'].sudo().get_entry(sub_domain)
         if not wxapp_entry:
             return self.res_err(404), None
+        request.env.context = dict(request.env.context, entry_id=wxapp_entry.get_id())
         return None, wxapp_entry
 
     def _check_user(self, sub_domain, token):
         wxapp_entry = request.env['wxapp.config'].sudo().get_entry(sub_domain)
         if not wxapp_entry:
             return self.res_err(404), None, wxapp_entry
-
-        wxapp_entry =wxapp_entry
+        request.env.context = dict(request.env.context, entry_id=wxapp_entry.get_id())
         if not token:
             return self.res_err(300), None, wxapp_entry
 

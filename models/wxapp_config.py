@@ -11,7 +11,7 @@ class WxappConfig(models.Model):
     _description = u'对接设置'
     _rec_name = 'mall_name'
 
-    sub_domain = fields.Char('接口前缀', help='商城访问的接口url前缀', index=True, required=True)
+    sub_domain = fields.Char('接口前缀', help='商城访问的接口url前缀', index=True, required=True, default='oejia')
 
     mall_name = fields.Char('商城名称', help='显示在顶部')
 
@@ -38,10 +38,17 @@ class WxappConfig(models.Model):
         config = self.search([('sub_domain', '=', sub_domain)])
         if config:
             config.ensure_one()
-            config._platform = 'wxapp'
+            config._platform = 'wxapp|%s' % config.id
+            config.env.context = dict(config.env.context, entry_id=config.id)
             return config
         else:
             return False
+
+    def get_id(self):
+        if self._platform in ['h5', 'mirror']:
+            return self.id
+        else:
+            return int(self._platform.replace('wxapp|', ''))
 
     @api.model
     def get_from_team(self, team_id):
