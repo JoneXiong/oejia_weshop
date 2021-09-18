@@ -43,7 +43,7 @@
                           (0, 0, {'view_mode': 'form', 'view_id': ref('wxapp_notice_view_form_1727')}),
                     ]"/>
         </record>
-        <menuitem action="wxapp_notice_action_596" id="wxapp_notice_menuitem_448_1563988113" name="公告" parent="parent_menu_327_1536754696" sequence="10"/>
+        <menuitem action="wxapp_notice_action_596" id="wxapp_notice_menuitem_448_1563988113" name="公告" parent="parent_menu_327_1536754696" sequence="10" groups="oejia_weshop.group_wxapp_sale,base.group_system"/>
 
     </data>
 </openerp>
