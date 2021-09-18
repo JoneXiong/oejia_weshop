@@ -52,7 +52,6 @@ class WxappConfig(models.Model):
         if config:
             config.ensure_one()
             config._platform = 'wxapp|%s' % config.id
-            config.env.context = dict(config.env.context, entry_id=config.id)
             return config
         else:
             return False
