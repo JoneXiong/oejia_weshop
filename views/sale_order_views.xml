@@ -79,7 +79,7 @@
             <field name="target">current</field>
             <field name="view_id" ref="oejia_weshop.sale_order_tree_weshop_1655"/>
             <field name="context">{'hide_sale': True}</field>
-            <field name="domain" eval="[('team_id', '=', ref('oejia_weshop.crm_team_data_3'))]"/>
+            <field name="domain" eval="[('number_goods', '>', 0)]"/>
             <field name="help" type="html"><p class="oe_view_nocontent_create">
                 暂无订单
               </p></field>
