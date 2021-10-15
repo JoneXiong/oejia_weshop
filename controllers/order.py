@@ -4,6 +4,7 @@ import json
 
 from odoo import http
 from odoo.http import request
+from odoo import release
 
 from .. import defs
 from .base import BaseController, dt_convert, UserException
@@ -97,7 +98,10 @@ class WxappOrder(http.Controller, BaseController):
                 OrderModel = request.env(user=1)['sale.order']
                 user = self._get_user()
                 if user:
-                    OrderModel = OrderModel.with_context(force_company=user.company_id.id)
+                    if release.version_info[0]>=14:
+                        OrderModel = OrderModel.with_company(user.company_id.id)
+                    else:
+                        OrderModel = OrderModel.with_context(force_company=user.company_id.id)
                 order_dict.pop('goods_price')
                 order_dict.pop('extra')
                 line_value_list = []
