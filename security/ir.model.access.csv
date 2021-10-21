@@ -1,6 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
 access_wxapp_banner_group_wxapp_config,wxapp_banner.group_wxapp_config,model_wxapp_banner,group_wxapp_config,1,1,1,1
+access_wxapp_confirm_all,wxapp_confirm.group_False,model_wxapp_confirm,,1,1,1,0
 access_wxapp_banner_group_wxapp_sale,wxapp_banner.group_wxapp_sale,model_wxapp_banner,group_wxapp_sale,1,1,1,1
 access_wxapp_config_group_wxapp_config,wxapp_config.group_wxapp_config,model_wxapp_config,group_wxapp_config,1,1,1,1
 access_wxapp_payment_group_wxapp_sale,wxapp_payment.group_wxapp_sale,model_wxapp_payment,group_wxapp_sale,1,0,0,0
