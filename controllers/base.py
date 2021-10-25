@@ -77,6 +77,12 @@ class WechatUser(object):
         self.id = user.id
         self.open_id = ''
         self.avatar_url = ''
+        self.parent_id = False
+        self.name = partner.name
+        self.vat = ''
+
+    def check_account_ok(self):
+        return True
 
     @property
     def address_ids(self):
@@ -88,14 +94,18 @@ class BaseController(object):
         wxapp_entry = request.env['wxapp.config'].sudo().get_entry(sub_domain)
         if not wxapp_entry:
             return self.res_err(404), None
+        self._makeup_context(request.env, wxapp_entry)
         return None, wxapp_entry
+
+    def _makeup_context(self, env, entry):
+        env.context = dict(env.context, entry_id=entry.get_id())
+        entry.env.context = dict(entry.env.context, entry_id=entry.get_id())
 
     def _check_user(self, sub_domain, token):
         wxapp_entry = request.env['wxapp.config'].sudo().get_entry(sub_domain)
         if not wxapp_entry:
             return self.res_err(404), None, wxapp_entry
-
-        wxapp_entry =wxapp_entry
+        self._makeup_context(request.env, wxapp_entry)
         if not token:
             return self.res_err(300), None, wxapp_entry
 
@@ -106,10 +116,11 @@ class BaseController(object):
                 wechat_user = request.env['wxapp.user'].sudo().search([('partner_id', '=', request.env.user.partner_id.id)], limit=1)
                 if wechat_user:
                     request.wechat_user = wechat_user
+                    return None, wechat_user, wxapp_entry
                 else:
                     wechat_user = WechatUser(request.env.user.partner_id, request.env.user)
                     request.wechat_user = wechat_user
-                return None, wechat_user, wxapp_entry
+                    return None, wechat_user, wxapp_entry
 
         access_token = request.env['wxapp.access_token'].sudo().search([
             ('token', '=', token),
@@ -167,7 +178,7 @@ def convert_static_link(request, html):
 
 def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S'):
     """
-    时间的时区转换
+    UTC时间转为本地时间
     """
     if not value:
         return value
@@ -180,7 +191,7 @@ def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S'):
 
 def dt_utc(value, return_format='%Y-%m-%d %H:%M:%S'):
     """
-    时间的时区转换
+    本地时间转为UTC时间
     """
     if not value:
         return value

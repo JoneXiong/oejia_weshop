@@ -11,7 +11,7 @@ class Payment(models.Model):
     _description = u'支付记录'
     _order = 'id desc'
 
-    wechat_user_id = fields.Many2one('wxapp.user', string='微信用户')
+    wechat_user_id = fields.Many2one('wxapp.user', string='客户')
     order_id = fields.Many2one('sale.order', string='订单')
     payment_number = fields.Char('支付单号', index=True)
     price = fields.Float('支付金额(元)')
@@ -22,7 +22,7 @@ class Payment(models.Model):
     result_code = fields.Char('业务结果')
     err_code = fields.Char('错误代码')
     err_code_des = fields.Char('错误代码描述')
-    transaction_id = fields.Char('微信订单号')
+    transaction_id = fields.Char('订单号')
     bank_type = fields.Char('付款银行')
     fee_type = fields.Char('货币种类')
     total_fee = fields.Integer('订单金额(分)')

@@ -26,9 +26,9 @@ class WxappProduct(http.Controller, BaseController):
             "id": each_goods.id,
             "index": each_goods.id,
             "logisticsId": 1,
-            "minPrice": round(each_goods.get_present_price(1), 2),
+            "minPrice": request.env['product.template'].cli_price(each_goods.get_present_price(1)),
             "minScore": 0,
-            "name": '[%s] %s'%(each_goods.default_code, each_goods.name) if each_goods.default_code else each_goods.name,
+            "name": each_goods.name,
             "numberFav": each_goods.number_fav,
             "numberGoodReputation": 0,
             "numberOrders": 0,#each_goods.sales_count,
@@ -71,7 +71,8 @@ class WxappProduct(http.Controller, BaseController):
             cate_ids = [int(category_id)] + request.env['wxapp.product.category'].sudo().browse(int(category_id)).child_ids.ids
             domain.append(('wxpp_category_id', 'in', cate_ids))
         if nameLike:
-            domain.append(('name', 'ilike', nameLike))
+            for srch in nameLike.split(" "):
+                domain += ['|', ('name', 'ilike', srch), ('barcode', '=', srch)]
 
         return domain
 
@@ -101,6 +102,7 @@ class WxappProduct(http.Controller, BaseController):
             domain = self.get_goods_domain(category_id, nameLike, **kwargs)
             order = self.get_order_by(order_by)
 
+            _logger.info('>>> list domain %s', domain)
             goods_list = request.env['product.template'].sudo().search(domain, offset=(page-1)*pageSize, limit=pageSize, order=order)
 
             if not goods_list:
@@ -113,6 +115,9 @@ class WxappProduct(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
+    def pre_check(self, entry, kwargs):
+        return
+
     @http.route('/wxa/<string:sub_domain>/shop/goods/detail', auth='public', methods=['GET'])
     def detail(self, sub_domain, id=False, code=False, **kwargs):
         goods_id = id
@@ -121,6 +126,9 @@ class WxappProduct(http.Controller, BaseController):
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
             self.check_userid(token)
+
+            res = self.pre_check(entry, kwargs)
+            if res:return res
 
             if not goods_id and not code:
                 return self.res_err(300)

@@ -68,6 +68,9 @@ class ProductTemplate(models.Model):
     def get_present_price(self, quantity=1):
         return self.list_price
 
+    @api.model
+    def cli_price(self, price):
+        return round(price, 2)
 
 class ProductProduct(models.Model):
 

@@ -27,10 +27,11 @@ class SaleOrder(models.Model):
     mobile = fields.Char('手机号码')
     zipcode = fields.Char('邮编', requried=True)
 
-
+    delivery_time = fields.Datetime('发货时间')
     shipper_id = fields.Many2one('oe.shipper', string='承运商', track_visibility='onchange', copy=False)
     shipper_no = fields.Char('运单号', track_visibility='onchange', copy=False)
     shipper_traces = fields.Text('物流信息', copy=False)
+    is_paid = fields.Boolean('已支付', default=False)
 
 
 
@@ -67,7 +68,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def delivery(self):
-        self.write({'customer_status': 'unconfirmed'})
+        self.write({'customer_status': 'unconfirmed', 'delivery_time': fields.Datetime.now()})
 
     @api.multi
     def close_dialog(self):
@@ -93,7 +94,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_paid(self):
-        self.write({'customer_status': 'pending'})
+        self.write({'customer_status': 'pending', 'is_paid': True})
 
     @api.multi
     def action_created(self, data=None):
@@ -130,3 +131,7 @@ class SaleOrder(models.Model):
         result = super(SaleOrder, self).action_draft()
         self.write({'customer_status': 'unpaid'})
         return result
+
+    @api.multi
+    def action_receive(self):
+        self.write({'customer_status': 'unevaluated'})

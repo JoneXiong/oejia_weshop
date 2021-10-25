@@ -42,7 +42,7 @@
                           (0, 0, {'view_mode': 'form', 'view_id': ref('oe_shipper_view_form_1011')}),
                     ]"/>
         </record>
-        <menuitem action="oe_shipper_action_409" id="oe_shipper_menuitem_330_1536754696" name="物流商" parent="parent_menu_319_1536754696" sequence="10"/>
+        <menuitem action="oe_shipper_action_409" id="oe_shipper_menuitem_330_1536754696" name="物流商" parent="parent_menu_319_1536754696" sequence="12"  groups="oejia_weshop.group_wxapp_sale"/>
 
     </data>
 </openerp>

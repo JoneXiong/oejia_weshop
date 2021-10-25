@@ -11,10 +11,10 @@
                 <tree string="商品分类">
                <field name="sort" widget="handle"/>
                <field name="name"/>
+               <field name="complete_name"/>
                <field name="pid"/>
                <field name="is_use"/>
                <field name="level"/>
-               <field name="key"/>
                 </tree>
             </field>
         </record>

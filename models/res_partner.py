@@ -39,8 +39,13 @@ class res_partner(models.Model):
 
     @api.depends('province_id')
     def _compute_city_domain_ids(self):
-        self.city_domain_ids = self.province_id.child_ids if self.province_id else False
+        for obj in self:
+            obj.city_domain_ids = obj.province_id.child_ids if obj.province_id else False
 
     @api.depends('city_id')
     def _compute_district_domain_ids(self):
-        self.district_domain_ids = self.city_id.child_ids if self.city_id else False
+        for obj in self:
+            obj.district_domain_ids = obj.city_id.child_ids if obj.city_id else False
+
+    def check_account_ok(self):
+        return True

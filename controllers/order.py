@@ -4,6 +4,7 @@ import json
 
 from odoo import http, _
 from odoo.http import request
+from odoo import release
 
 from .. import defs
 from .base import BaseController, dt_convert, UserException
@@ -14,6 +15,12 @@ _logger = logging.getLogger(__name__)
 
 
 class WxappOrder(http.Controller, BaseController):
+
+    def _get_user(self):
+        user = None
+        if hasattr(request, 'wechat_user') and request.wechat_user:
+            user = request.wechat_user.user_id
+        return user
 
     @http.route('/wxa/<string:sub_domain>/order/create',
                 auth='public', methods=['POST'], csrf=False, type='http')
@@ -42,6 +49,8 @@ class WxappOrder(http.Controller, BaseController):
             goods_price, logistics_price, order_lines = self.parse_goods_json(
                 goods_json, province_id, city_id, district_id, calculate
             )
+            if kwargs.get('peisongType')=='zq':
+                logistics_price = 0
 
             address = request.env(user=1)['res.partner'].search([
                 ('parent_id', '=', wechat_user.partner_id.id),
@@ -63,6 +72,7 @@ class WxappOrder(http.Controller, BaseController):
                 'user_id': wechat_user.partner_id.user_id.id,
                 'goods_price': goods_price,
                 'extra': {},
+                'entry': entry,
             }
             order_dict.update(kwargs)
             _logger.info('>>> order_dict %s', order_dict)
@@ -73,7 +83,7 @@ class WxappOrder(http.Controller, BaseController):
 
             if calculate:
                 _data = {
-                    'score': 0,
+                    'score': order_dict.get('need_score', 0),
                     'isNeedLogistics': 1,
                     'amountTotle': round(order_dict['goods_price'], 2),
                     'amountLogistics': order_dict['logistics_price'],
@@ -85,21 +95,30 @@ class WxappOrder(http.Controller, BaseController):
                     line['price_unit'] = round(line['price_unit'], 2)
                 _data['orderLines'] = order_lines
             else:
+                OrderModel = request.env(user=1)['sale.order']
+                user = self._get_user()
+                if user:
+                    if release.version_info[0]>=14:
+                        OrderModel = OrderModel.with_company(user.company_id.id)
+                    else:
+                        OrderModel = OrderModel.with_context(force_company=user.company_id.id)
                 order_dict.pop('goods_price')
                 order_dict.pop('extra')
-                order = request.env(user=1)['sale.order'].create(order_dict)
+                line_value_list = []
                 for line in order_lines:
                     if 'goods_id' in line:
                         line.pop('goods_id')
-                    line['order_id'] = order.id
-                    request.env(user=1)['sale.order.line'].create(line)
+                    line_value_list.append((0, 0, line))
                 if order_dict['logistics_price']>0:
-                    request.env(user=1)['sale.order.line'].create({
-                        'order_id': order.id,
+                    line_value_list.append((0, 0, {
                         'product_id': request.env.ref('oejia_weshop.product_product_delivery_weshop').id,
                         'price_unit': order_dict['logistics_price'],
                         'product_uom_qty': 1,
-                    })
+                    }))
+                order_dict['order_line'] = line_value_list
+                vals = order_dict.copy()
+                vals.pop('entry', None)
+                order = OrderModel.create(vals)
 
                 #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
@@ -110,16 +129,16 @@ class WxappOrder(http.Controller, BaseController):
                     "id": order.id,
                     "orderNumber": order.name,
                     "status": defs.OrderResponseStatus.attrs[order.customer_status],
-                    "statusStr": defs.OrderStatus.attrs[order.customer_status],
+                    "statusStr": self.get_statusStr(order),
                 }
 
             return self.res_ok(_data)
 
         except UserException as e:
-            return self.res_err(-99, str(e))
+            return self.res_err(-99, e.args[0])
         except Exception as e:
             _logger.exception(e)
-            return self.res_err(-1, str(e))
+            return self.res_err(-1, '%s'%e)
 
     def calculate_order_logistics(self, wechat_user, order_dict, order_lines):
         pass
@@ -245,7 +264,8 @@ class WxappOrder(http.Controller, BaseController):
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return res
 
-            orders = request.env['sale.order'].sudo().search([('partner_id', '=', wechat_user.partner_id.id), ('number_goods', '>', 0)])
+            domain = self.get_orders_domain(None, **kwargs)
+            orders = request.env['sale.order'].sudo().search(domain)
             order_statistics_dict = {order_status: 0 for order_status in defs.OrderStatus.attrs.keys()}
             for each_order in orders:
                 order_statistics_dict[each_order.customer_status] += 1
@@ -273,10 +293,13 @@ class WxappOrder(http.Controller, BaseController):
             "orderNumber": each_order.name,
             "goodsNumber": each_order.number_goods,
             "status": defs.OrderResponseStatus.attrs[each_order.customer_status],
-            "statusStr": defs.OrderStatus.attrs[each_order.customer_status],
+            "statusStr": self.get_statusStr(each_order),
             "score": 0,
         }
         return ret
+
+    def get_statusStr(self, order):
+        return defs.OrderStatus.attrs[order.customer_status]
 
     def get_orders_domain(self, status, **kwargs):
         domain = [('partner_id', '=', request.wechat_user.partner_id.id), ('number_goods', '>', 0)]
@@ -301,6 +324,7 @@ class WxappOrder(http.Controller, BaseController):
                     each_order.id: [
                         {
                             "pic": each_goods.product_id.product_tmpl_id.main_img,
+                            "number": each_goods.product_uom_qty,
                         } for each_goods in each_order.order_line if each_goods.product_id.id!=delivery_product_id]
                     for each_order in orders}
             }
@@ -367,13 +391,12 @@ class WxappOrder(http.Controller, BaseController):
                     ],
                     "logistics": {
                         "address": order.address,
+                        "provinceId": order.province_id.id,
                         "cityId": order.city_id.id,
-                        "code": order.zipcode,
-                        "dateUpdate": dt_convert(order.write_date),
                         "districtId": order.district_id.id or 0,
                         "linkMan": order.linkman,
                         "mobile": order.mobile,
-                        "provinceId": order.province_id.id,
+                        "code": order.zipcode,
                         "shipperCode": order.shipper_id.code if order.shipper_id else '',
                         "shipperName": order.shipper_id.name if order.shipper_id else '',
                         "status": 0 if order.shipper_id else '',
@@ -453,7 +476,7 @@ class WxappOrder(http.Controller, BaseController):
             if not order:
                 return self.res_err(404)
 
-            order.write({'customer_status': 'unevaluated'})
+            order.action_receive()
 
             #mail_template = request.env.ref('wechat_mall_order_confirmed')
             #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)

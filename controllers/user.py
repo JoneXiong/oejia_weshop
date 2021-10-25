@@ -25,8 +25,11 @@ class WxappUser(http.Controller, BaseController):
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return self.res_err(609)
 
-            data = self.get_user_info(wechat_user)
-            return self.res_ok(data)
+            if wechat_user.check_account_ok():
+                data = self.get_user_info(wechat_user)
+                return self.res_ok(data)
+            else:
+                return self.res_err(608, u'账号不可用')
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, str(e))
@@ -110,6 +113,8 @@ class WxappUser(http.Controller, BaseController):
                 return self.res_err(404)
 
             session_key, user_info = get_wx_user_info(app_id, secret, code, encrypted_data, iv)
+            if kwargs.get('userInfo'):
+                user_info.update(json.loads(kwargs.get('userInfo')))
 
             user_id = None
             if hasattr(request, 'user_id'):
@@ -129,12 +134,17 @@ class WxappUser(http.Controller, BaseController):
                 'user_id': user_id,
                 'partner_id': user_id and request.env['res.users'].sudo().browse(user_id).partner_id.id or None,
                 'category_id': [(4, request.env.ref('oejia_weshop.res_partner_category_data_1').sudo().id)],
+                'entry_id': entry.id,
             }
             if user_id:
                 vals['user_id'] = user_id
                 vals['partner_id'] = request.env['res.users'].sudo().browse(user_id).partner_id.id
                 vals.pop('name')
-            wechat_user = request.env(user=1)['wxapp.user'].create(vals)
+            try:
+                wechat_user = request.env(user=1)['wxapp.user'].create(vals)
+            except:
+                import traceback;traceback.print_exc()
+                return self.res_err(-99, u'账号状态异常')
             request.wechat_user = wechat_user
             request.entry = entry
             return self.res_ok()
@@ -148,13 +158,11 @@ class WxappUser(http.Controller, BaseController):
 
     def get_user_info(self, wechat_user):
         mobile = ''
-        if hasattr(wechat_user, 'phone'):
-            mobile = wechat_user.phone
-        else:
+        if hasattr(wechat_user, 'partner_id'):
             mobile = wechat_user.partner_id.mobile
         data = {
             'base':{
-                'mobile': mobile,
+                'mobile': mobile or '',
                 'userid': '',
             },
         }
@@ -199,10 +207,11 @@ class WxappUser(http.Controller, BaseController):
             _logger.info('>>> decrypt: %s %s %s %s', app_id, session_key, encrypted_data, iv)
             user_info = get_decrypt_info(app_id, session_key, encrypted_data, iv)
             _logger.info('>>> bind_mobile: %s', user_info)
-            wechat_user.write({'phone': user_info.get('phoneNumber')})
-            wechat_user.partner_id.write({'mobile': user_info.get('phoneNumber')})
-
-            return self.res_ok()
+            wechat_user.bind_mobile(user_info.get('phoneNumber'))
+            ret = {
+                'account_ok': wechat_user.check_account_ok(),
+            }
+            return self.res_ok(ret)
 
         except Exception as e:
             _logger.exception(e)

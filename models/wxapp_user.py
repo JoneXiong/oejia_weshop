@@ -8,7 +8,7 @@ from .. import defs
 class WxappUser(models.Model):
 
     _name = 'wxapp.user'
-    _description = u'微信用户'
+    _description = u'微信客户'
     _inherits = {'res.partner': 'partner_id'}
     _order = 'id desc'
 
@@ -33,6 +33,7 @@ class WxappUser(models.Model):
 
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', string='关联联系人', auto_join=True) #
     address_ids = fields.One2many('res.partner', compute='_compute_address_ids', string='收货地址')
+    entry_id = fields.Integer('来源ID')
 
     _sql_constraints = [(
         'wxapp_user_union_id_unique',
@@ -61,3 +62,9 @@ class WxappUser(models.Model):
     def _compute_address_ids(self):
         for obj in self:
             obj.address_ids = obj.partner_id.child_ids.filtered(lambda r: r.type == 'delivery')
+
+    def bind_mobile(self, mobile):
+        self.partner_id.write({'mobile': mobile})
+
+    def check_account_ok(self):
+        return True

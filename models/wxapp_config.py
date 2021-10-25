@@ -11,12 +11,12 @@ class WxappConfig(models.Model):
     _description = u'对接设置'
     _rec_name = 'mall_name'
 
-    sub_domain = fields.Char('接口前缀', help='商城访问的接口url前缀', index=True, required=True)
+    sub_domain = fields.Char('接口前缀', help='商城访问的接口url前缀', index=True, required=True, default='oejia')
 
     mall_name = fields.Char('商城名称', help='显示在顶部')
 
-    app_id = fields.Char('appid')
-    secret = fields.Char('secret')
+    app_id = fields.Char('AppId')
+    secret = fields.Char('Secret')
 
     team_id = fields.Many2one('crm.team', string='所属销售渠道', required=True)
 
@@ -30,17 +30,24 @@ class WxappConfig(models.Model):
 
     @api.model
     def get_entry(self, sub_domain):
-        if sub_domain in ['h5']:
+        # h5, mirror 默认使用平台的配置
+        if sub_domain in ['h5', 'mirror']:
             entry = self.env.ref('oejia_weshop.wxapp_config_data_1')
             entry._platform = sub_domain
             return entry
         config = self.search([('sub_domain', '=', sub_domain)])
         if config:
             config.ensure_one()
-            config._platform = 'wxapp'
+            config._platform = 'wxapp|%s' % config.id
             return config
         else:
             return False
+
+    def get_id(self):
+        if self._platform in ['h5', 'mirror']:
+            return self.id
+        else:
+            return int(self._platform.replace('wxapp|', ''))
 
     @api.model
     def get_from_team(self, team_id):
@@ -50,6 +57,10 @@ class WxappConfig(models.Model):
             return config
         else:
             return False
+
+    @api.model
+    def get_from_id(self, id):
+        return self.browse(id)
 
     @api.multi
     def clean_all_token(self):
