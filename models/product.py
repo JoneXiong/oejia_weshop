@@ -14,7 +14,7 @@ class ProductTemplate(models.Model):
     characteristic = fields.Text('商品特色')
     recommend_status = fields.Boolean('是否推荐')
     wxapp_published = fields.Boolean('是否上架', default=True)
-    description_wxapp = fields.Html('商品描述')
+    description_wxapp = fields.Html('商品描述', translate=True)
     original_price = fields.Float('原始价格', default=0)
     qty_public_tpl = fields.Integer('库存', default=0)
     qty_show = fields.Integer('库存数量', compute='_compute_qty_show')

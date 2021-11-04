@@ -13,7 +13,7 @@ class WxappConfig(models.Model):
 
     sub_domain = fields.Char('接口前缀', help='商城访问的接口url前缀', index=True, required=True, default='oejia')
 
-    mall_name = fields.Char('商城名称', help='显示在顶部')
+    mall_name = fields.Char('商城名称', help='显示在顶部', translate=True)
 
     app_id = fields.Char('AppId')
     secret = fields.Char('Secret')

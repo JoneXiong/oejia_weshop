@@ -9,6 +9,6 @@ class WxappNotice(models.Model):
     _description = u'公告'
     _rec_name = 'title'
 
-    title = fields.Char(string='标题', required=True)
-    content = fields.Text('内容')
+    title = fields.Char(string='标题', required=True, translate=True)
+    content = fields.Text('内容', translate=True)
     active = fields.Boolean('是否有效', default=True)
