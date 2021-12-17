@@ -17,6 +17,12 @@ DEFAULT_IMG_URL = '/web/static/src/img/placeholder.png'
 
 class WxappCategory(http.Controller, BaseController):
 
+    def get_categorys(self, entry):
+        all_category = request.env['wxapp.product.category'].sudo().search([
+            ('is_use', '=', True)
+        ])
+        return all_category
+
     @http.route('/wxa/<string:sub_domain>/shop/goods/category/all', auth='public', methods=['GET'])
     def all(self, sub_domain):
         ret, entry = self._check_domain(sub_domain)
@@ -24,9 +30,7 @@ class WxappCategory(http.Controller, BaseController):
 
         try:
             base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            all_category = request.env['wxapp.product.category'].sudo().search([
-                ('is_use', '=', True)
-            ])
+            all_category = self.get_categorys(entry)
             if not all_category:
                 return self.res_err(404)
 
