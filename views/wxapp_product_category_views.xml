@@ -14,6 +14,7 @@
                <field name="complete_name"/>
                <field name="pid"/>
                <field name="is_use"/>
+               <field name="index_display"/>
                <field name="level"/>
                 </tree>
             </field>
@@ -32,6 +33,7 @@
                <field name="sort"/>
                <field name="icon" widget="image"/>
                <field name="is_use"/>
+               <field name="index_display"/>
                <field name="key"/>
                <field name="product_template_ids" widget="many2many_tags"/>
                <field name="child_ids" widget="many2many_tags"/>
