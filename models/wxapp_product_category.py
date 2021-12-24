@@ -19,6 +19,7 @@ class Category(models.Model):
     icon = fields.Binary(string='图标/图片')
     level = fields.Integer(string='分类级别', compute='_compute_level', store=True)
     is_use = fields.Boolean(string='是否启用', default=True)
+    index_display = fields.Boolean(string='首页导航展示', default=True)
     sort = fields.Integer(string='排序')
     product_template_ids = fields.One2many('product.template', 'wxpp_category_id', string='商品')
 
