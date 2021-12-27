@@ -46,6 +46,7 @@ class WxappCategory(http.Controller, BaseController):
                     "isUse": each_category.is_use,
                     "key": each_category.key,
                     "level": each_category.level,
+                    "index_display": each_category.index_display,
                     "name": each_category.name,
                     "paixu": each_category.sort or 0,
                     "pid": each_category.pid.id if each_category.pid else 0,
