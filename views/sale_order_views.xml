@@ -37,6 +37,7 @@
                 </xpath>
 		<xpath expr="//field[@name='validity_date']" position="before">
                         <field name="customer_status" attrs="{'invisible': [('number_goods', '=', 0)]}" readonly="1" string="电商状态"/>
+                        <field name="is_paid" attrs="{'invisible': [('number_goods', '=', 0)]}" readonly="1" string="是否已支付"/>
                 </xpath>
 		</data>
             </field>
