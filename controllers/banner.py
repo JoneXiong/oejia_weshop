@@ -27,7 +27,7 @@ class WxappBanner(http.Controller, BaseController):
                 banner_type = 'index'
             banner_list = request.env['wxapp.banner'].sudo().search([
                 ('status', '=', True),
-                ('ptype', '=', banner_type)
+                ('ptype', '=like', banner_type + '%')
             ])
 
             data = []
@@ -38,6 +38,8 @@ class WxappBanner(http.Controller, BaseController):
                         "dateAdd": each_banner.create_date,
                         "dateUpdate": each_banner.write_date,
                         "id": each_banner.id,
+                        "linkType": each_banner.link_type,
+                        "linkPage": each_banner.link_page,
                         "linkUrl": each_banner.link_url or '',
                         "paixu": each_banner.sort or 0,
                         "picUrl": each_banner.get_main_image(),
