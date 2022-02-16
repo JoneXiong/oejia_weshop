@@ -12,6 +12,7 @@
                <field name="title"/>
                <field name="display_pic"/>
                <field name="ptype"/>
+               <field name="link_type"/>
                <field name="remark"/>
                <field name="sort"/>
                <field name="status"/>
