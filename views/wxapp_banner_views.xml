@@ -12,6 +12,7 @@
                <field name="title"/>
                <field name="display_pic"/>
                <field name="ptype"/>
+               <field name="link_type"/>
                <field name="remark"/>
                <field name="sort"/>
                <field name="status"/>
@@ -30,8 +31,10 @@
                <field name="ptype"/>
                <field name="title"/>
                <field name="image" widget="image"/>
-               <field name="business_id"/>
-               <field name="link_url"/>
+               <field name="link_type"/>
+               <field name="business_id" attrs="{'invisible': [('link_type', '!=', 'business')]}"/>
+               <field name="link_page" attrs="{'invisible': [('link_type', '!=', 'page')]}"/>
+               <field name="link_url" attrs="{'invisible': [('link_type', '!=', 'url')]}"/>
                <field name="remark"/>
                <field name="sort"/>
                <field name="status"/>
