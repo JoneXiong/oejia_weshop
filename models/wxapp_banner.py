@@ -37,3 +37,9 @@ class Banner(models.Model):
     def get_main_image(self):
         base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         return '%s/web/image/wxapp.banner/%s/image/'%(base_url, self.id)
+
+    def fetch_url(self, partner):
+        return
+
+    def get_business_id(self):
+        return self.business_id.id

@@ -34,7 +34,7 @@ class WxappBanner(http.Controller, BaseController):
             if banner_list:
                 data = [
                     {
-                        "businessId": each_banner.business_id.id,
+                        "businessId": each_banner.get_business_id(),
                         "dateAdd": each_banner.create_date,
                         "dateUpdate": each_banner.write_date,
                         "id": each_banner.id,
