@@ -10,6 +10,9 @@
             <field name="purchase_ok" eval="False"/>
             <field name="list_price">10.0</field>
             <field name="taxes_id" eval="[(5,)]" />
+            <field name="sale_ok" eval="False"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
         </record>
 
     </data>
