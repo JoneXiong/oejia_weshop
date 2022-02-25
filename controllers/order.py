@@ -303,7 +303,7 @@ class WxappOrder(http.Controller, BaseController):
 
     def get_orders_domain(self, status, **kwargs):
         domain = [('partner_id', '=', request.wechat_user.partner_id.id), ('number_goods', '>', 0)]
-        if status:
+        if status and status!='9':
             domain.append(('customer_status', '=', defs.OrderRequestStatus.attrs[int(status)]))
         return domain
 
@@ -325,6 +325,9 @@ class WxappOrder(http.Controller, BaseController):
                         {
                             "pic": each_goods.product_id.product_tmpl_id.main_img,
                             "number": each_goods.product_uom_qty,
+                            "name": each_goods.name,
+                            "price": each_goods.price_unit,
+                            "sku": each_goods.product_id.get_property_str(),
                         } for each_goods in each_order.order_line if each_goods.product_id.id!=delivery_product_id]
                     for each_order in orders}
             }

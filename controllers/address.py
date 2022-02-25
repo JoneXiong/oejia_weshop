@@ -71,7 +71,7 @@ class WxappAddress(http.Controller, BaseController):
                 'city_id': int(kwargs['cityId']) if kwargs.get('cityId') else False,
                 'district_id': int(kwargs['districtId']) if kwargs.get('districtId') else False,
                 'street': kwargs['address'],
-                'zip': kwargs['code'],
+                'zip': kwargs.get('code', False),
                 'type': 'delivery',
                 'is_default': json.loads(kwargs['isDefault'])
             })
