@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import sys
 import json
 
 from odoo import http
@@ -151,13 +151,14 @@ class WxappProduct(http.Controller, BaseController):
                 return self.res_err(404)
 
             description_value = None
+            is_py2 = sys.version_info.major==2
             if goods.description_wxapp:
-                _content = str(goods.description_wxapp).replace('<p><br></p>', '')
+                _content = is_py2 and goods.description_wxapp or str(goods.description_wxapp).replace('<p><br></p>', '')
                 if _content:
-                    description_value = str(goods.description_wxapp)
+                    description_value = is_py2 and goods.description_wxapp or str(goods.description_wxapp)
             if not description_value:
                 if hasattr(goods, 'website_description'):
-                    description_value = str(goods.website_description)
+                    description_value = is_py2 and goods.website_description or str(goods.website_description)
 
             data = {
                 "code": 0,
