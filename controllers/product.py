@@ -152,12 +152,12 @@ class WxappProduct(http.Controller, BaseController):
 
             description_value = None
             if goods.description_wxapp:
-                _content = goods.description_wxapp.replace('<p><br></p>', '')
+                _content = str(goods.description_wxapp).replace('<p><br></p>', '')
                 if _content:
-                    description_value = goods.description_wxapp
+                    description_value = str(goods.description_wxapp)
             if not description_value:
                 if hasattr(goods, 'website_description'):
-                    description_value = goods.website_description
+                    description_value = str(goods.website_description)
 
             data = {
                 "code": 0,
