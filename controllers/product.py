@@ -27,6 +27,7 @@ class WxappProduct(http.Controller, BaseController):
             "index": each_goods.id,
             "logisticsId": 1,
             "minPrice": request.env['product.template'].cli_price(each_goods.get_present_price(1)),
+            #"uom_name": 'uom_name' in each_goods._fields.keys() and each_goods.uom_name or each_goods.uom_id.name,
             "minScore": 0,
             "name": each_goods.name,
             "numberFav": each_goods.number_fav,
