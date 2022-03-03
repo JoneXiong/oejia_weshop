@@ -328,6 +328,7 @@ class WxappOrder(http.Controller, BaseController):
                             "name": each_goods.name,
                             "price": each_goods.price_unit,
                             "sku": each_goods.product_id.get_property_str(),
+                            "product_uom": each_goods.product_uom.name,
                         } for each_goods in each_order.order_line if each_goods.product_id.id!=delivery_product_id]
                     for each_order in orders}
             }

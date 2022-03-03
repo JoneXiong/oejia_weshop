@@ -98,8 +98,8 @@ class BaseController(object):
         return None, wxapp_entry
 
     def _makeup_context(self, env, entry):
-        env.context = dict(env.context, entry_id=entry.get_id())
-        entry.env.context = dict(entry.env.context, entry_id=entry.get_id())
+        env.context = dict(env.context, entry_id=entry.get_id(), fm_type=request.httprequest.cookies.get('_fm'))
+        entry.env.context = dict(entry.env.context, entry_id=entry.get_id(), fm_type=request.httprequest.cookies.get('_fm'))
 
     def _check_user(self, sub_domain, token):
         wxapp_entry = request.env['wxapp.config'].sudo().get_entry(sub_domain)
