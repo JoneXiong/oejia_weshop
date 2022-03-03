@@ -11,7 +11,7 @@ class Category(models.Model):
     _rec_name = 'complete_name'
 
     name = fields.Char(string='名称', required=True)
-    complete_name = fields.Char(string='全名', compute='_compute_complete_name', store=True)
+    complete_name = fields.Char(string='全名', compute='_compute_complete_name', store=True, recursive=True)
     category_type = fields.Char(string='类型')
     pid = fields.Many2one('wxapp.product.category', string='上级分类', ondelete='cascade')
     child_ids = fields.One2many('wxapp.product.category', 'pid', string='子分类')
