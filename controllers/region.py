@@ -23,14 +23,17 @@ class Region(http.Controller, BaseController):
     @http.route('/wxa/common/region/v2/child', auth='public', methods=['GET'])
     def child(self, pid, **kwargs):
         model = None
+        level = 0
         if pid[-4:]=='0000' or int(pid)>820000:
             model = 'oe.city'
+            level = 2
         else:
+            level = 3
             model = 'oe.district'
 
         if model:
             objs = request.env[model].sudo().search([('pid', '=', int(pid))]).sorted(key=lambda o: o.name[0])
-            data = [{'id': e.id, 'name': e.name, 'level': 2, 'pid': e.pid} for e in objs]
+            data = [{'id': e.id, 'name': e.name, 'level': level, 'pid': e.pid} for e in objs]
             return self.res_ok(data)
         else:
             return self.res_ok([{'id': 0, 'name':' ', 'pid': pid}])
