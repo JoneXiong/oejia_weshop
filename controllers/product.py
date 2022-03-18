@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import sys
 import json
 
 from odoo import http
@@ -27,6 +27,7 @@ class WxappProduct(http.Controller, BaseController):
             "index": each_goods.id,
             "logisticsId": 1,
             "minPrice": request.env['product.template'].cli_price(each_goods.get_present_price(1)),
+            #"uom_name": 'uom_name' in each_goods._fields.keys() and each_goods.uom_name or each_goods.uom_id.name,
             "minScore": 0,
             "name": each_goods.name,
             "numberFav": each_goods.number_fav,
@@ -67,6 +68,14 @@ class WxappProduct(http.Controller, BaseController):
         if 'recommendStatus' in kwargs or 'pingtuan' in kwargs:
             return [('id', '=', 0)]
         domain = [('sale_ok', '=', True), ('wxapp_published', '=', True)]
+        if not category_id and nameLike and nameLike.startswith('_c_'):
+            _name = nameLike.replace('_c_', '')
+            category = request.env['wxapp.product.category'].sudo().search([('name', '=', _name)], limit=1)
+            if category:
+                category_id = category.id
+                nameLike = ''
+            else:
+                nameLike = _name
         if category_id:
             cate_ids = [int(category_id)] + request.env['wxapp.product.category'].sudo().browse(int(category_id)).child_ids.ids
             domain.append(('wxpp_category_id', 'in', cate_ids))
@@ -111,8 +120,10 @@ class WxappProduct(http.Controller, BaseController):
 
             if not goods_list:
                 return self.res_err(700)
-
-            return self.res_ok([ self._product_basic_dict(each_goods) for each_goods in goods_list])
+            data = [ self._product_basic_dict(each_goods) for each_goods in goods_list]
+            all_count = request.env['product.template'].sudo().search_count(domain)
+            data[0]['all_count'] = all_count
+            return self.res_ok(data)
 
         except Exception as e:
             _logger.exception(e)
@@ -151,13 +162,14 @@ class WxappProduct(http.Controller, BaseController):
                 return self.res_err(404)
 
             description_value = None
+            is_py2 = sys.version_info.major==2
             if goods.description_wxapp:
-                _content = str(goods.description_wxapp).replace('<p><br></p>', '')
+                _content = is_py2 and goods.description_wxapp or str(goods.description_wxapp or '').replace('<p><br></p>', '')
                 if _content:
-                    description_value = str(goods.description_wxapp)
+                    description_value = is_py2 and goods.description_wxapp or str(goods.description_wxapp or '')
             if not description_value:
                 if hasattr(goods, 'website_description'):
-                    description_value = str(goods.website_description)
+                    description_value = is_py2 and goods.website_description or str(goods.website_description or '')
 
             data = {
                 "code": 0,

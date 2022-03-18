@@ -43,8 +43,8 @@ class WxappConfig(models.Model):
 
     @api.model
     def get_entry(self, sub_domain):
-        # h5, mirror 默认使用平台的配置
-        if sub_domain in ['h5', 'mirror']:
+        # mirror 默认使用平台的配置
+        if sub_domain in ['mirror']:
             entry = self.env.ref('oejia_weshop.wxapp_config_data_1')
             entry._platform = sub_domain
             return entry
@@ -57,7 +57,7 @@ class WxappConfig(models.Model):
             return False
 
     def get_id(self):
-        if self._platform in ['h5', 'mirror']:
+        if self._platform in ['mirror']:
             return self.id
         else:
             return int(self._platform.replace('wxapp|', ''))
