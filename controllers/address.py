@@ -117,7 +117,7 @@ class WxappAddress(http.Controller, BaseController):
             address.write({'street2': _main})
 
             address_ids = wechat_user.address_ids.filtered(lambda r: r.id != address.id)
-            if address_ids:
+            if address_ids and address.is_default:
                 address_ids.write({'is_default': False})
 
             return self.res_ok()
