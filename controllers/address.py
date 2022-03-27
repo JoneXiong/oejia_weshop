@@ -20,17 +20,17 @@ class WxappAddress(http.Controller, BaseController):
             "address": each_address.street,
             "areaStr": each_address.district_id.name or '',
             "cityId": each_address.city_id.id,
-            "cityStr": each_address.city_id.name,
+            "cityStr": each_address.city_id.name or '',
             "code": each_address.zip,
             "dateAdd": each_address.create_date,
             "dateUpdate": each_address.write_date,
             "districtId": each_address.district_id.id or False,
             "id": each_address.id,
             "isDefault": each_address.is_default,
-            "linkMan": each_address.name,
-            "mobile": each_address.mobile,
+            "linkMan": each_address.name or '',
+            "mobile": each_address.mobile or '',
             "provinceId": each_address.province_id.id,
-            "provinceStr": each_address.province_id.name,
+            "provinceStr": each_address.province_id.name or '',
             "status": 0 if each_address.active else 1,
             "statusStr": _('正常') if each_address.active else _('禁用'),
             "uid": each_address.create_uid.id,
@@ -76,7 +76,7 @@ class WxappAddress(http.Controller, BaseController):
                 'is_default': json.loads(kwargs['isDefault'])
             })
             address = new_address
-            _main = '%s %s %s'%(address.province_id.name, address.city_id.name, address.district_id.name)
+            _main = '%s %s %s'%(address.province_id.name, address.city_id.name, address.district_id.name or '')
             address.write({'street2': _main})
 
             address_ids = wechat_user.address_ids.filtered(lambda r: r.id != new_address.id)
@@ -113,11 +113,11 @@ class WxappAddress(http.Controller, BaseController):
                 'zip': kwargs['code'] if kwargs.get('code') else address.zip,
                 'is_default': json.loads(kwargs['isDefault'])
             })
-            _main = '%s %s %s'%(address.province_id.name, address.city_id.name, address.district_id.name)
+            _main = '%s %s %s'%(address.province_id.name, address.city_id.name, address.district_id.name or '')
             address.write({'street2': _main})
 
             address_ids = wechat_user.address_ids.filtered(lambda r: r.id != address.id)
-            if address_ids:
+            if address_ids and address.is_default:
                 address_ids.write({'is_default': False})
 
             return self.res_ok()
@@ -153,6 +153,8 @@ class WxappAddress(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
+    def get_default_ext(self, data, wechat_user):
+        return data
 
     @http.route('/wxa/<string:sub_domain>/user/shipping-address/default', auth='public', methods=['GET'])
     def default(self, sub_domain, token=None, **kwargs):
@@ -167,9 +169,10 @@ class WxappAddress(http.Controller, BaseController):
             ], limit=1)
 
             if not address:
-                return self.res_err(404)
+                return self.res_err(404, self.get_default_ext({}, wechat_user))
 
-            return self.res_ok(self._get_address_dict(address, wechat_user.id))
+            data = self._get_address_dict(address, wechat_user.id)
+            return self.res_ok(self.get_default_ext(data, wechat_user))
 
         except Exception as e:
             _logger.exception(e)
