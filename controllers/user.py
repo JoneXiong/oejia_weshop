@@ -145,6 +145,7 @@ class WxappUser(http.Controller, BaseController):
             except:
                 import traceback;traceback.print_exc()
                 return self.res_err(-99, u'账号状态异常')
+            wechat_user.action_created(vals)
             request.wechat_user = wechat_user
             request.entry = entry
             return self.res_ok()

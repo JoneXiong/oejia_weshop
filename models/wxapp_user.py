@@ -48,6 +48,10 @@ class WxappUser(models.Model):
     ]
 
     @api.multi
+    def action_created(self, data=None):
+        pass
+
+    @api.multi
     @api.depends('avatar_url')
     def _compute_avatar(self):
         for each_record in self:
