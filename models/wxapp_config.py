@@ -33,6 +33,9 @@ class WxappConfig(models.Model):
 
     team_id = fields.Many2one('crm.team', string='所属销售渠道', required=True)
 
+    def need_login(self):
+        return False
+
     def get_config(self, key):
         if key=='mallName':
             key = 'mall_name'
