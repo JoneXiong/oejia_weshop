@@ -42,4 +42,7 @@ class Banner(models.Model):
         return
 
     def get_business_id(self):
-        return self.business_id.id
+        if self.link_type=='business':
+            return self.business_id.id
+        else:
+            return self.id

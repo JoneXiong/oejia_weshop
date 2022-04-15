@@ -40,6 +40,7 @@ class WxappOrder(http.Controller, BaseController):
             province_id = int(kwargs.pop('provinceId')) if 'provinceId' in kwargs else False
             city_id = int(kwargs.pop('cityId')) if 'cityId' in kwargs else False
             district_id = int(kwargs.pop('districtId')) if 'districtId' in kwargs else False
+            addr_id = int(kwargs.pop('addrid')) if 'addrid' in kwargs else False
             zipcode = kwargs.pop('code') if 'code' in kwargs else False
             link_man = kwargs.pop('linkMan') if 'linkMan' in kwargs else False
 
@@ -52,11 +53,6 @@ class WxappOrder(http.Controller, BaseController):
             if kwargs.get('peisongType')=='zq':
                 logistics_price = 0
 
-            address = request.env(user=1)['res.partner'].search([
-                ('parent_id', '=', wechat_user.partner_id.id),
-                ('type', '=', 'delivery'),
-                ('is_default', '=', True)
-            ], limit=1)
             order_dict = {
                 'zipcode': zipcode,
                 'partner_id': wechat_user.partner_id.id,
@@ -68,7 +64,7 @@ class WxappOrder(http.Controller, BaseController):
                 'team_id': team_id and int(team_id) or entry.team_id.id,
                 'note': remark,
                 'linkman': link_man,
-                'partner_shipping_id': address and address.id or wechat_user.partner_id.id,
+                'partner_shipping_id': addr_id or wechat_user.partner_id.id,
                 'user_id': wechat_user.partner_id.user_id.id,
                 'goods_price': goods_price,
                 'extra': {},
@@ -328,6 +324,8 @@ class WxappOrder(http.Controller, BaseController):
                             "name": each_goods.name,
                             "price": each_goods.price_unit,
                             "sku": each_goods.product_id.get_property_str(),
+                            "product_uom": each_goods.product_uom.name,
+                            "prodId": each_goods.product_id.product_tmpl_id.id,
                         } for each_goods in each_order.order_line if each_goods.product_id.id!=delivery_product_id]
                     for each_order in orders}
             }

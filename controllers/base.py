@@ -34,6 +34,7 @@ error_code = {
     702: u'资源余额不足',
     901: u'登录超时',
     902: u'登录超时',# 不触发授权登录
+    903: u'尚未登录',
     300: u'缺少参数',
     400: u'域名错误',
     401: u'该域名已删除',
@@ -95,11 +96,14 @@ class BaseController(object):
         if not wxapp_entry:
             return self.res_err(404), None
         self._makeup_context(request.env, wxapp_entry)
+        if wxapp_entry.need_login():
+            if not request.session.get('login_uid'):
+                return self.res_err(903), None
         return None, wxapp_entry
 
     def _makeup_context(self, env, entry):
-        env.context = dict(env.context, entry_id=entry.get_id())
-        entry.env.context = dict(entry.env.context, entry_id=entry.get_id())
+        env.context = dict(env.context, entry_id=entry.get_id(), fm_type=request.httprequest.cookies.get('_fm'))
+        entry.env.context = dict(entry.env.context, entry_id=entry.get_id(), fm_type=request.httprequest.cookies.get('_fm'))
 
     def _check_user(self, sub_domain, token):
         wxapp_entry = request.env['wxapp.config'].sudo().get_entry(sub_domain)
