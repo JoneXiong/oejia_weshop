@@ -4,6 +4,7 @@ import json
 
 from odoo import http
 from odoo.http import request
+from odoo import release
 
 from .. import defs
 from .base import BaseController
@@ -14,6 +15,9 @@ import logging
 _logger = logging.getLogger(__name__)
 
 DEFAULT_IMG_URL = '/web/static/src/img/placeholder.png'
+odoo_ver = release.version_info[0]
+if odoo_ver>=15:
+    DEFAULT_IMG_URL = '/web/static/img/placeholder.png'
 
 class WxappCategory(http.Controller, BaseController):
 
