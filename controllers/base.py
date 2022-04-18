@@ -72,11 +72,11 @@ def json_default(obj):
 
 class WechatUser(object):
 
-    def __init__(self, partner, user):
+    def __init__(self, partner, user, open_id=''):
         self.partner_id = partner
         self.user_id = user
         self.id = user.id
-        self.open_id = ''
+        self.open_id = open_id
         self.avatar_url = ''
         self.parent_id = False
         self.name = partner.name
