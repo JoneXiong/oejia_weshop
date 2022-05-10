@@ -89,6 +89,9 @@ class WechatUser(object):
     def address_ids(self):
         return self.partner_id.child_ids.filtered(lambda r: r.type == 'delivery')
 
+    def get_product_pricelist(self):
+        return self.partner_id.property_product_pricelist
+
 class BaseController(object):
 
     def _check_domain(self, sub_domain):
