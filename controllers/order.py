@@ -421,6 +421,7 @@ class WxappOrder(http.Controller, BaseController):
             if order.shipper_no:
                 self.build_traces(order, data)
             self.build_ext(order, data)
+            order.get_detail_ext(data)
 
             return self.res_ok(data["data"])
 
