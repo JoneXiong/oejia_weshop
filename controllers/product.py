@@ -81,7 +81,7 @@ class WxappProduct(http.Controller, BaseController):
             domain.append(('wxpp_category_id', 'in', cate_ids))
         if nameLike:
             for srch in nameLike.split(" "):
-                domain += ['|', ('name', 'ilike', srch), ('barcode', '=', srch)]
+                domain += ['|', ('name', 'ilike', srch), '|', ('barcode', '=', srch), ('default_code', '=', srch)]
 
         return domain
 

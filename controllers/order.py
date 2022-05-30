@@ -7,7 +7,7 @@ from odoo.http import request
 from odoo import release
 
 from .. import defs
-from .base import BaseController, dt_convert, UserException
+from .base import BaseController, dt_convert, UserException, WechatUser
 
 import logging
 
@@ -124,6 +124,7 @@ class WxappOrder(http.Controller, BaseController):
                     "dateAdd": dt_convert(order.create_date),
                     "id": order.id,
                     "orderNumber": order.name,
+                    "customer": order.partner_id.name,
                     "status": defs.OrderResponseStatus.attrs[order.customer_status],
                     "statusStr": self.get_statusStr(order),
                 }
@@ -343,15 +344,27 @@ class WxappOrder(http.Controller, BaseController):
         order_id = id
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
+            if res:
+                if entry and kwargs.get('access_token'):
+                    pass
+                else:
+                    return res
 
             if not order_id:
                 return self.res_err(300)
 
-            order = request.env['sale.order'].sudo().search([
-                ('partner_id', '=', wechat_user.partner_id.id),
-                ('id', '=', int(order_id))
-            ])
+            if kwargs.get('access_token'):
+                order = request.env['sale.order'].sudo().search([
+                    ('access_token', '=', kwargs.get('access_token')),
+                    ('id', '=', int(order_id))
+                ])
+                if order:
+                    wechat_user = WechatUser(order.partner_id, request.env.user)
+            else:
+                order = request.env['sale.order'].sudo().search([
+                    ('partner_id', '=', wechat_user.partner_id.id),
+                    ('id', '=', int(order_id))
+                ])
 
             if not order:
                 return self.res_err(404)
@@ -409,6 +422,7 @@ class WxappOrder(http.Controller, BaseController):
             if order.shipper_no:
                 self.build_traces(order, data)
             self.build_ext(order, data)
+            order.get_detail_ext(data)
 
             return self.res_ok(data["data"])
 

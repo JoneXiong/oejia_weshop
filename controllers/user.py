@@ -170,7 +170,7 @@ class WxappUser(http.Controller, BaseController):
         return data
 
     @http.route('/wxa/<string:sub_domain>/user/detail', auth='public', methods=['GET'])
-    def detail(self, sub_domain, token=None):
+    def detail(self, sub_domain, token=None, **kwargs):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return res
@@ -219,10 +219,14 @@ class WxappUser(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
     @http.route('/wxa/<string:sub_domain>/user/amount', auth='public', methods=['GET'])
-    def user_amount(self, sub_domain, token=None):
+    def user_amount(self, sub_domain, token=None, **kwargs):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
+            if res:
+                if entry and kwargs.get('access_token'):
+                    return self.res_ok({'balance': 0, 'score': 0})
+                else:
+                    return res
             _data = {
                 'balance': hasattr(wechat_user, 'balance') and wechat_user.balance or 0,
                 'freeze': 0,

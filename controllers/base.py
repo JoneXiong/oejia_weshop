@@ -34,6 +34,7 @@ error_code = {
     702: _(u'资源余额不足'),
     901: _(u'登录超时'),
     902: _(u'登录超时'),# 不触发授权登录
+    903: _(u'尚未登录'),
     300: _(u'缺少参数'),
     400: _(u'域名错误'),
     401: _(u'该域名已删除'),
@@ -71,11 +72,11 @@ def json_default(obj):
 
 class WechatUser(object):
 
-    def __init__(self, partner, user):
+    def __init__(self, partner, user, open_id=''):
         self.partner_id = partner
         self.user_id = user
         self.id = user.id
-        self.open_id = ''
+        self.open_id = open_id
         self.avatar_url = ''
         self.parent_id = False
         self.name = partner.name
@@ -88,6 +89,9 @@ class WechatUser(object):
     def address_ids(self):
         return self.partner_id.child_ids.filtered(lambda r: r.type == 'delivery')
 
+    def get_product_pricelist(self):
+        return self.partner_id.property_product_pricelist
+
 class BaseController(object):
 
     def _check_domain(self, sub_domain):
@@ -95,6 +99,9 @@ class BaseController(object):
         if not wxapp_entry:
             return self.res_err(404), None
         self._makeup_context(request.env, wxapp_entry)
+        if wxapp_entry.need_login():
+            if not request.session.get('login_uid'):
+                return self.res_err(903), None
         return None, wxapp_entry
 
     def _makeup_context(self, env, entry):
