@@ -81,6 +81,7 @@ class WechatUser(object):
         self.parent_id = False
         self.name = partner.name
         self.vat = ''
+        self.category_id = False
 
     def check_account_ok(self):
         return True
