@@ -81,6 +81,7 @@ class WechatUser(object):
         self.parent_id = False
         self.name = partner.name
         self.vat = ''
+        self.category_id = False
 
     def check_account_ok(self):
         return True
@@ -150,12 +151,22 @@ class BaseController(object):
 
     def check_userid(self, token):
         if token:
-            access_token = request.env(user=1)['wxapp.access_token'].search([
+            login_uid = request.session.get('login_uid')
+            if login_uid:
+                if str(login_uid)==token:
+                    wechat_user = request.env['wxapp.user'].sudo().search([('partner_id', '=', request.env.user.partner_id.id)], limit=1)
+                    if wechat_user:
+                        request.wechat_user = wechat_user
+                    else:
+                        wechat_user = WechatUser(request.env.user.partner_id, request.env.user)
+                        request.wechat_user = wechat_user
+
+            access_token = request.env['wxapp.access_token'].sudo().search([
                 ('token', '=', token),
             ])
             if not access_token:
                 return
-            wechat_user = request.env(user=1)['wxapp.user'].search([
+            wechat_user = request.env['wxapp.user'].sudo().search([
                 ('open_id', '=', access_token.open_id),
             ])
             if wechat_user:
