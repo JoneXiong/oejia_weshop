@@ -135,3 +135,6 @@ class SaleOrder(models.Model):
     @api.multi
     def action_receive(self):
         self.write({'customer_status': 'unevaluated'})
+
+    def get_detail_ext(self, data):
+        pass

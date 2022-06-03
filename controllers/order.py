@@ -124,6 +124,7 @@ class WxappOrder(http.Controller, BaseController):
                     "dateAdd": dt_convert(order.create_date),
                     "id": order.id,
                     "orderNumber": order.name,
+                    "customer": order.partner_id.name,
                     "status": defs.OrderResponseStatus.attrs[order.customer_status],
                     "statusStr": self.get_statusStr(order),
                 }
@@ -421,6 +422,7 @@ class WxappOrder(http.Controller, BaseController):
             if order.shipper_no:
                 self.build_traces(order, data)
             self.build_ext(order, data)
+            order.get_detail_ext(data)
 
             return self.res_ok(data["data"])
 
