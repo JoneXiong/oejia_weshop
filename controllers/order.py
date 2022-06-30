@@ -52,6 +52,14 @@ class WxappOrder(http.Controller, BaseController):
             )
             if kwargs.get('peisongType')=='zq':
                 logistics_price = 0
+            if not addr_id:
+                address = request.env(user=1)['res.partner'].search([
+                    ('parent_id', '=', wechat_user.partner_id.id),
+                    ('type', '=', 'delivery'),
+                    ('is_default', '=', True)
+                ], limit=1)
+                if address:
+                    addr_id = address.id
 
             order_dict = {
                 'zipcode': zipcode,
