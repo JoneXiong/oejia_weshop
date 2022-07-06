@@ -47,11 +47,9 @@ class WxappOrder(http.Controller, BaseController):
             calculate = kwargs.pop('calculate', False)
             remark = kwargs.pop('remark', '')
 
-            goods_price, logistics_price, order_lines = self.parse_goods_json(
+            goods_price, logistics_price, order_lines, isNeedLogistics = self.parse_goods_json(
                 goods_json, province_id, city_id, district_id, calculate
             )
-            if kwargs.get('peisongType')=='zq':
-                logistics_price = 0
             if not addr_id:
                 address = request.env(user=1)['res.partner'].search([
                     ('parent_id', '=', wechat_user.partner_id.id),
@@ -79,16 +77,18 @@ class WxappOrder(http.Controller, BaseController):
                 'entry': entry,
             }
             order_dict.update(kwargs)
+            order_dict['_params'] = {'calculate': calculate, 'isNeedLogistics': isNeedLogistics}
+            order_dict['_params'].update(kwargs)
             _logger.info('>>> order_dict %s', order_dict)
             order_logistics = self.calculate_order_logistics(wechat_user, order_dict, order_lines)
-            if order_logistics:
+            if order_logistics!=None:
                 order_dict['logistics_price'] = order_logistics
             self.after_calculate(wechat_user, order_dict, order_lines)
 
             if calculate:
                 _data = {
                     'score': order_dict.get('need_score', 0),
-                    'isNeedLogistics': 1,
+                    'isNeedLogistics': isNeedLogistics,
                     'amountTotle': round(order_dict['goods_price'], 2),
                     'amountLogistics': order_dict['logistics_price'],
                     'amountTax': order_dict.get('amount_tax', 0),
@@ -108,6 +108,7 @@ class WxappOrder(http.Controller, BaseController):
                         OrderModel = OrderModel.with_context(force_company=user.company_id.id)
                 order_dict.pop('goods_price')
                 order_dict.pop('extra')
+                order_dict.pop('_params')
                 line_value_list = []
                 for line in order_lines:
                     if 'goods_id' in line:
@@ -187,22 +188,22 @@ class WxappOrder(http.Controller, BaseController):
             _name_list = [e.name for e in request.env['product.template'].sudo().search([('id', 'in', list(_ids))])]
             raise UserException(u'订单中包含已下架的商品: %s' % ','.join(_name_list))
 
+        isNeedLogistics = 0
         for each_goods in goods_json:
             property_child_ids = each_goods.get('propertyChildIds')
             amount = each_goods['number']
             transport_type = each_goods['logisticsType']
             template = template_dict[each_goods['goodsId']]
+            if template.type=='product':
+                isNeedLogistics = 1
 
             each_goods_total, line_dict = self.calculate_goods_fee(template, amount, property_child_ids, calculate)
-            each_logistics_price = self.calculate_logistics_fee(template, amount, transport_type, province_id, city_id, district_id)
             order_lines.append(line_dict)
             goods_fee += each_goods_total
-            if each_logistics_price<0:
-                logistics_fee = abs(each_logistics_price)
-            else:
-                logistics_fee += each_logistics_price
+            each_logistics_price = self.calculate_logistics_fee(template, amount, transport_type, province_id, city_id, district_id)
+            logistics_fee += each_logistics_price
 
-        return goods_fee, logistics_fee, order_lines
+        return goods_fee, logistics_fee, order_lines, isNeedLogistics
 
     def calculate_goods_fee(self, goods, amount, property_child_ids, calculate):
         _logger.info('>>> calculate_goods_fee %s %s %s', goods, amount, property_child_ids)
