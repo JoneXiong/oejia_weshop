@@ -51,7 +51,7 @@ def jsonapi(f):
         except Exception as e:
             _logger.exception(str(e))
             ret = {'code': -1, 'msg': str(e)}
-            return request.make_response(json.dumps(ret))
+            return request.make_response(json.dumps(ret, default=json_default))
     return wrap
 
 
@@ -186,7 +186,7 @@ class BaseController(object):
         ret = {'code': code, 'msg': error_code.get(code) or data}
         if data:
             ret['data'] = data
-        return request.make_response(json.dumps(ret))
+        return request.make_response(json.dumps(ret, default=json_default))
 
 
 def convert_static_link(request, html):
