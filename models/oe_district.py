@@ -12,7 +12,7 @@ class District(models.Model):
     _description = u'区'
 
     pid = fields.Many2one('oe.city', string='城市')
-    name = fields.Char('名称')
+    name = fields.Char('名称', requried=True)
 
     @api.model_cr
     def _register_hook(self):

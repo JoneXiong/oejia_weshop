@@ -8,7 +8,7 @@ class Province(models.Model):
     _name = 'oe.province'
     _description = u'省份'
 
-    name = fields.Char('名称')
+    name = fields.Char('名称', requried=True)
     child_ids = fields.One2many('oe.city', 'pid', string='市')
 
 
