@@ -169,6 +169,9 @@ class WxappUser(http.Controller, BaseController):
         }
         return data
 
+    def get_user_more(self, wechat_user):
+        return {}
+
     @http.route('/wxa/<string:sub_domain>/user/detail', auth='public', methods=['GET'])
     def detail(self, sub_domain, token=None, **kwargs):
         try:
@@ -176,6 +179,7 @@ class WxappUser(http.Controller, BaseController):
             if res:return res
 
             data = self.get_user_info(wechat_user)
+            data.update(self.get_user_more(wechat_user))
             return self.res_ok(data)
 
         except Exception as e:
