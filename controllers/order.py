@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import re
 
 from odoo import http
 from odoo.http import request
@@ -15,6 +16,8 @@ _logger = logging.getLogger(__name__)
 
 
 class WxappOrder(http.Controller, BaseController):
+
+    cur_gmt_diff = 8
 
     def _get_user(self):
         user = None
@@ -130,7 +133,7 @@ class WxappOrder(http.Controller, BaseController):
                 order.action_created(order_dict)
                 _data = {
                     "amountReal": round(order.amount_total, 2),
-                    "dateAdd": dt_convert(order.create_date),
+                    "dateAdd": dt_convert(order.create_date, gmt_diff=entry.gmt_diff),
                     "id": order.id,
                     "orderNumber": order.name,
                     "customer": order.partner_id.name,
@@ -290,12 +293,17 @@ class WxappOrder(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
+    def clean_html(self, content):
+        pattern = re.compile(r'<[^>]+>',re.S)
+        result = pattern.sub('', content)
+        return result
+
     def _order_basic_dict(self, each_order):
         ret = {
             "amountReal": round(each_order.amount_total, 2),
-            "dateAdd": dt_convert(each_order.create_date),
+            "dateAdd": dt_convert(each_order.create_date, gmt_diff=self.cur_gmt_diff),
             "id": each_order.id,
-            "remark": each_order.note,
+            "remark": self.clean_html(each_order.note),
             "orderNumber": each_order.name,
             "goodsNumber": each_order.number_goods,
             "status": defs.OrderResponseStatus.attrs[each_order.customer_status],
@@ -323,6 +331,7 @@ class WxappOrder(http.Controller, BaseController):
             domain = self.get_orders_domain(status, **kwargs)
             orders = request.env['sale.order'].sudo().search(domain, order='id desc', limit=30)
             delivery_product_id = request.env.ref('oejia_weshop.product_product_delivery_weshop').id
+            self.cur_gmt_diff = entry.gmt_diff
             data = {
                 "logisticsMap": {},
                 "orderList": [self._order_basic_dict(each_order) for each_order in orders],
@@ -387,12 +396,12 @@ class WxappOrder(http.Controller, BaseController):
                         "amountLogistics": order.logistics_price,
                         "amountTax": round(order.amount_tax, 2),
                         "amountReal": round(order.amount_total, 2),
-                        "dateAdd": dt_convert(order.create_date),
-                        "dateUpdate": dt_convert(order.write_date),
+                        "dateAdd": dt_convert(order.create_date, gmt_diff=entry.gmt_diff),
+                        "dateUpdate": dt_convert(order.write_date, gmt_diff=entry.gmt_diff),
                         "goodsNumber": order.number_goods,
                         "id": order.id,
                         "orderNumber": order.name,
-                        "remark": order.note,
+                        "remark": self.clean_html(order.note),
                         "status": defs.OrderResponseStatus.attrs[order.customer_status],
                         "statusStr": defs.OrderStatus.attrs[order.customer_status],
                         "type": 0,

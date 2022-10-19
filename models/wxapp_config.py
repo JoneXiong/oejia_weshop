@@ -19,6 +19,7 @@ class WxappConfig(models.Model):
     secret = fields.Char('Secret')
 
     team_id = fields.Many2one('crm.team', string='所属销售渠道', required=True)
+    gmt_diff = fields.Integer('客户端时区GMT ± N', default=8)
 
     def need_login(self):
         return False

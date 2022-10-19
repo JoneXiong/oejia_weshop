@@ -35,6 +35,7 @@
                      <group string="基础配置" colspan="4">
                         <field name="mall_name"/>
                         <field name="team_id"/>
+                        <field name="gmt_diff"/>
                     </group>
                     </sheet>
                 </form>
