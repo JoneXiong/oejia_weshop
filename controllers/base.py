@@ -175,6 +175,8 @@ class BaseController(object):
 
     def res_ok(self, data=None):
         ret = {'code': 0, 'msg': 'success'}
+        if request.httprequest.headers.get('sec-ch-ua-platform')=='"Android"':
+            pass#ret = {'code': 1, 'msg': 'success'}
         if data!=None:
             ret['data'] = data
         return request.make_response(
@@ -194,7 +196,7 @@ def convert_static_link(request, html):
     return html.replace('src="/', 'src="{base_url}/'.format(base_url=base_url))
 
 
-def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S'):
+def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S', gmt_diff=8):
     """
     UTC时间转为本地时间
     """
@@ -203,11 +205,16 @@ def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S'):
     if isinstance(value, datetime):
         value = value.strftime(return_format)
     dt = datetime.strptime(value, return_format)
-    pytz_timezone = pytz.timezone('Etc/GMT-8')
+    _diff = ''
+    if gmt_diff>0:
+        _diff = '-%s'%gmt_diff
+    else:
+        _diff = '+%s'%(0-gmt_diff)
+    pytz_timezone = pytz.timezone('Etc/GMT' + _diff)
     dt = dt.replace(tzinfo=pytz.timezone('UTC'))
     return dt.astimezone(pytz_timezone).strftime(return_format)
 
-def dt_utc(value, return_format='%Y-%m-%d %H:%M:%S'):
+def dt_utc(value, return_format='%Y-%m-%d %H:%M:%S', gmt_diff=8):
     """
     本地时间转为UTC时间
     """
@@ -216,6 +223,11 @@ def dt_utc(value, return_format='%Y-%m-%d %H:%M:%S'):
     if isinstance(value, datetime):
         value = value.strftime(return_format)
     dt = datetime.strptime(value, return_format)
-    pytz_timezone = pytz.timezone('Etc/GMT+8')
+    _diff = ''
+    if gmt_diff>=0:
+        _diff = '+%s'%gmt_diff
+    else:
+        _diff = str(gmt_diff)
+    pytz_timezone = pytz.timezone('Etc/GMT' + _diff)
     dt = dt.replace(tzinfo=pytz.timezone('UTC'))
     return dt.astimezone(pytz_timezone).strftime(return_format)
