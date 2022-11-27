@@ -35,3 +35,11 @@ def get_request(self, httprequest):
         return HttpRequest(httprequest)
 root.get_request = MethodType(get_request, root)
 
+origin_get_response = root.get_response
+def get_response(self, httprequest, result, explicit_session):
+    response = origin_get_response(httprequest, result, explicit_session)
+    if response.headers.get('set-sid'):
+        response.headers.set('set-sid', httprequest.session.sid)
+    return response
+root.get_response = MethodType(get_response, root)
+
