@@ -36,6 +36,7 @@ error_code = {
     902: u'登录超时',# 不触发授权登录
     903: u'尚未登录',
     300: u'缺少参数',
+    2000: u'当前登录token无效，请重新登录',
     400: u'域名错误',
     401: u'该域名已删除',
     402: u'该域名已禁用',
@@ -82,6 +83,9 @@ class WechatUser(object):
         self.name = partner.name
         self.vat = ''
         self.category_id = False
+        self.registered = False
+        self.parent_key = ''
+        self.birthday = ''
 
     def check_account_ok(self):
         return True
@@ -106,8 +110,12 @@ class BaseController(object):
         return None, wxapp_entry
 
     def _makeup_context(self, env, entry):
-        env.context = dict(env.context, entry_id=entry.get_id(), fm_type=request.httprequest.cookies.get('_fm'))
-        entry.env.context = dict(entry.env.context, entry_id=entry.get_id(), fm_type=request.httprequest.cookies.get('_fm'))
+        fm_type=request.httprequest.cookies.get('_fm')
+        header_fm_type = request.httprequest.headers.get("Fm-Type")
+        if header_fm_type:
+            fm_type = header_fm_type
+        env.context = dict(env.context, entry_id=entry.get_id(), fm_type=fm_type)
+        entry.env.context = dict(entry.env.context, entry_id=entry.get_id(), fm_type=fm_type)
 
     def _check_user(self, sub_domain, token):
         wxapp_entry = request.env['wxapp.config'].sudo().get_entry(sub_domain)
@@ -175,8 +183,6 @@ class BaseController(object):
 
     def res_ok(self, data=None):
         ret = {'code': 0, 'msg': 'success'}
-        if request.httprequest.headers.get('sec-ch-ua-platform')=='"Android"':
-            pass#ret = {'code': 1, 'msg': 'success'}
         if data!=None:
             ret['data'] = data
         return request.make_response(
