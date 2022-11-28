@@ -8,7 +8,7 @@ from odoo.http import request
 from odoo import fields
 
 from .. import defs
-from .base import BaseController
+from .base import BaseController, jsonapi
 from .tools import get_wx_session_info, get_wx_user_info, get_decrypt_info
 
 import logging
@@ -34,7 +34,7 @@ class WxappUser(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
-    @http.route('/wxa/<string:sub_domain>/user/wxapp/login', auth='public', methods=['GET', 'POST'],csrf=False)
+    @http.route(['/wxa/<string:sub_domain>/user/wxapp/login', '/wxa/<string:sub_domain>/user/wxapp/authorize'], auth='public', methods=['GET', 'POST'],csrf=False)
     def login(self, sub_domain, code=None, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)

@@ -25,6 +25,7 @@ class Banner(models.Model):
 
     type_mark = fields.Integer(string='类型标记', default=0)
     ptype = fields.Selection([('index', '首页顶部'), ('app', '启动页')], string='位置', default='index')
+    ctype = fields.Selection([('1', '移动端')], string='终端类型', default='1')
 
     @api.depends('image')
     def _compute_display_pic(self):

@@ -38,7 +38,7 @@ class WxappAddress(http.Controller, BaseController):
         }
         return _dict
 
-    @http.route('/wxa/<string:sub_domain>/user/shipping-address/list', auth='public', methods=['GET'])
+    @http.route(['/wxa/<string:sub_domain>/user/shipping-address/list', '/wxa/<string:sub_domain>/user/shipping-address/list/v2'], auth='public', methods=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, token=None):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
@@ -48,6 +48,12 @@ class WxappAddress(http.Controller, BaseController):
                 return self.res_err(700)
 
             data = [self._get_address_dict(each_address, wechat_user.id) for each_address in wechat_user.address_ids.filtered(lambda r: r.active)]
+            if '/v2' in request.httprequest.url:
+                return self.res_ok({
+                    'result': data,
+                    'totalPage': 1,
+                    'totalRow': len(data),
+                })
             return self.res_ok(data)
 
         except Exception as e:
@@ -156,7 +162,7 @@ class WxappAddress(http.Controller, BaseController):
     def get_default_ext(self, data, wechat_user):
         return data
 
-    @http.route('/wxa/<string:sub_domain>/user/shipping-address/default', auth='public', methods=['GET'])
+    @http.route(['/wxa/<string:sub_domain>/user/shipping-address/default', '/wxa/<string:sub_domain>/user/shipping-address/default/v2'], auth='public', methods=['GET'])
     def default(self, sub_domain, token=None, **kwargs):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
@@ -172,6 +178,8 @@ class WxappAddress(http.Controller, BaseController):
                 return self.res_err(404, self.get_default_ext({}, wechat_user))
 
             data = self._get_address_dict(address, wechat_user.id)
+            if '/v2' in request.httprequest.url:
+                return self.res_ok({'extJson': {}, 'info': self.get_default_ext(data, wechat_user)})
             return self.res_ok(self.get_default_ext(data, wechat_user))
 
         except Exception as e:
