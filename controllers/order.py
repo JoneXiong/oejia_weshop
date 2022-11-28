@@ -48,6 +48,8 @@ class WxappOrder(http.Controller, BaseController):
             link_man = kwargs.pop('linkMan') if 'linkMan' in kwargs else False
 
             calculate = kwargs.pop('calculate', False)
+            if calculate=='false':
+                calculate = False
             remark = kwargs.pop('remark', '')
 
             goods_price, logistics_price, order_lines, isNeedLogistics = self.parse_goods_json(
@@ -124,6 +126,7 @@ class WxappOrder(http.Controller, BaseController):
                         'product_uom_qty': 1,
                     }))
                 order_dict['order_line'] = line_value_list
+                _logger.info('>>> create order_line %s', order_dict['order_line'])
                 vals = order_dict.copy()
                 vals.pop('entry', None)
                 order = OrderModel.create(vals)
@@ -415,6 +418,7 @@ class WxappOrder(http.Controller, BaseController):
                             "goodsName": each_goods.name,
                             "id": each_goods.product_id.id,
                             "number": each_goods.product_uom_qty,
+                            "product_uom": each_goods.product_uom.name,
                             "orderId": order.id,
                             "pic": each_goods.product_id.product_tmpl_id.main_img,
                             "property": each_goods.product_id.get_property_str(),
@@ -426,6 +430,9 @@ class WxappOrder(http.Controller, BaseController):
                         "provinceId": order.province_id.id,
                         "cityId": order.city_id.id,
                         "districtId": order.district_id.id or 0,
+                        "provinceStr": order.province_id.name,
+                        "cityStr": order.city_id.name,
+                        "areaStr": order.district_id.name,
                         "linkMan": order.linkman,
                         "mobile": order.mobile,
                         "code": order.zipcode,
