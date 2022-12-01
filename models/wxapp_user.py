@@ -68,7 +68,10 @@ class WxappUser(models.Model):
             obj.address_ids = obj.partner_id.child_ids.filtered(lambda r: r.type == 'delivery')
 
     def bind_mobile(self, mobile):
-        self.partner_id.write({'mobile': mobile})
+        vals = {'mobile': mobile}
+        if self.partner_id.name=='微信用户':
+            vals['name'] = mobile
+        self.partner_id.write(vals)
 
     def check_account_ok(self):
         return True
