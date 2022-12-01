@@ -65,7 +65,7 @@ class WxappProduct(http.Controller, BaseController):
         return _dict
 
     def get_goods_domain(self, category_id, nameLike, **kwargs):
-        if 'recommendStatus' in kwargs or 'pingtuan' in kwargs:
+        if 'recommendStatus' in kwargs or 'pingtuan' in kwargs or 'kanjia' in kwargs or 'miaosha' in kwargs:
             return [('id', '=', 0)]
         domain = [('sale_ok', '=', True), ('wxapp_published', '=', True)]
         if not category_id and nameLike and nameLike.startswith('_c_'):
@@ -105,6 +105,8 @@ class WxappProduct(http.Controller, BaseController):
         category_id = categoryId
         token = kwargs.get('token', None)
         order_by = kwargs.get('orderBy', None)
+        if not nameLike:
+            nameLike = kwargs.get('k')
         try:
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
