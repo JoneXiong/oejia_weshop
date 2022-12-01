@@ -82,6 +82,9 @@ class WxappOrder(http.Controller, BaseController):
                 'entry': entry,
             }
             order_dict.update(kwargs)
+            if kwargs.get('extraInfo'):
+                extraInfo = json.loads(kwargs.get('extraInfo'))
+                order_dict.update(extraInfo)
             order_dict['_params'] = {'calculate': calculate, 'isNeedLogistics': isNeedLogistics}
             order_dict['_params'].update(kwargs)
             _logger.info('>>> order_dict %s', order_dict)
@@ -320,7 +323,7 @@ class WxappOrder(http.Controller, BaseController):
 
     def get_orders_domain(self, status, **kwargs):
         domain = [('partner_id', '=', request.wechat_user.partner_id.id), ('number_goods', '>', 0)]
-        if status and status!='9':
+        if status and status!='9' and status.isdigit():
             domain.append(('customer_status', '=', defs.OrderRequestStatus.attrs[int(status)]))
         return domain
 
