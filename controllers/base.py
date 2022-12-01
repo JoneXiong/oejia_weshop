@@ -123,7 +123,7 @@ class BaseController(object):
             return self.res_err(404), None, wxapp_entry
         self._makeup_context(request.env, wxapp_entry)
         if not token:
-            return self.res_err(300), None, wxapp_entry
+            return self.res_err(2000), None, wxapp_entry
 
         login_uid = request.session.get('login_uid')
         _logger.info('>>> get session login_uid %s', login_uid)
@@ -153,6 +153,8 @@ class BaseController(object):
 
         if not wechat_user:
             return self.res_err(10000), None, wxapp_entry
+        if not wechat_user.check_account_ok():
+            return self.res_err(2000), wechat_user, wxapp_entry
 
         request.wechat_user = wechat_user
         return None, wechat_user, wxapp_entry
