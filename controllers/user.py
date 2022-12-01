@@ -59,7 +59,7 @@ class WxappUser(http.Controller, BaseController):
                 #('create_uid', '=', user.id)
             ])
             if not wechat_user:
-                return self.res_err(10000)
+                return self.res_err(10000, {'session_info': session_info})
 
             wechat_user.write({'last_login': fields.Datetime.now(), 'ip': request.httprequest.remote_addr})
             access_token = request.env(user=1)['wxapp.access_token'].search([
@@ -102,19 +102,28 @@ class WxappUser(http.Controller, BaseController):
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
 
-            encrypted_data = encryptedData
-            if not code or not encrypted_data or not iv:
-                return self.res_err(300)
+            session_info = kwargs.get('session_info')
+            if session_info:
+                session_info = json.loads(session_info)
+                user_info = {
+                    'nickName': '微信用户',
+                    'openId': session_info.get('openid'),
+                    'unionId': session_info.get('unionid')
+                }
+            else:
+                encrypted_data = encryptedData
+                if not code or not encrypted_data or not iv:
+                    return self.res_err(300)
 
-            app_id = entry.get_config('app_id')
-            secret = entry.get_config('secret')
+                app_id = entry.get_config('app_id')
+                secret = entry.get_config('secret')
 
-            if not app_id or not secret:
-                return self.res_err(404)
+                if not app_id or not secret:
+                    return self.res_err(404)
 
-            session_key, user_info = get_wx_user_info(app_id, secret, code, encrypted_data, iv)
-            if kwargs.get('userInfo'):
-                user_info.update(json.loads(kwargs.get('userInfo')))
+                session_key, user_info = get_wx_user_info(app_id, secret, code, encrypted_data, iv)
+                if kwargs.get('userInfo'):
+                    user_info.update(json.loads(kwargs.get('userInfo')))
 
             user_id = None
             if hasattr(request, 'user_id'):
@@ -124,12 +133,12 @@ class WxappUser(http.Controller, BaseController):
                 'name': user_info['nickName'],
                 'nickname': user_info['nickName'],
                 'open_id': user_info['openId'],
-                'gender': user_info['gender'],
-                'language': user_info['language'],
-                'country': user_info['country'],
-                'province': user_info['province'],
-                'city': user_info['city'],
-                'avatar_url': user_info['avatarUrl'],
+                'gender': user_info.get('gender'),
+                'language': user_info.get('language'),
+                'country': user_info.get('country'),
+                'province': user_info.get('province'),
+                'city': user_info.get('city'),
+                'avatar_url': user_info.get('avatarUrl'),
                 'register_ip': request.httprequest.remote_addr,
                 'user_id': user_id,
                 'partner_id': user_id and request.env['res.users'].sudo().browse(user_id).partner_id.id or None,
@@ -190,7 +199,7 @@ class WxappUser(http.Controller, BaseController):
     def bind_mobile(self, sub_domain, token=None, encryptedData=None, iv=None, **kwargs):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
+            if res and not wechat_user:return res
 
             encrypted_data = encryptedData
             if not token or not encrypted_data or not iv:
