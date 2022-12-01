@@ -102,6 +102,7 @@ class WxappOrder(http.Controller, BaseController):
                     'amountTax': order_dict.get('amount_tax', 0),
                     'extra': order_dict['extra']
                 }
+                _data['amountReal'] = _data['amountTotle'] + _data['amountLogistics'] + _data['amountTax']
                 _data.update(self.calculate_ext_info(wechat_user, order_dict, order_lines, _data))
                 for line in order_lines:
                     line['price_unit'] = round(line['price_unit'], 2)
