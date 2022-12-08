@@ -241,9 +241,9 @@ class WxappUser(http.Controller, BaseController):
                 else:
                     return res
             _data = {
-                'balance': hasattr(wechat_user, 'balance') and wechat_user.balance or 0,
+                'balance': wechat_user.get_balance(),
                 'freeze': 0,
-                'score': hasattr(wechat_user, 'score') and wechat_user.score or 0,
+                'score': wechat_user.get_score(),
                 'totleConsumed': 0,
             }
             return self.res_ok(_data)
