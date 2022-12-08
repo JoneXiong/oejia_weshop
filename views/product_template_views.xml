@@ -9,6 +9,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//tree" position="attributes">
+                        <attribute name="default_order">sequence</attribute>
+                    </xpath>
                     <xpath expr="//field[@name='type']" position="after">
                         <field name="wxapp_published"/>
                     </xpath>
