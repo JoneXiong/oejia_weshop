@@ -107,6 +107,7 @@ class WxappOrder(http.Controller, BaseController):
                 for line in order_lines:
                     line['price_unit'] = round(line['price_unit'], 2)
                 _data['orderLines'] = order_lines
+                _data['amountReal'] = round(_data['amountReal'], 2)
             else:
                 OrderModel = request.env(user=1)['sale.order']
                 user = self._get_user()
