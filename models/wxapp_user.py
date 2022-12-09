@@ -81,3 +81,6 @@ class WxappUser(models.Model):
 
     def get_score(self):
         return hasattr(self, 'score') and self.score or 0
+
+    def get_credit_limit(self):
+        return 0

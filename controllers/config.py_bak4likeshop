@@ -1,0 +1,136 @@
+# -*- coding: utf-8 -*-
+
+import json
+
+from odoo import http
+from odoo.http import request
+
+from .base import BaseController
+
+
+import logging
+
+_logger = logging.getLogger(__name__)
+
+
+
+class WxappConfig(http.Controller, BaseController):
+
+    @http.route('/wxa/<string:sub_domain>/config/get-value', auth='public', methods=['GET'])
+    def get_value(self, sub_domain, key=None, **kwargs):
+        try:
+            ret, entry = self._check_domain(sub_domain)
+            if ret:return ret
+
+            if not key:
+                return self.res_err(300)
+
+            data = {
+                'dbname': request.env.cr.dbname,
+                'creatAt': entry.create_date,
+                'dateType': 0,
+                'id': entry.id,
+                'key': key,
+                'remark': '',
+                'updateAt': entry.write_date,
+                'userId': entry.id,
+                'value': entry.get_config(key)
+            }
+            data.update(entry.get_ext_config())
+            return self.res_ok(data)
+
+        except AttributeError:
+            return self.res_err(404)
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, str(e))
+
+    @http.route(['/wxa/<string:sub_domain>/config/values', '/wxa/<string:sub_domain>/index/config'], auth='public', methods=['GET', 'OPTIONS'])
+    def get_values(self, sub_domain, keys=None, **kwargs):
+        keys = keys and keys.split(',') or ['abc']
+        try:
+            ret, entry = self._check_domain(sub_domain)
+            if ret:return ret
+
+            if not keys:
+                return self.res_err(300)
+
+            data = []
+            for key in keys:
+                key = key.strip()
+                data.append({'key': key, 'value': entry.get_config(key)})
+            data.append({'key': 'dbname', 'value': request.env.cr.dbname})
+            ext_config = entry.get_ext_config()
+            for key in ext_config:
+                data.append({'key': key, 'value': ext_config[key]})
+            lk = {
+                "register_setting": 0, 
+                "app_wechat_login": 0, 
+                "shop_login_logo": ext_config['company_logo'],#"http://oes.oejia.net/static/common/image/default/login_logo_mall.png",  138x39
+                "web_favicon": "http://oes.oejia.net/static/common/ico/default.ico", 
+                "name": "likeshop", 
+                "copyright_info": "Copyright © 2019-2021 广州好象科技有限公司", 
+                "icp_number": "京ICP证000000号", 
+                "icp_link": "http://www.beian.gov.cn/portal/index.do", 
+                "app_agreement": 0, 
+                "ios_download": "", 
+                "android_download": "", 
+                "download_doc": "", 
+                "cate_style": 1, 
+                "index_setting": {
+                    "logo": 1, 
+                    "hots": 1, 
+                    "news": 1, 
+                    "top_bg_image": ""
+                }, 
+                "center_setting": {
+                    "top_bg_image": ""
+                }, 
+                "navigation_setting": {
+                    "ust_color": "#000000", 
+                    "st_color": "#000000"
+                }, 
+                "navigation_menu": [
+                    {
+                        "name": "首页1", 
+                        "selected_icon": "http://oes.oejia.net/static/common/image/default/icon_tab_home_s.png", 
+                        "un_selected_icon": "http://oes.oejia.net/static/common/image/default/icon_tab_home.png"
+                    }, 
+                    {
+                        "name": "分类", 
+                        "selected_icon": "http://oes.oejia.net/static/common/image/default/icon_tab_sort_s.png", 
+                        "un_selected_icon": "http://oes.oejia.net/static/common/image/default/icon_tab_sort.png"
+                    }, 
+                    {
+                        "name": "购物车", 
+                        "selected_icon": "http://oes.oejia.net/static/common/image/default/icon_tab_shoppingCar.png", 
+                        "un_selected_icon": "http://oes.oejia.net/static/common/image/default/icon_tab_shopcart.png"
+                    }, 
+                    {
+                        "name": "我的", 
+                        "selected_icon": "http://oes.oejia.net/static/common/image/default/icon_tab_my_s.png", 
+                        "un_selected_icon": "http://oes.oejia.net/static/common/image/default/icon_tab_my.png"
+                    }
+                ]
+            }
+            if '/index/config' in request.httprequest.url:
+                return self.res_ok(lk)
+
+            return self.res_ok(data)
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, str(e))
+
+    @http.route('/wxa/<string:sub_domain>/config/vipLevel', auth='public', methods=['GET'])
+    def get_viplevel(self, sub_domain, key=None, **kwargs):
+        try:
+            ret, entry = self._check_domain(sub_domain)
+            if ret:return ret
+
+            return self.res_ok(entry.get_level())
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, str(e))
