@@ -19,15 +19,42 @@ _logger = logging.getLogger(__name__)
 class WxappUser(http.Controller, BaseController):
 
 
-    @http.route('/wxa/<string:sub_domain>/user/check-token', auth='public', methods=['GET'])
+    @http.route(['/wxa/<string:sub_domain>/user/check-token', '/wxa/<string:sub_domain>/user/center'], auth='public', methods=['GET'])
     def check_token(self, sub_domain, token=None, **kwargs):
+        '''
+/api/user/center
+{
+    "code": -1, 
+    "msg": "会话失效，请重新登录", 
+    "data": [ ], 
+    "show": 1, 
+    "time": "0.049300"
+}
+        '''
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return self.res_err(609)
 
             if wechat_user.check_account_ok():
                 data = self.get_user_info(wechat_user)
-                return self.res_ok(data)
+                if '/user/center' in request.httprequest.url:
+                    data.update(self.get_user_more(wechat_user))
+                    data.update({
+                        "wait_pay": 1, 
+                        "wait_delivery": 0, 
+                        "wait_take": 0, 
+                        "wait_comment": 0, 
+                        "after_sale": 0,
+                        "total_order_amount": "0.00", 
+                        "total_recharge_amount": "0.00", 
+                        "distribution_code": "H46NH9", 
+                        "distribution_setting": 1, 
+                        "notice_num": 1,
+                        "hasPayPassword": 0,
+                    })
+                    return self.res_ok(data)
+                else:
+                    return self.res_ok(data)
             else:
                 return self.res_err(608, u'账号不可用')
         except Exception as e:
@@ -59,7 +86,7 @@ class WxappUser(http.Controller, BaseController):
                 #('create_uid', '=', user.id)
             ])
             if not wechat_user:
-                return self.res_err(10000, {'session_info': session_info})
+                return self.res_err(10000)
 
             wechat_user.write({'last_login': fields.Datetime.now(), 'ip': request.httprequest.remote_addr})
             access_token = request.env(user=1)['wxapp.access_token'].search([
@@ -102,28 +129,19 @@ class WxappUser(http.Controller, BaseController):
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
 
-            session_info = kwargs.get('session_info')
-            if session_info:
-                session_info = json.loads(session_info)
-                user_info = {
-                    'nickName': '微信用户',
-                    'openId': session_info.get('openid'),
-                    'unionId': session_info.get('unionid')
-                }
-            else:
-                encrypted_data = encryptedData
-                if not code or not encrypted_data or not iv:
-                    return self.res_err(300)
+            encrypted_data = encryptedData
+            if not code or not encrypted_data or not iv:
+                return self.res_err(300)
 
-                app_id = entry.get_config('app_id')
-                secret = entry.get_config('secret')
+            app_id = entry.get_config('app_id')
+            secret = entry.get_config('secret')
 
-                if not app_id or not secret:
-                    return self.res_err(404)
+            if not app_id or not secret:
+                return self.res_err(404)
 
-                session_key, user_info = get_wx_user_info(app_id, secret, code, encrypted_data, iv)
-                if kwargs.get('userInfo'):
-                    user_info.update(json.loads(kwargs.get('userInfo')))
+            session_key, user_info = get_wx_user_info(app_id, secret, code, encrypted_data, iv)
+            if kwargs.get('userInfo'):
+                user_info.update(json.loads(kwargs.get('userInfo')))
 
             user_id = None
             if hasattr(request, 'user_id'):
@@ -133,12 +151,12 @@ class WxappUser(http.Controller, BaseController):
                 'name': user_info['nickName'],
                 'nickname': user_info['nickName'],
                 'open_id': user_info['openId'],
-                'gender': user_info.get('gender'),
-                'language': user_info.get('language'),
-                'country': user_info.get('country'),
-                'province': user_info.get('province'),
-                'city': user_info.get('city'),
-                'avatar_url': user_info.get('avatarUrl'),
+                'gender': user_info['gender'],
+                'language': user_info['language'],
+                'country': user_info['country'],
+                'province': user_info['province'],
+                'city': user_info['city'],
+                'avatar_url': user_info['avatarUrl'],
                 'register_ip': request.httprequest.remote_addr,
                 'user_id': user_id,
                 'partner_id': user_id and request.env['res.users'].sudo().browse(user_id).partner_id.id or None,
@@ -165,6 +183,54 @@ class WxappUser(http.Controller, BaseController):
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, str(e))
+
+    @http.route('/wxa/<string:sub_domain>/account/silentLogin', auth='public', methods=['GET', 'POST'], csrf=False)
+    @jsonapi
+    def silent_login(self, sub_domain, code=None, **kwargs):
+        '''
+{
+    "code": 0, 
+    "msg": "登录失败:Request access_token fail: {\"errcode\":41002,\"errmsg\":\"appid missing rid: 636e1172-7234b71d-1d851e56\"}", 
+    "data": [ ], 
+    "show": 1, 
+    "time": "0.150039"
+}
+
+{
+    "code": 1, 
+    "msg": "", 
+    "data": [ ], 
+    "show": 0, 
+    "time": "0.564538"
+}
+
+
+        '''
+        pass
+
+    @http.route('/wxa/<string:sub_domain>/account/authLogin', auth='public', methods=['GET', 'POST'], csrf=False)
+    @jsonapi
+    def auth_login(self, sub_domain, code=None, **kwargs):
+        '''
+code: "0618QoHa1O7RcE0Se4Ia1ERJMD08QoHZ"
+headimgurl: "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132"
+nickname: "微信用户"
+
+{
+    "code": 1, 
+    "msg": "登录成功", 
+    "data": {
+        "nickname": "微信用户", 
+        "avatar": "http://oes.oejia.net/uploads/user/avatar/90c4c9060717a2f68c9ce18d88c38f3e.jpeg", 
+        "level": 0, 
+        "distribution_code": "G926H7", 
+        "token": "914331f501c74befaa9c54dc2a3944b9"
+    }, 
+    "show": 0, 
+    "time": "0.558135"
+}
+        '''
+        pass
 
     def get_user_info(self, wechat_user):
         mobile = ''
@@ -199,7 +265,7 @@ class WxappUser(http.Controller, BaseController):
     def bind_mobile(self, sub_domain, token=None, encryptedData=None, iv=None, **kwargs):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res and not wechat_user:return res
+            if res:return res
 
             encrypted_data = encryptedData
             if not token or not encrypted_data or not iv:
@@ -241,10 +307,9 @@ class WxappUser(http.Controller, BaseController):
                 else:
                     return res
             _data = {
-                'balance': wechat_user.get_balance(),
-                'creditLimit': wechat_user.get_credit_limit(),
+                'balance': hasattr(wechat_user, 'balance') and wechat_user.balance or 0,
                 'freeze': 0,
-                'score': wechat_user.get_score(),
+                'score': hasattr(wechat_user, 'score') and wechat_user.score or 0,
                 'totleConsumed': 0,
             }
             return self.res_ok(_data)
