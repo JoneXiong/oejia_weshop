@@ -242,6 +242,7 @@ class WxappUser(http.Controller, BaseController):
                     return res
             _data = {
                 'balance': wechat_user.get_balance(),
+                'creditLimit': wechat_user.get_credit_limit(),
                 'freeze': 0,
                 'score': wechat_user.get_score(),
                 'totleConsumed': 0,
