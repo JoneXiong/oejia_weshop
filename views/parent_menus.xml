@@ -6,6 +6,7 @@
         <menuitem id="parent_menu_327_1536754696" name="配置" parent="parent_menu_319_1536754696" sequence="999"/>
         <menuitem id="parent_menu_331_1536754696" name="省市区" parent="parent_menu_327_1536754696" sequence="10"/>
         <menuitem id="parent_menu_757_1611842705" name="客户" parent="parent_menu_319_1536754696" sequence="3"/>
+        <menuitem id="parent_menu_758_1611842706" name="场景" parent="parent_menu_319_1536754696" groups="oejia_weshop.group_wxapp_sale,base.group_system" sequence="10"/>
 
     </data>
 </openerp>
