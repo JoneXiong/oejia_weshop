@@ -36,6 +36,7 @@ error_code = {
     902: u'登录超时',# 不触发授权登录
     903: u'尚未登录',
     300: u'缺少参数',
+    2000: u'当前登录token无效，请重新登录',
     400: u'域名错误',
     401: u'该域名已删除',
     402: u'该域名已禁用',
@@ -82,6 +83,9 @@ class WechatUser(object):
         self.name = partner.name
         self.vat = ''
         self.category_id = False
+        self.registered = False
+        self.parent_key = ''
+        self.birthday = ''
 
     def check_account_ok(self):
         return True
@@ -106,8 +110,12 @@ class BaseController(object):
         return None, wxapp_entry
 
     def _makeup_context(self, env, entry):
-        env.context = dict(env.context, entry_id=entry.get_id(), fm_type=request.httprequest.cookies.get('_fm'))
-        entry.env.context = dict(entry.env.context, entry_id=entry.get_id(), fm_type=request.httprequest.cookies.get('_fm'))
+        fm_type=request.httprequest.cookies.get('_fm')
+        header_fm_type = request.httprequest.headers.get("Fm-Type")
+        if header_fm_type:
+            fm_type = header_fm_type
+        env.context = dict(env.context, entry_id=entry.get_id(), fm_type=fm_type)
+        entry.env.context = dict(entry.env.context, entry_id=entry.get_id(), fm_type=fm_type)
 
     def _check_user(self, sub_domain, token):
         wxapp_entry = request.env['wxapp.config'].sudo().get_entry(sub_domain)
@@ -115,7 +123,7 @@ class BaseController(object):
             return self.res_err(404), None, wxapp_entry
         self._makeup_context(request.env, wxapp_entry)
         if not token:
-            return self.res_err(300), None, wxapp_entry
+            return self.res_err(2000), None, wxapp_entry
 
         login_uid = request.session.get('login_uid')
         _logger.info('>>> get session login_uid %s', login_uid)
@@ -145,6 +153,8 @@ class BaseController(object):
 
         if not wechat_user:
             return self.res_err(10000), None, wxapp_entry
+        if not wechat_user.check_account_ok():
+            return self.res_err(2000), wechat_user, wxapp_entry
 
         request.wechat_user = wechat_user
         return None, wechat_user, wxapp_entry
@@ -194,7 +204,7 @@ def convert_static_link(request, html):
     return html.replace('src="/', 'src="{base_url}/'.format(base_url=base_url))
 
 
-def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S'):
+def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S', gmt_diff=8):
     """
     UTC时间转为本地时间
     """
@@ -203,11 +213,16 @@ def dt_convert(value, return_format='%Y-%m-%d %H:%M:%S'):
     if isinstance(value, datetime):
         value = value.strftime(return_format)
     dt = datetime.strptime(value, return_format)
-    pytz_timezone = pytz.timezone('Etc/GMT-8')
+    _diff = ''
+    if gmt_diff>0:
+        _diff = '-%s'%gmt_diff
+    else:
+        _diff = '+%s'%(0-gmt_diff)
+    pytz_timezone = pytz.timezone('Etc/GMT' + _diff)
     dt = dt.replace(tzinfo=pytz.timezone('UTC'))
     return dt.astimezone(pytz_timezone).strftime(return_format)
 
-def dt_utc(value, return_format='%Y-%m-%d %H:%M:%S'):
+def dt_utc(value, return_format='%Y-%m-%d %H:%M:%S', gmt_diff=8):
     """
     本地时间转为UTC时间
     """
@@ -216,6 +231,11 @@ def dt_utc(value, return_format='%Y-%m-%d %H:%M:%S'):
     if isinstance(value, datetime):
         value = value.strftime(return_format)
     dt = datetime.strptime(value, return_format)
-    pytz_timezone = pytz.timezone('Etc/GMT+8')
+    _diff = ''
+    if gmt_diff>=0:
+        _diff = '+%s'%gmt_diff
+    else:
+        _diff = str(gmt_diff)
+    pytz_timezone = pytz.timezone('Etc/GMT' + _diff)
     dt = dt.replace(tzinfo=pytz.timezone('UTC'))
     return dt.astimezone(pytz_timezone).strftime(return_format)

@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from openerp import models, fields, api
+from odoo import models, fields, api
 
 from .. import defs
 
@@ -31,7 +31,8 @@ class SaleOrder(models.Model):
     shipper_id = fields.Many2one('oe.shipper', string='承运商', track_visibility='onchange', copy=False)
     shipper_no = fields.Char('运单号', track_visibility='onchange', copy=False)
     shipper_traces = fields.Text('物流信息', copy=False)
-    is_paid = fields.Boolean('已支付', default=False)
+
+    is_paid = fields.Boolean('已支付', default=False) #在线支付或余额支付
 
 
 
@@ -137,4 +138,8 @@ class SaleOrder(models.Model):
         self.write({'customer_status': 'unevaluated'})
 
     def get_detail_ext(self, data):
+        pass
+
+    @api.multi
+    def action_accounted(self, data=None):
         pass
