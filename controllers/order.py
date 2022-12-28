@@ -138,7 +138,8 @@ class WxappOrder(http.Controller, BaseController):
 
                 #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
-                order.action_accounted(order_dict)
+                if hasattr(obj, 'action_accounted'):
+                    order.action_accounted(order_dict)
                 order.action_created(order_dict)
                 _data = {
                     "amountReal": round(order.amount_total, 2),
