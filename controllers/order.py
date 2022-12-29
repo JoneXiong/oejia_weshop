@@ -83,8 +83,11 @@ class WxappOrder(http.Controller, BaseController):
             }
             order_dict.update(kwargs)
             if kwargs.get('extraInfo'):
-                extraInfo = json.loads(kwargs.get('extraInfo'))
-                order_dict.update(extraInfo)
+                try:
+                    extraInfo = json.loads(kwargs.get('extraInfo'))
+                    order_dict.update(extraInfo)
+                except:
+                    import traceback;traceback.print_exc()
             order_dict['_params'] = {'calculate': calculate, 'isNeedLogistics': isNeedLogistics}
             order_dict['_params'].update(kwargs)
             _logger.info('>>> order_dict %s', order_dict)
