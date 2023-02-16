@@ -95,6 +95,9 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_paid(self):
+        '''
+        将订单置为已支付(电商)
+        '''
         self.write({'customer_status': 'pending', 'is_paid': True})
 
     @api.multi
