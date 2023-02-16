@@ -29,6 +29,7 @@ class WxappProduct(http.Controller, BaseController):
             "minPrice": request.env['product.template'].cli_price(each_goods.get_present_price(1)),
             #"uom_name": 'uom_name' in each_goods._fields.keys() and each_goods.uom_name or each_goods.uom_id.name,
             "minScore": 0,
+            "minBuyNumber": 1,
             "name": each_goods.name,
             "numberFav": each_goods.number_fav,
             "numberGoodReputation": 0,
@@ -65,7 +66,7 @@ class WxappProduct(http.Controller, BaseController):
         return _dict
 
     def get_goods_domain(self, category_id, nameLike, **kwargs):
-        if 'recommendStatus' in kwargs or 'pingtuan' in kwargs:
+        if 'recommendStatus' in kwargs or 'pingtuan' in kwargs or 'kanjia' in kwargs or 'miaosha' in kwargs:
             return [('id', '=', 0)]
         domain = [('sale_ok', '=', True), ('wxapp_published', '=', True)]
         if not category_id and nameLike and nameLike.startswith('_c_'):
@@ -97,7 +98,7 @@ class WxappProduct(http.Controller, BaseController):
             ret = 'recommend_sort'
         return ret
 
-    @http.route('/wxa/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET', 'POST'], csrf=False)
+    @http.route(['/wxa/<string:sub_domain>/shop/goods/list', '/wxa/<string:sub_domain>/shop/goods/list/v2'], auth='public', methods=['GET', 'POST'], csrf=False)
     def list(self, sub_domain, categoryId=False, nameLike=False, page=1, pageSize=20, **kwargs):
         _logger.info('>>> product list %s', kwargs)
         page = int(page)
@@ -105,6 +106,8 @@ class WxappProduct(http.Controller, BaseController):
         category_id = categoryId
         token = kwargs.get('token', None)
         order_by = kwargs.get('orderBy', None)
+        if not nameLike:
+            nameLike = kwargs.get('k')
         try:
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
@@ -121,9 +124,19 @@ class WxappProduct(http.Controller, BaseController):
             if not goods_list:
                 return self.res_err(700)
             data = [ self._product_basic_dict(each_goods) for each_goods in goods_list]
+            if 'recommendStatus' in kwargs:
+                for index in range(len(goods_list)):
+                    self.product_info_ext(data[index], goods_list[index], None)
             all_count = request.env['product.template'].sudo().search_count(domain)
-            data[0]['all_count'] = all_count
-            return self.res_ok(data)
+            if '/v2' in request.httprequest.url:
+                return self.res_ok({
+                    'result': data,
+                    'totalPage': (all_count // pageSize) + 1,
+                    'totalRow': all_count,
+                })
+            else:
+                data[0]['all_count'] = all_count
+                return self.res_ok(data)
 
         except Exception as e:
             _logger.exception(e)
@@ -181,7 +194,7 @@ class WxappProduct(http.Controller, BaseController):
                 },
                 "msg": "success"
             }
-            self.product_info_ext(data, goods, product)
+            self.product_info_ext(data['data'], goods, product)
 
             # goods.sudo().write({'views': goods.views + 1}) #同时同用户多次重复请求的事务问题
             return self.res_ok(data['data'])
@@ -191,7 +204,7 @@ class WxappProduct(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
     def product_info_ext(self, data, goods, product):
-        data["data"]["logistics"] = {
+        data["logistics"] = {
                 "logisticsBySelf": False,
                 "isFree": False,
                 "by_self": False,

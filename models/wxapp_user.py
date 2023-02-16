@@ -72,3 +72,12 @@ class WxappUser(models.Model):
 
     def check_account_ok(self):
         return True
+
+    def get_balance(self):
+        return hasattr(self, 'balance') and self.balance or 0
+
+    def get_score(self):
+        return hasattr(self, 'score') and self.score or 0
+
+    def get_credit_limit(self):
+        return 0

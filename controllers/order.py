@@ -48,6 +48,8 @@ class WxappOrder(http.Controller, BaseController):
             link_man = kwargs.pop('linkMan') if 'linkMan' in kwargs else False
 
             calculate = kwargs.pop('calculate', False)
+            if calculate=='false':
+                calculate = False
             remark = kwargs.pop('remark', '')
 
             goods_price, logistics_price, order_lines, isNeedLogistics = self.parse_goods_json(
@@ -80,6 +82,12 @@ class WxappOrder(http.Controller, BaseController):
                 'entry': entry,
             }
             order_dict.update(kwargs)
+            if kwargs.get('extraInfo'):
+                try:
+                    extraInfo = json.loads(kwargs.get('extraInfo'))
+                    order_dict.update(extraInfo)
+                except:
+                    import traceback;traceback.print_exc()
             order_dict['_params'] = {'calculate': calculate, 'isNeedLogistics': isNeedLogistics}
             order_dict['_params'].update(kwargs)
             _logger.info('>>> order_dict %s', order_dict)
@@ -97,10 +105,12 @@ class WxappOrder(http.Controller, BaseController):
                     'amountTax': order_dict.get('amount_tax', 0),
                     'extra': order_dict['extra']
                 }
+                _data['amountReal'] = _data['amountTotle'] + _data['amountLogistics'] + _data['amountTax']
                 _data.update(self.calculate_ext_info(wechat_user, order_dict, order_lines, _data))
                 for line in order_lines:
                     line['price_unit'] = round(line['price_unit'], 2)
                 _data['orderLines'] = order_lines
+                _data['amountReal'] = round(_data['amountReal'], 2)
             else:
                 OrderModel = request.env(user=1)['sale.order']
                 user = self._get_user()
@@ -124,12 +134,15 @@ class WxappOrder(http.Controller, BaseController):
                         'product_uom_qty': 1,
                     }))
                 order_dict['order_line'] = line_value_list
+                _logger.info('>>> create order_line %s', order_dict['order_line'])
                 vals = order_dict.copy()
                 vals.pop('entry', None)
                 order = OrderModel.create(vals)
 
                 #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
+                if hasattr(order, 'action_accounted'):
+                    order.action_accounted(order_dict)
                 order.action_created(order_dict)
                 _data = {
                     "amountReal": round(order.amount_total, 2),
@@ -317,7 +330,7 @@ class WxappOrder(http.Controller, BaseController):
 
     def get_orders_domain(self, status, **kwargs):
         domain = [('partner_id', '=', request.wechat_user.partner_id.id), ('number_goods', '>', 0)]
-        if status and status!='9':
+        if status and status!='9' and status.isdigit():
             domain.append(('customer_status', '=', defs.OrderRequestStatus.attrs[int(status)]))
         return domain
 
@@ -415,6 +428,7 @@ class WxappOrder(http.Controller, BaseController):
                             "goodsName": each_goods.name,
                             "id": each_goods.product_id.id,
                             "number": each_goods.product_uom_qty,
+                            "product_uom": each_goods.product_uom.name,
                             "orderId": order.id,
                             "pic": each_goods.product_id.product_tmpl_id.main_img,
                             "property": each_goods.product_id.get_property_str(),
@@ -426,6 +440,9 @@ class WxappOrder(http.Controller, BaseController):
                         "provinceId": order.province_id.id,
                         "cityId": order.city_id.id,
                         "districtId": order.district_id.id or 0,
+                        "provinceStr": order.province_id.name,
+                        "cityStr": order.city_id.name,
+                        "areaStr": order.district_id.name,
                         "linkMan": order.linkman,
                         "mobile": order.mobile,
                         "code": order.zipcode,
