@@ -83,8 +83,11 @@ class WxappOrder(http.Controller, BaseController):
             }
             order_dict.update(kwargs)
             if kwargs.get('extraInfo'):
-                extraInfo = json.loads(kwargs.get('extraInfo'))
-                order_dict.update(extraInfo)
+                try:
+                    extraInfo = json.loads(kwargs.get('extraInfo'))
+                    order_dict.update(extraInfo)
+                except:
+                    import traceback;traceback.print_exc()
             order_dict['_params'] = {'calculate': calculate, 'isNeedLogistics': isNeedLogistics}
             order_dict['_params'].update(kwargs)
             _logger.info('>>> order_dict %s', order_dict)
@@ -138,7 +141,8 @@ class WxappOrder(http.Controller, BaseController):
 
                 #mail_template = request.env.ref('wechat_mall_order_create')
                 #mail_template.sudo().send_mail(order.id, force_send=True, raise_exception=False)
-                order.action_accounted(order_dict)
+                if hasattr(order, 'action_accounted'):
+                    order.action_accounted(order_dict)
                 order.action_created(order_dict)
                 _data = {
                     "amountReal": round(order.amount_total, 2),

@@ -12,14 +12,9 @@
                <field name="wechat_user_id"/>
                <field name="payment_number"/>
                <field name="price" sum="合计" widget="monetary"/>
-               <field name="cash_fee"/>
                <field name="cash_fee_type"/>
-               <field name="coupon_count"/>
-               <field name="coupon_fee"/>
                <field name="fee_type"/>
                <field name="result_code"/>
-               <field name="settlement_total_fee"/>
-               <field name="total_fee"/>
                <field name="transaction_id"/>
                <field name="status"/>
                 </tree>
