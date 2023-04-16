@@ -10,10 +10,3 @@ class Province(models.Model):
 
     name = fields.Char('名称', requried=True)
     child_ids = fields.One2many('oe.city', 'pid', string='市')
-
-
-    @api.model_cr
-    def init(self):
-        from ..data.oe_province_datas import init_sql
-        self.env.cr.execute(init_sql)
-        self.env.cr.execute("select setval('oe_province_id_seq', max(id)) from oe_province;")
