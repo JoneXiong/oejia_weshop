@@ -36,7 +36,7 @@ class District(models.Model):
             if city0code[-2:]=='00':
                 for city in province[children_key]:
                     city_sql += """INSERT INTO oe_city (id, pid, name, create_uid, create_date, write_uid, write_date) VALUES (%s, %s, '%s', 1, NOW() AT TIME ZONE 'UTC', 1, NOW() AT TIME ZONE 'UTC') ON CONFLICT DO NOTHING;\n"""%(city['code'], province['code'], city[name_key])
-                    _logger.info('>>> load city %s', city)
+                    # _logger.info('>>> load city %s', city)
                     for district in city[children_key]:
                         district_sql += """INSERT INTO oe_district (id, pid, name, create_uid, create_date, write_uid, write_date) VALUES (%s, %s, '%s', 1, NOW() AT TIME ZONE 'UTC', 1, NOW() AT TIME ZONE 'UTC') ON CONFLICT DO NOTHING;"""%(district['code'], city['code'], district[name_key])
             else:
