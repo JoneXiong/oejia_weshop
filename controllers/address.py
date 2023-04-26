@@ -187,7 +187,7 @@ class WxappAddress(http.Controller, BaseController):
             return self.res_err(-1, str(e))
 
 
-    @http.route('/wxa/<string:sub_domain>/user/shipping-address/detail', auth='public', methods=['GET'])
+    @http.route(['/wxa/<string:sub_domain>/user/shipping-address/detail', '/wxa/<string:sub_domain>/user/shipping-address/detail/v2'], auth='public', methods=['GET'])
     def detail(self, sub_domain, token=None, id=None, **kwargs):
         address_id = id
         try:
@@ -202,6 +202,8 @@ class WxappAddress(http.Controller, BaseController):
             if not address:
                 return self.res_err(404)
 
+            if '/v2' in request.httprequest.url:
+                return self.res_ok({'info': self._get_address_dict(address, wechat_user.id)})
             return self.res_ok(self._get_address_dict(address, wechat_user.id))
 
         except Exception as e:
