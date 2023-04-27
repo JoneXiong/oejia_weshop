@@ -15,6 +15,9 @@
                     <xpath expr="//field[@name='type']" position="after">
                         <field name="wxapp_published"/>
                     </xpath>
+                    <xpath expr="//field[@name='product_variant_count']" position="before">
+                        <field name="sequence" widget="handle"/>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -54,7 +57,7 @@
                         </group>
                     </group>
                     <group string="图文描述">
-                        <field name="description_wxapp" nolabel="1"/>
+                        <field name="description_wxapp" nolabel="1" colspan="2" placeholder="这里可以编辑维护商品的图描述"/>
                     </group>
                     </page>
                     </xpath>
