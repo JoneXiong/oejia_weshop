@@ -224,6 +224,7 @@ class WxappUser(http.Controller, BaseController):
             wechat_user.bind_mobile(user_info.get('phoneNumber'))
             ret = {
                 'account_ok': wechat_user.check_account_ok(),
+                'mobile': wechat_user.mobile,
             }
             return self.res_ok(ret)
 
