@@ -63,7 +63,7 @@ class SaleOrder(models.Model):
     @api.multi
     def write(self, vals):
         result = super(SaleOrder, self).write(vals)
-        if 'shipper_id' in vals:
+        if 'shipper_id' in vals or 'picked_code' in vals:
             self.delivery()
         return result
 
