@@ -18,6 +18,11 @@ _logger = logging.getLogger(__name__)
 
 class WxappUser(http.Controller, BaseController):
 
+    def after_check(self, wechat_user, token, data):
+        pass
+
+    def after_login(self, wechat_user, token, data):
+        pass
 
     @http.route('/wxa/<string:sub_domain>/user/check-token', auth='public', methods=['GET'])
     def check_token(self, sub_domain, token=None, **kwargs):
@@ -27,6 +32,7 @@ class WxappUser(http.Controller, BaseController):
 
             if wechat_user.check_account_ok():
                 data = self.get_user_info(wechat_user)
+                self.after_check(wechat_user, token, data)
                 return self.res_ok(data)
             else:
                 return self.res_err(608, u'账号不可用')
@@ -82,6 +88,7 @@ class WxappUser(http.Controller, BaseController):
                 'uid': wechat_user.id,
                 'info': self.get_user_info(wechat_user)
             }
+            self.after_login(wechat_user, access_token.token, data)
             return self.res_ok(data)
 
         except AttributeError:
