@@ -17,6 +17,7 @@
                <field name="result_code"/>
                <field name="transaction_id"/>
                <field name="status"/>
+               <field name="create_date"/>
                 </tree>
             </field>
         </record>
