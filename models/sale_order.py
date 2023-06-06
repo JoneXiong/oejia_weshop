@@ -70,6 +70,7 @@ class SaleOrder(models.Model):
     @api.multi
     def delivery(self):
         self.write({'customer_status': 'unconfirmed', 'delivery_time': fields.Datetime.now()})
+        return True
 
     @api.multi
     def close_dialog(self):
