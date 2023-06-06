@@ -78,7 +78,8 @@ class WxappProduct(http.Controller, BaseController):
             else:
                 nameLike = _name
         if category_id:
-            cate_ids = [int(category_id)] + request.env['wxapp.product.category'].sudo().browse(int(category_id)).child_ids.ids
+            #cate_ids = [int(category_id)] + request.env['wxapp.product.category'].sudo().browse(int(category_id)).child_ids.ids
+            cate_ids = request.env['wxapp.product.category'].sudo().search([('pid', 'child_of', int(category_id))]).ids
             domain.append(('wxpp_category_id', 'in', cate_ids))
         if nameLike:
             for srch in nameLike.split(" "):
