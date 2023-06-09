@@ -58,6 +58,9 @@ class ProductTemplate(models.Model):
     def get_present_qty(self):
         return self.qty_public_tpl
 
+    def get_qty(self):
+        return self.qty_public_tpl
+
     def _compute_qty_show(self):
         for obj in self:
             obj.qty_show = obj.get_present_qty()
@@ -94,6 +97,9 @@ class ProductProduct(models.Model):
         return self.lst_price or self.product_tmpl_id.list_price
 
     def get_present_qty(self):
+        return self.qty_public
+
+    def get_qty(self):
         return self.qty_public
 
     def change_qty(self, val):
