@@ -35,7 +35,7 @@
                <field name="is_use"/>
                <field name="index_display"/>
                <field name="key"/>
-               <field name="product_template_ids" widget="many2many_tags"/>
+               <field name="product_template_ids"/>
                <field name="child_ids" widget="many2many_tags"/>
                     </group>
                     </sheet>
