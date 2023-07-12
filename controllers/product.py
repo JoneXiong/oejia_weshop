@@ -61,7 +61,7 @@ class WxappProduct(http.Controller, BaseController):
             "name": category_id.name,
             "paixu": category_id.sort or 0,
             "pid": category_id.pid.id if category_id.pid else 0,
-            "type": category_id.category_type,
+            "type": '', #category_id.category_type,
             "userId": category_id.create_uid.id
         }
         return _dict
