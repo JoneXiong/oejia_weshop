@@ -133,10 +133,10 @@ class BaseController(object):
                 if wechat_user:
                     request.wechat_user = wechat_user
                     return None, wechat_user, wxapp_entry
-                else:
-                    wechat_user = WechatUser(request.env.user.partner_id, request.env.user)
-                    request.wechat_user = wechat_user
-                    return None, wechat_user, wxapp_entry
+                #else:
+                #    wechat_user = WechatUser(request.env.user.partner_id, request.env.user)
+                #    request.wechat_user = wechat_user
+                #    return None, wechat_user, wxapp_entry
 
         access_token = request.env['wxapp.access_token'].sudo().search([
             ('token', '=', token),

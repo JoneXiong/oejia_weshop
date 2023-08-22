@@ -15,7 +15,7 @@ class WxappUser(models.Model):
     name = fields.Char(related='partner_id.name',string='名称', inherited=True)
     nickname = fields.Char('昵称')
 
-    open_id = fields.Char('OpenId', required=True, index=True, readonly=True)
+    open_id = fields.Char('OpenId', index=True, readonly=True)
     union_id = fields.Char('UnionId', readonly=True)
     gender = fields.Integer('gender')
     language = fields.Char('语言')

@@ -419,7 +419,8 @@ class WxappOrder(http.Controller, BaseController):
                         "statusStr": defs.OrderStatus.attrs[order.customer_status],
                         "type": 0,
                         "uid": 1,#user.id,
-                        "userId": wechat_user.id
+                        "userId": wechat_user.id,
+                        "portal_messages": [],
                     },
                     "goods": [
                         {
