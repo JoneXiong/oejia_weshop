@@ -24,7 +24,7 @@ class WxappConfig(models.Model):
     _rec_name = 'mall_name'
     _platform = Platform('wxapp')
 
-    sub_domain = fields.Char('接口前缀', help='商城访问的接口url前缀', index=True, required=True, default='oejia')
+    sub_domain = fields.Char('接口前缀', help='商城访问的接口url前缀', index=True, required=True, default='p')
 
     mall_name = fields.Char('商城名称', help='显示在顶部')
 
@@ -100,6 +100,20 @@ class WxappConfig(models.Model):
             'context': new_context,
             'view_id': self.env.ref('oejia_weshop.confirm_view_form').id,
             'target': 'new'
+        }
+
+    def get_config_view(self):
+        new_context = dict(self._context) or {}
+        return {
+            'name': u'设置',
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.env.ref('oejia_weshop.wxapp_config_data_1').id,
+            'view_mode': 'form',
+            'view_type': 'form',
+            'context': new_context,
+            'view_id': self.env.ref('oejia_weshop.wxapp_config_view_form_1003').id,
+            'target': 'current'
         }
 
     def get_level(self):
