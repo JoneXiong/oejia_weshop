@@ -255,8 +255,12 @@ class WxappUser(http.Controller, BaseController):
                 'score': wechat_user.get_score(),
                 'totleConsumed': 0,
             }
+            self.amount_info_ext(wechat_user, _data, kwargs)
             return self.res_ok(_data)
 
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, str(e))
+
+    def amount_info_ext(self, wechat_user, info, kwargs):
+        pass
