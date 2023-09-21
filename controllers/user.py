@@ -185,7 +185,7 @@ class WxappUser(http.Controller, BaseController):
         }
         return data
 
-    def get_user_more(self, wechat_user):
+    def get_user_more(self, wechat_user, entry):
         return {}
 
     @http.route('/wxa/<string:sub_domain>/user/detail', auth='public', methods=['GET'])
@@ -195,7 +195,7 @@ class WxappUser(http.Controller, BaseController):
             if res:return res
 
             data = self.get_user_info(wechat_user)
-            data.update(self.get_user_more(wechat_user))
+            data.update(self.get_user_more(wechat_user, entry))
             return self.res_ok(data)
 
         except Exception as e:
@@ -255,12 +255,12 @@ class WxappUser(http.Controller, BaseController):
                 'score': wechat_user.get_score(),
                 'totleConsumed': 0,
             }
-            self.amount_info_ext(wechat_user, _data, kwargs)
+            self.amount_info_ext(wechat_user, entry, _data, kwargs)
             return self.res_ok(_data)
 
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, str(e))
 
-    def amount_info_ext(self, wechat_user, info, kwargs):
+    def amount_info_ext(self, wechat_user, entry, info, kwargs):
         pass
