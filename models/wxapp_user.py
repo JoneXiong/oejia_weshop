@@ -60,7 +60,7 @@ class WxappUser(models.Model):
                 <img src="{avatar_url}" style="max-width:100px;">
                 """.format(avatar_url=each_record.avatar_url)
             else:
-                each_record.avatar = False
+                each_record.avatar = ''
 
     @api.depends('partner_id')
     def _compute_address_ids(self):
