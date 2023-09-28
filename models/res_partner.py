@@ -46,6 +46,3 @@ class res_partner(models.Model):
     def _compute_district_domain_ids(self):
         for obj in self:
             obj.district_domain_ids = obj.city_id.child_ids if obj.city_id else False
-
-    def check_account_ok(self):
-        return True

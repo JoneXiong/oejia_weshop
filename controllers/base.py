@@ -153,8 +153,6 @@ class BaseController(object):
 
         if not wechat_user:
             return self.res_err(10000), None, wxapp_entry
-        if not wechat_user.check_account_ok():
-            return self.res_err(2000), wechat_user, wxapp_entry
 
         request.wechat_user = wechat_user
         return None, wechat_user, wxapp_entry

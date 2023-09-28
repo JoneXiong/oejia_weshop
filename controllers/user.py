@@ -30,11 +30,14 @@ class WxappUser(http.Controller, BaseController):
             res, wechat_user, entry = self._check_user(sub_domain, token)
             if res:return self.res_err(609)
 
-            if wechat_user.check_account_ok():
+            account_ok = wechat_user.check_account_ok()
+            if account_ok==True:
                 data = self.get_user_info(wechat_user)
                 self.after_check(wechat_user, token, data)
                 return self.res_ok(data)
             else:
+                if account_ok==-2 or account_ok==-3:
+                    return self.res_err(610, u'需要补充信息')
                 return self.res_err(608, u'账号不可用')
         except Exception as e:
             _logger.exception(e)
