@@ -36,7 +36,7 @@
                 <form string="微信客户" version="7.0">
                     <sheet>
                     <group>
-                    <field name="nickname" readonly="1"/>
+                    <field name="nickname"/>
                     <field name="avatar" readonly="1"/>
                     <field name="mobile" readonly="1"/>
 
