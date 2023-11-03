@@ -57,7 +57,7 @@ class WxappUser(models.Model):
         for each_record in self:
             if each_record.avatar_url:
                 each_record.avatar = """
-                <img src="{avatar_url}" style="max-width:100px;">
+                <img src="{avatar_url}" width="100px" height="100px">
                 """.format(avatar_url=each_record.avatar_url)
             else:
                 each_record.avatar = ''
